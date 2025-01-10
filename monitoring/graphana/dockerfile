@@ -20,11 +20,9 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com 
 
 RUN	echo "deb [signed-by=/etc/apt/keyrings/grafana.gpg] https://apt.grafana.com beta main" | tee -a /etc/apt/sources.list.d/grafana.list
 
-
 RUN apt-get -y update
-
 
 RUN apt-get install grafana-enterprise
 
-EXPOSE 3306
+EXPOSE 3308
 
