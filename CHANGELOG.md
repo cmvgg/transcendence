@@ -1,3 +1,4 @@
+0eb1d57 - Cesar Manuel Varela Garcia, 57 seconds ago : Actualización de: monitoring/prometheus/dockerfile server /dock  [19/03/2025 11:34]
 bfe73e0 - xbasabe, 2 days ago : Update documentacion_bootstrap.txt
 e7ad551 - Cesar Manuel Varela Garcia, 10 weeks ago : change grafana expose and clen dockerfile 10/01/2025--12:41
 81715d6 - Cesar Manuel Varela Garcia, 10 weeks ago : Correcciones de linting 10/01/2025--12:35
