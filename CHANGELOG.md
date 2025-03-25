@@ -1,8 +1,9 @@
-8b015e0 - Cesar Manuel Varela Garcia, 5 hours ago : Pequeñas actualizaciones [19/03/2025 11:35]
-0eb1d57 - Cesar Manuel Varela Garcia, 5 hours ago : Actualización de: monitoring/prometheus/dockerfile server /dock  [19/03/2025 11:34]
-bfe73e0 - xbasabe, 2 days ago : Update documentacion_bootstrap.txt
-e7ad551 - Cesar Manuel Varela Garcia, 10 weeks ago : change grafana expose and clen dockerfile 10/01/2025--12:41
-81715d6 - Cesar Manuel Varela Garcia, 10 weeks ago : Correcciones de linting 10/01/2025--12:35
-7324d62 - Cesar Manuel Varela Garcia, 10 weeks ago : Correcciones de linting 10/01/2025--09:39
+49ab7ec - Cesar Manuel Varela Garcia, 6 days ago : Actualización de: server /dock server /dockk/.env server /dockk/Dockerfile server /dockk/README.md server /dockk/docker-compose.yml server /dockk/sample/demo_app/__init__.py server /dockk/sample/demo_app/admin.py server /dockk/sample/demo_app/apps.py server /dockk/sample/demo_app/forms.py server /dockk/sample/demo_app/migrations/__init__.py server /dockk/sample/demo_app/models.py server /dockk/sample/demo_app/tasks.py server /dockk/sample/demo_app/templates/demo_app/home.html server /dockk/sample/demo_app/tests.py server /dockk/sample/demo_app/urls.py server /dockk/sample/demo_app/views.py server /dockk/sample/dev_requirements.txt server /dockk/sample/manage.py server /dockk/sample/requirements.txt server /dockk/sample/sample/__init__.py server /dockk/sample/sample/celery.py server /dockk/sample/sample/settings.py server /dockk/sample/sample/urls.py server /dockk/sample/sample/wsgi.py server /dockk/sample/wait-for-it.sh  [19/03/2025 17:01]
+8b015e0 - Cesar Manuel Varela Garcia, 6 days ago : Pequeñas actualizaciones [19/03/2025 11:35]
+0eb1d57 - Cesar Manuel Varela Garcia, 6 days ago : Actualización de: monitoring/prometheus/dockerfile server /dock  [19/03/2025 11:34]
+bfe73e0 - xbasabe, 8 days ago : Update documentacion_bootstrap.txt
+e7ad551 - Cesar Manuel Varela Garcia, 2 months ago : change grafana expose and clen dockerfile 10/01/2025--12:41
+81715d6 - Cesar Manuel Varela Garcia, 2 months ago : Correcciones de linting 10/01/2025--12:35
+7324d62 - Cesar Manuel Varela Garcia, 2 months ago : Correcciones de linting 10/01/2025--09:39
 cdcb8aa - Cesar Manuel Varela Garcia, 3 months ago : Correcciones de linting 17/12/2024--21:19
 cd3d94d - Cesar Manuel Varela Garcia, 3 months ago : Correcciones de linting 17/12/2024--21:18
