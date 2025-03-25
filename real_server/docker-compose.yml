@@ -11,6 +11,8 @@ services:
       POSTGRES_PASSWORD: mypassword
     ports:
       - "5432:5432"
+    networks:
+      - app-network 
 
   backend:
     build: .
@@ -23,7 +25,9 @@ services:
        DJANGO_SETTINGS_MODULE: ft_transcendence_backend.settings
     depends_on:
       - db
-  
+    networks:
+      - app-network 
+
   grafana:
     build: ../monitoring/graphana/
     ports:
@@ -32,7 +36,20 @@ services:
       - grafana_data:/var/lib/grafana
     environment:
       - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=your_grafana_admin_password
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - backend
+      - db
+    networks:
+      - app-network 
+
+  prometheus:
+    build: ../monitoring/prometheus/
+    ports:
+      - "3300:3300"
+    volumes:
+      - ../monitoring/prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
     depends_on:
       - backend
       - db
@@ -42,7 +59,8 @@ services:
 volumes:
   grafana_data:
   postgres_data:
+  prometheus_data: 
 
 networks:
-  app-network:
-    driver: bridge
+  app-network: 
+    driver: bridge 

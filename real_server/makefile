@@ -5,6 +5,9 @@ down:
 	@docker-compose down
 
 re:
+	@docker-compose down && docker-compose up --build -d
+
+run:
 	@docker-compose down && docker-compose up --build -d && docker exec -it real_server-backend-1 bash
 
 clean:
