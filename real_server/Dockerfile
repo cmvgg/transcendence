@@ -18,4 +18,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY . .
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN python manage.py collectstatic --noinput
+
+CMD ["python manage.py runserver 0.0.0.0:8000"]
