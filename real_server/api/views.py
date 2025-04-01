@@ -3,6 +3,10 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
+from django.shortcuts import render
+
+def index(request):
+    return render(request, 'index.html')
 
 from .models import UserProfile
 from .serializers import UserProfileSerializer
@@ -29,10 +33,3 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     """
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
-#
-from rest_framework.views import APIView
-from rest_framework.response import Response
-
-class TestView(APIView):
-    def get(self, request):
-        return Response({"message": "¡Funciona!"})
