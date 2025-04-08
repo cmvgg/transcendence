@@ -1,6 +1,6 @@
 FROM python:3.11-slim-buster
 
-WORKDIR /app
+WORKDIR /appfront
 
 COPY requirements.txt .
 
@@ -8,8 +8,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 RUN pip install djangorestframework
 
-RUN pip install django-crispy-forms
+RUN python -m pip install Django
 
+RUN mkdir /ft_transcendence_fronten/vol
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
@@ -21,6 +22,4 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY . .
 
-RUN python manage.py collectstatic --noinput
-
-CMD ["python manage.py runserver 0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
