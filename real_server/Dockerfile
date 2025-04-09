@@ -8,6 +8,9 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 RUN pip install djangorestframework
 
+RUN pip install django-crispy-forms
+
+
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     gcc \
@@ -18,4 +21,6 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 COPY . .
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+RUN python manage.py collectstatic --noinput
+
+CMD ["python manage.py runserver 0.0.0.0:8000"]
