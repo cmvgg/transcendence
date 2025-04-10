@@ -14,9 +14,27 @@ services:
     networks:
       - app-network 
 
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter
+    environment:
+      - DATA_SOURCE_NAME=postgresql://myuser:mypassword@db:5432/mydatabase?sslmode=disable
+    ports:
+      - "9187:9187"
+    depends_on:
+      - db
+    networks:
+      - app-network
+
   backend:
     build: .
-    command: tail -f /dev/null
+    command: >
+      sh -c "
+        until pg_isready -h db -p 5432; do
+          echo 'Esperando a que la base de datos esté lista...';
+          sleep 1;
+        done &&
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -28,45 +46,27 @@ services:
     networks:
       - app-network
 
-  frontend:
-    build: .
-    command: tail -f /dev/null
-    volumes:
-      - frontend_data:/var/lib/frontend/data
-    ports:
-      - "8080:8080"
-    environment:
-       DJANGO_SETTINGS_MODULE: ft_transcendence_frontend.settings
-    depends_on:
-      - backend
-    networks:
-      - app-network  
 
   grafana:
-    build: ../monitoring/graphana/
+    build: ../monitoring/grafana/
     ports:
       - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+      - ../monitoring/grafana/provisioning:/etc/grafana/provisioning
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
-    depends_on:
-      - backend
-      - db
     networks:
       - app-network 
 
   prometheus:
     build: ../monitoring/prometheus/
     ports:
-      - "3300:3300"
+      - "9090:9090"
     volumes:
-      - ../monitoring/prometheus:/etc/prometheus
+      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
-    depends_on:
-      - backend
-      - db
     networks:
       - app-network
 
@@ -78,4 +78,4 @@ volumes:
 
 networks:
   app-network: 
-    driver: bridge 
+    driver: bridge

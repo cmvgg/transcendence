@@ -14,6 +14,7 @@ RUN pip install django-crispy-forms
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
     gcc \
+	postgresql-client \
     python3-dev \
     nano \
 	curl \
