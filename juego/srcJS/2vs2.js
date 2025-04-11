@@ -6,7 +6,17 @@ const paddleHeight = 100;
 const borderHeight = 10;
 const maxSpeed = 8;
 
-let ball = {x: canvas.width / 2, y: canvas.height / 2, dx: 4, dy: 4, radius: 7, speed: 4};
+let angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+let directionX = Math.random() < 0.5 ? 1 : -1;
+let directionY = Math.random() < 0.5 ? 1 : -1;
+let ball = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    dx: directionX * 4 * Math.cos(angle),
+    dy: directionY * 4 * Math.sin(angle),
+    radius: 7,
+    speed: 6
+};
 let leftPaddle = { y: (canvas.height - paddleHeight) / 4, dy: 0, color: "blue" };
 let leftPaddle2 = { y: (canvas.height - paddleHeight) / 1.5, dy: 0, color: "green" };
 let rightPaddle = { y: (canvas.height - paddleHeight) / 4, dy: 0, color: "red" };

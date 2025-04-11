@@ -16,7 +16,17 @@ const AI_CONFIG = {
         hard: {speedMultiplier: 1.3, reactionThreshold: 5}
     }
 };
-let ball = {x: canvas.width / 2, y: canvas.height / 2, dx: 4, dy: 4, radius: 7, speed: 4, color: "blue"};
+let angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+let directionX = Math.random() < 0.5 ? 1 : -1;
+let directionY = Math.random() < 0.5 ? 1 : -1;
+let ball = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    dx: directionX * 4 * Math.cos(angle),
+    dy: directionY * 4 * Math.sin(angle),
+    radius: 7,
+    speed: 6
+};
 let leftPaddle = {y: (canvas.height - paddleHeight) / 2, dy: 0, color: "red", speed: paddleSpeed};
 let rightPaddle = {y: (canvas.height - paddleHeight) / 2, speed: AI_CONFIG.speed, color: "blue"};
 let leftScore = 0;
