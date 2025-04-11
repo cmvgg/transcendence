@@ -29,19 +29,21 @@ services:
     build: .
     command: >
       sh -c "
-        until pg_isready -h db -p 5432; do
-          echo 'Esperando a que la base de datos esté lista...';
-          sleep 1;
-        done &&
-        python manage.py migrate &&
-        python manage.py runserver 0.0.0.0:8000"
+      until pg_isready -h db -p 5432; do
+      echo 'Esperando a que la base de datos esté lista...';
+      sleep 1;
+      done &&
+      python manage.py collectstatic --noinput &&
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
       - "8000:8000"
     environment:
       - DJANGO_SETTINGS_MODULE=ft_transcendence_backend.settings
-      - DATABASE_URL=postgres://user:password@db:5432/dbname
+      - DJANGO_DEBUG=True
+      - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase
     depends_on:
       - db
     networks:

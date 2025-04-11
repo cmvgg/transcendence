@@ -1,7 +1,8 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import UserProfileViewSet  # Cambia la importación
-from . import views # Puedes dejar esta línea también, no causará problemas
+from .views import UserProfileViewSet 
+from . import views
+from django.urls import path, include
 
 router = DefaultRouter()
 router.register(r'users', views.UserProfileViewSet)
@@ -10,4 +11,5 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('user-profiles/', views.UserProfileList.as_view()),
     path('', include(router.urls)),
+	path('', include('django_prometheus.urls')),
 ]
