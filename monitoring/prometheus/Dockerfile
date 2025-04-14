@@ -16,6 +16,6 @@ RUN cd prometheus-3.1.0.linux-amd64
 
 RUN apt-get -y update
 
-EXPOSE 3300
+EXPOSE 9090
 
-CMD ["/prometheus-3.1.0.linux-amd64/prometheus", "--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--web.listen-address=:3300"]
+CMD ["/prometheus-3.1.0.linux-amd64/prometheus", "--config.file=/etc/prometheus/prometheus.yml", "--storage.tsdb.path=/prometheus", "--web.listen-address=:9090"]

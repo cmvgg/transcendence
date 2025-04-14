@@ -16,6 +16,8 @@ clean:
 	docker rmi -f $$(docker images -qa) || true;\
 	docker volume rm $$(docker volume ls -q) || true;\
 	docker network rm $$(docker network ls -q) || true;\
-	docker system prune -f --volumes
+	docker system prune -f --volumes || true;\
+	find . -name "__pycache__" -type d -exec rm -r {} +	;\
+	find . -name "*.pyc" -delete 
 
 .PHONY: all re down clean
