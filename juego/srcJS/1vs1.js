@@ -8,20 +8,18 @@ const maxSpeed = 8;
 
 let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0, color: "black" };
 let rightPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0, color: "black" };
-
-
-let angle = (/* Math.random() */1 * Math.PI / 2) - Math.PI / 4;
-let directionX = 1/* Math.random() < 0.5 ? 1 : -1 */;
-let directionY = 1/* Math.random() < 0.5 ? 1 : -1 */;
-
-
+let angle;
+do {
+    angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+} while (Math.abs(Math.cos(angle)) > 0.99);
+let directionX = Math.random() < 0.5 ? 1 : -1;
+let directionY = Math.random() < 0.5 ? 1 : -1;
 let ball = {
     x: canvas.width / 2,
     y: canvas.height / 2,
     dx: directionX * 4 * Math.cos(angle),
     dy: directionY * 4 * Math.sin(angle),
-    radius: 7,
-    speed: 6
+    radius: 7, speed: 6
 };
 let leftScore = 0;
 let rightScore = 0;
@@ -75,6 +73,10 @@ function update() {
     if (gameOver || isPaused)
         return ;
 
+    let extraSpeed = Math.sqrt(ball.dx ** 2 + ball.dy ** 2);
+    ball.dx *= (extraSpeed + 0.01) / extraSpeed;
+    ball.dy *= (extraSpeed + 0.01) / extraSpeed;
+
     //Mover paletas
     leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y + leftPaddle.dy));
     rightPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, rightPaddle.y + rightPaddle.dy));
@@ -87,15 +89,11 @@ function update() {
         ball.dy *= -1; 
 
     //Rebote en las paletas con efecto spin
-    // TODO: Mirar efecto spin dependiendo de la direccion de la bola y la paleta
     if(ball.dx < 0) {
         if (prevBallX + ball.radius > paddleWidth && ball.x - ball.radius <= paddleWidth && ball.y + ball.radius > leftPaddle.y
             && ball.y - ball.radius < leftPaddle.y + paddleHeight) {   
             ball.dx *= -1;
-            ball.dx += leftPaddle.dy / 4;
-            //ball.dx = ball.dx + (1 - (50 - ball.y) / 100);
-            //ball.dx *= (ball.dx < 0 ? -1 : 1) * 0.5; 
-            ball.dx = Math.max(-maxSpeed, Math.min(maxSpeed, ball.dx));
+            ball.dy += (1 - (50 - (leftPaddle.y - ball.y)) / 100);
             ball.x = paddleWidth + ball.radius + 0.1;
         }
     }
@@ -103,10 +101,7 @@ function update() {
         if (prevBallX - ball.radius < canvas.width - paddleWidth && ball.x + ball.radius >= canvas.width - paddleWidth
             && ball.y + ball.radius > rightPaddle.y && ball.y - ball.radius < rightPaddle.y + paddleHeight) {
             ball.dx *= -1;
-            ball.dx += rightPaddle.dy / 4;
-            //ball.dx = ball.dx + -(1 - (50 - ball.y) / 100);
-            //ball.dx *= (ball.dx < 0 ? 1 : -1) * 0.5; 
-            ball.dx = Math.max(-maxSpeed, Math.min(maxSpeed, ball.dx));
+            ball.dy += (1 - (50 - (rightPaddle.y - ball.y)) / 100);
             ball.x = canvas.width - paddleWidth - ball.radius - 0.1;
         }
     }
@@ -119,7 +114,7 @@ function update() {
         checkGameOver();
     }
 }
-
+ 
 function checkGameOver() {
     if (leftScore >= maxScore) {
         gameOver = true;
@@ -153,10 +148,11 @@ function resetBall() {
     ball.speed = 4;
     ball.radius = 7;
 
-    //TODO: Evitar angulos exactos (20º / 30º de clear)
-    
-    //let angle = Math.random() * Math.PI * 2;  //Cirulo completo de 0 a 2pi
-    let angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+    let angle;
+    do {
+        angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+    } while (Math.abs(Math.cos(angle)) > 0.99);
+
     let directionX = Math.random() < 0.5 ? 1 : -1;
     let directionY = Math.random() < 0.5 ? 1 : -1;
 
