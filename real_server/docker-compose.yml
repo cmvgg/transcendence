@@ -12,6 +12,10 @@ services:
     networks:
       - app-network 
 
+<<<<<<< HEAD
+  postgres_exporter:
+    image: prometheuscommunity/postgres-exporter
+=======
   backend:
     build: .
     command: >
@@ -26,52 +30,61 @@ services:
       - .:/app
     ports:
       - "8000:8000"
+>>>>>>> main
     environment:
-       DJANGO_SETTINGS_MODULE: ft_transcendence_backend.settings
+      - DATA_SOURCE_NAME=postgresql://myuser:mypassword@db:5432/mydatabase?sslmode=disable
+    ports:
+      - "9187:9187"
     depends_on:
       - db
     networks:
       - app-network
 
-  frontend:
+  backend:
     build: .
-    command: tail -f /dev/null
+    command: >
+      sh -c "
+      until pg_isready -h db -p 5432; do
+      echo 'Esperando a que la base de datos esté lista...';
+      sleep 1;
+      done &&
+      python manage.py collectstatic --noinput &&
+      python manage.py migrate &&
+      python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - frontend_data:/var/lib/frontend/data
+      - .:/app
     ports:
-      - "8080:8080"
+      - "8000:8000"
     environment:
-       DJANGO_SETTINGS_MODULE: ft_transcendence_frontend.settings
+      - DJANGO_SETTINGS_MODULE=ft_transcendence_backend.settings
+      - DJANGO_DEBUG=True
+      - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase
     depends_on:
-      - backend
+      - db
     networks:
-      - app-network  
+      - app-network
+
 
   grafana:
-    build: ../monitoring/graphana/
+    build: ../monitoring/grafana/
     ports:
       - "3000:3000"
     volumes:
       - grafana_data:/var/lib/grafana
+      - ../monitoring/grafana/provisioning:/etc/grafana/provisioning
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
-    depends_on:
-      - backend
-      - db
     networks:
       - app-network 
 
   prometheus:
     build: ../monitoring/prometheus/
     ports:
-      - "3300:3300"
+      - "9090:9090"
     volumes:
-      - ../monitoring/prometheus:/etc/prometheus
+      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
-    depends_on:
-      - backend
-      - db
     networks:
       - app-network
 
@@ -83,4 +96,4 @@ volumes:
 
 networks:
   app-network: 
-    driver: bridge 
+    driver: bridge
