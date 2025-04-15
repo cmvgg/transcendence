@@ -1,15 +1,14 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from .views import UserProfileViewSet 
 from . import views
-from django.urls import path, include
 
 router = DefaultRouter()
 router.register(r'users', views.UserProfileViewSet)
+router.register(r'tournaments', views.TournamentViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
     path('user-profiles/', views.UserProfileList.as_view()),
+    path('tournament-results/', views.tournament_results, name='tournament_results'),
     path('', include(router.urls)),
-	path('', include('django_prometheus.urls')),
 ]
