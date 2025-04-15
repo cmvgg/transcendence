@@ -8,6 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 RUN pip install djangorestframework django-crispy-forms django-prometheus
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
+	postgresql-client \
     libpq-dev \
     gcc \
     postgresql-client \

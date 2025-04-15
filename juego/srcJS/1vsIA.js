@@ -31,6 +31,7 @@ let leftPaddle = {y: (canvas.height - paddleHeight) / 2, dy: 0, color: "red", sp
 let rightPaddle = {y: (canvas.height - paddleHeight) / 2, speed: AI_CONFIG.speed, color: "blue"};
 let leftScore = 0;
 let rightScore = 0;
+let colorEffect = false;
 let gameOver = false;
 let isPaused = false;
 let winner = "";
@@ -123,6 +124,10 @@ function update() {
     if (gameOver || isPaused)
         return;
 
+    let extraSpeed = Math.sqrt(ball.dx ** 2 + ball.dy ** 2);
+    ball.dx *= (extraSpeed + 0.01) / extraSpeed;
+    ball.dy *= (extraSpeed + 0.01) / extraSpeed;
+
     //Mover paletas
     leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y + leftPaddle.dy));
     moveAI();
@@ -139,18 +144,19 @@ function update() {
 
     //Rebote en las paletas
     if(ball.dx < 0) {
-        if (prevBallX + ball.radius > paddleWidth && ball.x - ball.radius <= paddleWidth && ball.y + ball.radius > leftPaddle.y && ball.y - ball.radius < leftPaddle.y + paddleHeight) {    
+        if (prevBallX + ball.radius > paddleWidth && ball.x - ball.radius <= paddleWidth && ball.y + ball.radius > leftPaddle.y
+            && ball.y - ball.radius < leftPaddle.y + paddleHeight) {    
             ball.dx *= -1;
-            ball.dx = ball.dx + (1 - (50 - ball.y) / 100);
-            ball.dx *= (ball.dx < 0 ? -0.8 : 0.8); 
+            ball.dy += (1 - (50 - (leftPaddle.y - ball.y)) / 100);
+            ball.x = paddleWidth + ball.radius + 0.1; 
         }
     }
     if (ball.dx > 0) { 
-        if (prevBallX - ball.radius < canvas.width - paddleWidth && ball.x + ball.radius >= canvas.width - paddleWidth &&
-            ball.y + ball.radius > rightPaddle.y && ball.y - ball.radius < rightPaddle.y + paddleHeight) {
+        if (prevBallX - ball.radius < canvas.width - paddleWidth && ball.x + ball.radius >= canvas.width - paddleWidth
+            && ball.y + ball.radius > rightPaddle.y && ball.y - ball.radius < rightPaddle.y + paddleHeight) {
             ball.dx *= -1;
-            ball.dx = ball.dx + -(1 - (50 - ball.y) / 100);
-            ball.dx *= (ball.dx < 0 ? 0.8 : -0.8); 
+            ball.dy += (1 - (50 - (rightPaddle.y - ball.y)) / 100);
+            ball.x = canvas.width - paddleWidth - ball.radius - 0.1;
         }
     }
 
@@ -210,33 +216,39 @@ function resetGame() {
 //Dibujar juego
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "white";
     let min = 0;
     let max = 600;
     let random = Math.floor(Math.random() * (max - min + 3)) + min;
+    const currentSpeed = ball.dx; //
+    const minSpeed = 4; 
+    const maxBallSpeedForColor = 18; 
+    const normalizedSpeed = Math.min(1, Math.max(0, (currentSpeed - minSpeed) / (maxBallSpeedForColor - minSpeed)));
+    
     
     if (!gameOver) {
         ctx.fillRect(0, leftPaddle.y, paddleWidth, paddleHeight);
         ctx.fillRect(canvas.width - paddleWidth, rightPaddle.y, paddleWidth, paddleHeight);
-        const currentSpeed = ball.dx;
-        const minSpeed = 4; 
-        const maxBallSpeedForColor = 18; 
-        const normalizedSpeed = Math.min(1, Math.max(0, (currentSpeed - minSpeed) / (maxBallSpeedForColor - minSpeed)));
-        const hue = random - (normalizedSpeed);
-        const ballColor = `hsl(${hue}, 100%, 50%)`;
-        ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
-        ctx.fillStyle = ballColor
-        ctx.fill();
-
+        
+        ctx.fillStyle = "white";
         ctx.font = "60px Courier New";
         ctx.fillText(leftScore, canvas.width / 3, 60);
         ctx.fillText(rightScore, (canvas.width / 4) * 2.5, 60);
-
+        
         if (isPaused) {
             ctx.font = "30px Courier New";
             ctx.fillText("PAUSED", canvas.width / 2 - 60, canvas.height / 2);
         }
+
+        let ballColor;
+        if (colorEffect) {
+            const hue = random - (normalizedSpeed);
+            ballColor = `hsl(${hue}, 100%, 50%)`;
+        }
+
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+        ctx.fillStyle = ballColor
+        ctx.fill();
     }
 }
 

@@ -1,6 +1,14 @@
 /**********************
  * 1. Lógica del Torneo
  **********************/
+/* const modelName = document.getElementById('django.contrib.auth.models.User').dataset.modelName;
+const form = document.getElementById(modelName + '_tournament'); */
+
+const modelStart = document.getElementById('django.contrib.auth.models.Tournament' + '_start');
+const modelEnd = document.getElementById('django.contrib.auth.models' + '_end');
+
+console.log(modelStart);
+
 class Tournament {
 	constructor(players) {
 	  this.players = players.slice();
