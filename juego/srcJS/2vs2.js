@@ -6,7 +6,10 @@ const paddleHeight = 100;
 const borderHeight = 10;
 const maxSpeed = 8;
 
-let angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+let angle;
+do {
+    angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+} while (Math.abs(Math.cos(angle)) > 0.99);
 let directionX = Math.random() < 0.5 ? 1 : -1;
 let directionY = Math.random() < 0.5 ? 1 : -1;
 let ball = {
@@ -14,8 +17,7 @@ let ball = {
     y: canvas.height / 2,
     dx: directionX * 4 * Math.cos(angle),
     dy: directionY * 4 * Math.sin(angle),
-    radius: 7,
-    speed: 6
+    radius: 7, speed: 6
 };
 let leftPaddle = { y: (canvas.height - paddleHeight) / 4, dy: 0, color: "blue" };
 let leftPaddle2 = { y: (canvas.height - paddleHeight) / 1.5, dy: 0, color: "green" };
@@ -83,6 +85,10 @@ function update() {
     if (gameOver || isPaused)
         return;
 
+    let extraSpeed = Math.sqrt(ball.dx ** 2 + ball.dy ** 2);
+    ball.dx *= (extraSpeed + 0.01) / extraSpeed;
+    ball.dy *= (extraSpeed + 0.01) / extraSpeed;
+
     //Mover paletas más rápido
     leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y + leftPaddle.dy * 1.5));
     rightPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, rightPaddle.y + rightPaddle.dy * 1.5));
@@ -95,17 +101,34 @@ function update() {
 
     //Rebote en las paletas
     if (ball.y + ball.radius >= canvas.height || ball.y - ball.radius <= 0)
-        ball.dy = -ball.dy;
+        ball.dy *= -1;
 
     //Rebote en las paletas
-    if (ball.x - ball.radius < paddleWidth && ball.y > leftPaddle.y && ball.y < leftPaddle.y + paddleHeight)
-        ball.dx *= -1;
-    if (ball.x + ball.radius > canvas.width - paddleWidth && ball.y > rightPaddle.y && ball.y < rightPaddle.y + paddleHeight)
-        ball.dx *= -1;
-    if (ball.x - ball.radius < paddleWidth && ball.y > leftPaddle2.y && ball.y < leftPaddle2.y + paddleHeight)
-        ball.dx *= -1;
-    if (ball.x + ball.radius > canvas.width - paddleWidth && ball.y > rightPaddle2.y && ball.y < rightPaddle2.y + paddleHeight)
-        ball.dx *= -1;
+    if (ball.dx < 0) {
+        if (ball.x - ball.radius < paddleWidth && ball.y > leftPaddle.y && ball.y < leftPaddle.y + paddleHeight) {
+            ball.dx *= -1;
+            ball.dy += (1 - (50 - (leftPaddle.y - ball.y)) / 100);
+            ball.x = paddleWidth + ball.radius + 0.1;
+        }
+        if (ball.x - ball.radius < paddleWidth && ball.y > leftPaddle2.y && ball.y < leftPaddle2.y + paddleHeight) {
+            ball.dx *= -1;
+            ball.dy += (1 - (50 - (leftPaddle2.y - ball.y)) / 100);
+            ball.x = paddleWidth + ball.radius + 0.1;
+        }
+    }
+      
+    if (ball.dx > 0) {
+        if (ball.x + ball.radius > canvas.width - paddleWidth && ball.y > rightPaddle.y && ball.y < rightPaddle.y + paddleHeight) {
+            ball.dx *= -1;
+            ball.dy += (1 - (50 - (rightPaddle.y - ball.y)) / 100);
+            ball.x = canvas.width - paddleWidth - ball.radius - 0.1;
+        }
+        if (ball.x + ball.radius > canvas.width - paddleWidth && ball.y > rightPaddle2.y && ball.y < rightPaddle2.y + paddleHeight) {
+            ball.dx *= -1;
+            ball.dy += (1 - (50 - (rightPaddle2.y - ball.y)) / 100);
+            ball.x = canvas.width - paddleWidth - ball.radius - 0.1;
+        }
+    }
 
     //Checkeo de puntuacion
     if (ball.x - ball.radius < 0) {
@@ -138,10 +161,14 @@ function resetBall() {
     ball.speed = 4;
     ball.radius = 7;
 
-    let angle = Math.random() * Math.PI / 2 - Math.PI / 4;
+    let angle;
+    do {
+        angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+    } while (Math.abs(Math.cos(angle)) > 0.99);
+
     let directionX = Math.random() < 0.5 ? 1 : -1;
     let directionY = Math.random() < 0.5 ? 1 : -1;
-    
+
     ball.dx = directionX * ball.speed * Math.cos(angle);
     ball.dy = directionY * ball.speed * Math.sin(angle);
 }
@@ -152,7 +179,6 @@ function resetGame() {
     gameOver = false;
     winner = "";
     isPaused = false;
-    //Resetear paletas
     leftPaddle.y = (canvas.height - paddleHeight) / 4;
     leftPaddle2.y = (canvas.height - paddleHeight) / 1.5;
     rightPaddle.y = (canvas.height - paddleHeight) / 4;
@@ -165,7 +191,6 @@ function draw() {
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	if (!gameOver) {
-		//Dibujar paletas
 		ctx.fillStyle = leftPaddle.color;
 		ctx.fillRect(0, leftPaddle.y, paddleWidth, paddleHeight);
 		ctx.fillStyle = leftPaddle2.color;
@@ -175,14 +200,12 @@ function draw() {
 		ctx.fillStyle = rightPaddle2.color;
 		ctx.fillRect(canvas.width - paddleWidth, rightPaddle2.y, paddleWidth, paddleHeight);
         
-		//Dibujar pelota
         ctx.fillStyle = "white";
 		ctx.beginPath();
 		ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
 		ctx.fill();
 		ctx.closePath();
         
-		//Dibujar marcador
 		ctx.font = "30px Arial";
 		ctx.fillText(leftScore, canvas.width * 0.25, 50);
 		ctx.fillText(rightScore, canvas.width * 0.75, 50);

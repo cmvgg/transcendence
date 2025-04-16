@@ -215,9 +215,9 @@ function draw() {
 function gameLoop() {
     update();
     draw();
-    if (!gameOver) {
+    if (!gameOver)
         requestAnimationFrame(gameLoop);
-    }
 }
 
 gameLoop();
+

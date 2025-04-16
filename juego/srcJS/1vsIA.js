@@ -4,9 +4,7 @@ const ctx = canvas.getContext("2d");
 const paddleWidth = 10;
 const paddleHeight = 100;
 const borderHeight = 10;
-const paddleSpeed = 5;
 const maxBallSpeed = 8;
-const maxScore = 5;
 //Configuracion para la IA
 const AI_CONFIG = {
     speed: 3, reactionThreshold: 10, difficultyLevel: 'medium',
@@ -16,7 +14,12 @@ const AI_CONFIG = {
         hard: {speedMultiplier: 1.3, reactionThreshold: 5}
     }
 };
-let angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+let leftPaddle = {y: (canvas.height - paddleHeight) / 2, dy: 0, color: "red", speed: 5};
+let rightPaddle = {y: (canvas.height - paddleHeight) / 2, speed: AI_CONFIG.speed, color: "blue"};
+let angle;
+do {
+    angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+} while (Math.abs(Math.cos(angle)) > 0.99);
 let directionX = Math.random() < 0.5 ? 1 : -1;
 let directionY = Math.random() < 0.5 ? 1 : -1;
 let ball = {
@@ -24,13 +27,11 @@ let ball = {
     y: canvas.height / 2,
     dx: directionX * 4 * Math.cos(angle),
     dy: directionY * 4 * Math.sin(angle),
-    radius: 7,
-    speed: 6
+    radius: 7, speed: 6
 };
-let leftPaddle = {y: (canvas.height - paddleHeight) / 2, dy: 0, color: "red", speed: paddleSpeed};
-let rightPaddle = {y: (canvas.height - paddleHeight) / 2, speed: AI_CONFIG.speed, color: "blue"};
 let leftScore = 0;
 let rightScore = 0;
+let maxScore = 5;
 let colorEffect = false;
 let gameOver = false;
 let isPaused = false;
@@ -188,16 +189,19 @@ function checkGameOver() {
 function resetBall() {
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
-    if (Math.random() > 0.5) {
-        ball.dx = ball.speed * 1;
-    } else {
-        ball.dx = ball.speed * -1;
-    }
-    if (Math.random() > 0.5) {
-        ball.dy = 4 * ball.speed * 1;
-    } else {
-        ball.dy = 4 * ball.speed * -1;
-    }
+    ball.speed = 4;
+    ball.radius = 7;
+
+    let angle;
+    do {
+        angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+    } while (Math.abs(Math.cos(angle)) > 0.99);
+
+    let directionX = Math.random() < 0.5 ? 1 : -1;
+    let directionY = Math.random() < 0.5 ? 1 : -1;
+
+    ball.dx = directionX * ball.speed * Math.cos(angle);
+    ball.dy = directionY * ball.speed * Math.sin(angle);
 }
 
 function resetGame() {
@@ -207,7 +211,7 @@ function resetGame() {
     winner = "";
     isPaused = false;
     updateAIDifficulty();
-    leftPaddle = {y: (canvas.height - paddleHeight) / 2, dy: 0, speed: paddleSpeed};
+    leftPaddle = {y: (canvas.height - paddleHeight) / 2, dy: 0, speed: 5};
     rightPaddle = {y: (canvas.height - paddleHeight) / 2, speed: AI_CONFIG.speed};
     resetBall();
     gameLoop();
@@ -226,10 +230,11 @@ function draw() {
     
     
     if (!gameOver) {
+        ctx.fillStyle = leftPaddle.color;
         ctx.fillRect(0, leftPaddle.y, paddleWidth, paddleHeight);
+        ctx.fillStyle = "white";
         ctx.fillRect(canvas.width - paddleWidth, rightPaddle.y, paddleWidth, paddleHeight);
         
-        ctx.fillStyle = "white";
         ctx.font = "60px Courier New";
         ctx.fillText(leftScore, canvas.width / 3, 60);
         ctx.fillText(rightScore, (canvas.width / 4) * 2.5, 60);
@@ -239,7 +244,7 @@ function draw() {
             ctx.fillText("PAUSED", canvas.width / 2 - 60, canvas.height / 2);
         }
 
-        let ballColor;
+        let ballColor/*  = "white" */;
         if (colorEffect) {
             const hue = random - (normalizedSpeed);
             ballColor = `hsl(${hue}, 100%, 50%)`;
