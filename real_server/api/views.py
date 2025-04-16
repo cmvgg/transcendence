@@ -4,12 +4,14 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework import viewsets
 from django.shortcuts import render
+from rest_framework.decorators import api_view
+from django.utils import timezone
 
 def index(request):
     return render(request, 'index.html')
 
-from .models import UserProfile
-from .serializers import UserProfileSerializer
+from .models import UserProfile, Tournament
+from .serializers import UserProfileSerializer, TournamentSerializer, TournamentResultSerializer
 
 class UserProfileList(APIView):
     """
@@ -34,15 +36,58 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
+class TournamentViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint que permite ver y editar torneos.
+    """
+    queryset = Tournament.objects.all()
+    serializer_class = TournamentSerializer
 
-""" para crear un formulario de crispy forms
-    https://www.makeuseof.com/django-crispy-forms-style/
-"""
+@api_view(['POST'])
+def tournament_results(request):
+    """
+    Endpoint para recibir resultados de un torneo desde el frontend
+    """
+    serializer = TournamentResultSerializer(data=request.data)
+    if serializer.is_valid():
+        # Crear un nuevo torneo
+        tournament_name = serializer.validated_data['name']
+        tournament = Tournament.objects.create(
+            name=tournament_name,
+            start_date=timezone.now()
+        )
+        
+        # Procesar los resultados
+        results = serializer.validated_data['results']
+        for result in results:
+            winner_alias = result.get('winner')
+            loser_alias = result.get('loser')
+            
+            if winner_alias and loser_alias and winner_alias != "BYE" and loser_alias != "BYE":
+                # Actualizar o crear perfiles de usuario
+                winner, _ = UserProfile.objects.get_or_create(alias=winner_alias)
+                loser, _ = UserProfile.objects.get_or_create(alias=loser_alias)
+                
+                winner.wins += 1
+                loser.losses += 1
+                
+                winner.save()
+                loser.save()
+        
+        return Response({
+            'status': 'success', 
+            'tournament_id': tournament.id,
+            'message': f'Torneo "{tournament_name}" guardado correctamente'
+        })
+    
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+# Los formularios existentes permanecerían debajo de este código
+# No los he eliminado para mantener todo tu código actual
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
-from django.forms import ModelForm, TextInput, EmailInput,ImageField, Textarea
+from django.forms import ModelForm, TextInput, EmailInput, Textarea
 
 class RegisterUserForm(UserCreationForm):
         email = forms.EmailField(max_length=254, help_text='Required. Enter a valid email address.')
@@ -60,6 +105,11 @@ class PersonalDataForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(PersonalDataForm, self).__init__(*args, **kwargs)
+        # Nota: Necesita importar FormHelper, Submit, Layout, Fieldset, Div, InlineRadios, TabHolder, Tab
+        # from crispy_forms.helper import FormHelper
+        # from crispy_forms.layout import Submit, Layout, Fieldset, Div
+        # from crispy_forms.bootstrap import InlineRadios, TabHolder, Tab
+        # from django.urls import reverse
         self.helper = FormHelper()
         self.helper.form_id = 'id-personal-data-form'
         self.helper.form_method = 'post'
