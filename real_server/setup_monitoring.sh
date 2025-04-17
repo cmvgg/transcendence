@@ -1,10 +1,9 @@
 #!/bin/bash
 
-# Crear directorios necesarios
 mkdir -p monitoring/grafana/provisioning/dashboards
 mkdir -p monitoring/grafana/provisioning/datasources
+mkdir -p monitoring/prometheus
 
-# Crear archivo de configuración para datasources
 cat > monitoring/grafana/provisioning/datasources/datasource.yml << EOF
 apiVersion: 1
 
@@ -17,7 +16,6 @@ datasources:
     editable: true
 EOF
 
-# Crear archivo de configuración para dashboards
 cat > monitoring/grafana/provisioning/dashboards/dashboard.yml << EOF
 apiVersion: 1
 
@@ -34,7 +32,6 @@ providers:
       foldersFromFilesStructure: true
 EOF
 
-# Crear un dashboard simple para probar
 cat > monitoring/grafana/provisioning/dashboards/postgres_dashboard.json << EOF
 {
   "annotations": {
@@ -99,6 +96,89 @@ cat > monitoring/grafana/provisioning/dashboards/postgres_dashboard.json << EOF
           "refId": "A"
         }
       ]
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 2,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "pg_stat_database_numbackends",
+          "refId": "A"
+        }
+      ],
+      "title": "Active Connections",
+      "type": "timeseries"
     }
   ],
   "schemaVersion": 36,
@@ -119,8 +199,177 @@ cat > monitoring/grafana/provisioning/dashboards/postgres_dashboard.json << EOF
 }
 EOF
 
-# Crear/actualizar archivo prometheus.yml
-mkdir -p monitoring/prometheus
+cat > monitoring/grafana/provisioning/dashboards/django_dashboard.json << EOF
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "hideControls": false,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 10,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "django_http_requests_total_by_method_total",
+          "refId": "A"
+        }
+      ],
+      "title": "Total HTTP Requests by Method",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 0
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "pluginVersion": "9.3.0",
+      "targets": [
+        {
+          "datasource": "Prometheus",
+          "expr": "up{job=\"django\"}",
+          "refId": "A"
+        }
+      ],
+      "title": "Django Service Status",
+      "type": "stat"
+    }
+  ],
+  "schemaVersion": 36,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Django Monitoring",
+  "uid": "django-monitoring",
+  "version": 1
+}
+EOF
+
 cat > monitoring/prometheus/prometheus.yml << EOF
 global:
   scrape_interval: 15s
@@ -131,29 +380,11 @@ scrape_configs:
     static_configs:
       - targets: ['backend:8000']
     metrics_path: '/metrics'
-
+    scheme: http
+    
   - job_name: 'postgres'
     static_configs:
       - targets: ['postgres_exporter:9187']
-EOF
-
-# Modificar el Dockerfile de Grafana para asegurarnos que los directorios de provisión existen
-cat > monitoring/grafana/Dockerfile << EOF
-FROM debian:bullseye
-RUN apt-get update && \\
-    apt-get install -y wget adduser libfontconfig1 musl && \\
-    wget https://dl.grafana.com/enterprise/release/grafana-enterprise_11.4.0_amd64.deb && \\
-    dpkg -i grafana-enterprise_11.4.0_amd64.deb
-
-# Crear directorios de provisión
-RUN mkdir -p /etc/grafana/provisioning/dashboards /etc/grafana/provisioning/datasources && \\
-    chown -R grafana:grafana /etc/grafana/provisioning
-
-# Establecer permisos
-ENV GF_PATHS_PROVISIONING=/etc/grafana/provisioning
-
-EXPOSE 3000
-CMD ["/usr/sbin/grafana-server", "--homepath=/usr/share/grafana", "--config=/etc/grafana/grafana.ini"]
 EOF
 
 echo "Configuración completada"

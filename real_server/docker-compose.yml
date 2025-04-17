@@ -1,21 +1,19 @@
 services:
   db:
-    image: postgres:15-alpine
+    image: postgres:15
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    environment:
-      POSTGRES_DB: mydatabase
-      POSTGRES_USER: myuser
-      POSTGRES_PASSWORD: mypassword
-    ports:
-      - "5432:5432"
     networks:
-      - app-network 
+      - app-network
 
   postgres_exporter:
     image: prometheuscommunity/postgres-exporter
     environment:
-      - DATA_SOURCE_NAME=postgresql://myuser:mypassword@db:5432/mydatabase?sslmode=disable
+      - DATA_SOURCE_NAME=postgresql://postgres:postgres@db:5432/postgres?sslmode=disable
     ports:
       - "9187:9187"
     depends_on:
@@ -35,21 +33,33 @@ services:
       python manage.py migrate &&
       python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/app
+    - .:/app
     ports:
       - "8000:8000"
     environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
       - DJANGO_SETTINGS_MODULE=ft_transcendence_backend.settings
       - DJANGO_DEBUG=True
-      - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase
+      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
     depends_on:
       - db
     networks:
       - app-network
 
+  prometheus:
+    build: ../monitoring/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - app-network
 
   grafana:
-    build: ../monitoring/grafana/
+    build: ../monitoring/grafana
     ports:
       - "3000:3000"
     volumes:
@@ -58,28 +68,16 @@ services:
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
     depends_on:
-      - backend
-      - db
-    networks:
-      - app-network 
-
-  prometheus:
-    build: ../monitoring/prometheus/
-    ports:
-      - "9090:9090"
-    volumes:
-      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
+      - prometheus
     networks:
       - app-network
 
-volumes:
-  grafana_data:
-  postgres_data:
-  prometheus_data:
-  frontend_data: 
-
 networks:
-  app-network: 
-    driver: bridge
+  app-network:
+
+volumes:
+  prometheus_data:
+  postgres_data:
+  grafana_data:
