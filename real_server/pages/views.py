@@ -44,3 +44,7 @@ def register(request):
     else:
         form = ExampleForm()
     return render(request, 'register.html', {'form': form})
+
+def tournament(request):
+    # Your tournament view logic here
+    return render(request, 'tournament.html')
