@@ -11,10 +11,14 @@ class TournamentSerializer(serializers.ModelSerializer):
         model = Tournament
         fields = ['id', 'name', 'start_date']
 
+class MatchResultSerializer(serializers.Serializer):
+    winner = serializers.CharField()
+    loser = serializers.CharField()
+
 class TournamentResultSerializer(serializers.Serializer):
-    name = serializers.CharField(max_length=100)
+    tournament_id = serializers.IntegerField()
     results = serializers.ListField(
         child=serializers.DictField(
-            child=serializers.CharField(required=False),
+            child=serializers.CharField()
         )
     )

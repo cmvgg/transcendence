@@ -11,6 +11,7 @@ class UserProfile(models.Model):
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
     start_date = models.DateTimeField(auto_now_add=True)
+    participants = models.ManyToManyField('UserProfile', related_name='tournaments')
 
     def __str__(self):
         return self.name
