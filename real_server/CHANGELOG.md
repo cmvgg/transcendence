@@ -1,4 +1,5 @@
-9c95d0a - Cesar Manuel Varela Garcia, 15 seconds ago : Actualización de: real_server/ft_transcendence_backend/urls.py  [17/04/2025 19:52]
+42ae93c - Cesar Manuel Varela Garcia, 4 seconds ago : Pequeñas actualizaciones [17/04/2025 19:52]
+9c95d0a - Cesar Manuel Varela Garcia, 19 seconds ago : Actualización de: real_server/ft_transcendence_backend/urls.py  [17/04/2025 19:52]
 c59c713 - KeyKey03, 2 hours ago : commit
 3d32395 - KeyKey03, 2 hours ago : pusheo a main
 ed3dd13 - Cesar Manuel Varela Garcia, 2 hours ago : Actualización de: real_server/api/models.py real_server/api/serializers.py real_server/api/static/tournament.js real_server/api/templates/register.html real_server/api/views.py real_server/pages/static/images/tournament.js real_server/staticfiles/tournament.js  [17/04/2025 17:40]
