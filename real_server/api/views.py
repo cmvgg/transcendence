@@ -46,44 +46,49 @@ class TournamentViewSet(viewsets.ModelViewSet):
 @api_view(['POST'])
 def tournament_results(request):
     """
-    Endpoint para recibir resultados de un torneo desde el frontend
+    Endpoint para procesar resultados de un torneo, tomando los participantes desde la base de datos.
     """
     serializer = TournamentResultSerializer(data=request.data)
     if serializer.is_valid():
-        # Crear un nuevo torneo
-        tournament_name = serializer.validated_data['name']
-        tournament = Tournament.objects.create(
-            name=tournament_name,
-            start_date=timezone.now()
-        )
-        
-        # Procesar los resultados
+        tournament_id = serializer.validated_data['tournament_id']
+
+        try:
+            tournament = Tournament.objects.get(id=tournament_id)
+        except Tournament.DoesNotExist:
+            return Response({'error': 'Tournament not found'}, status=status.HTTP_404_NOT_FOUND)
+
+        players = list(tournament.participants.all())
+
+        if len(players) < 2:
+            return Response({'error': 'Not enough players registered for the tournament'}, status=status.HTTP_400_BAD_REQUEST)
+
+    
         results = serializer.validated_data['results']
         for result in results:
             winner_alias = result.get('winner')
             loser_alias = result.get('loser')
-            
+
             if winner_alias and loser_alias and winner_alias != "BYE" and loser_alias != "BYE":
-                # Actualizar o crear perfiles de usuario
-                winner, _ = UserProfile.objects.get_or_create(alias=winner_alias)
-                loser, _ = UserProfile.objects.get_or_create(alias=loser_alias)
-                
+                try:
+                    winner = UserProfile.objects.get(alias=winner_alias)
+                    loser = UserProfile.objects.get(alias=loser_alias)
+                except UserProfile.DoesNotExist:
+                    continue 
+
                 winner.wins += 1
                 loser.losses += 1
-                
+
                 winner.save()
                 loser.save()
-        
+
         return Response({
-            'status': 'success', 
+            'status': 'success',
             'tournament_id': tournament.id,
-            'message': f'Torneo "{tournament_name}" guardado correctamente'
+            'message': f'Resultados procesados para torneo "{tournament.name}"'
         })
-    
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-# Los formularios existentes permanecerían debajo de este código
-# No los he eliminado para mantener todo tu código actual
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -105,11 +110,11 @@ class PersonalDataForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         super(PersonalDataForm, self).__init__(*args, **kwargs)
-        # Nota: Necesita importar FormHelper, Submit, Layout, Fieldset, Div, InlineRadios, TabHolder, Tab
-        # from crispy_forms.helper import FormHelper
-        # from crispy_forms.layout import Submit, Layout, Fieldset, Div
-        # from crispy_forms.bootstrap import InlineRadios, TabHolder, Tab
-        # from django.urls import reverse
+    
+    
+    
+    
+    
         self.helper = FormHelper()
         self.helper.form_id = 'id-personal-data-form'
         self.helper.form_method = 'post'

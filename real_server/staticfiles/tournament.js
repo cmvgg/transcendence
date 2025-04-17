@@ -109,7 +109,7 @@ let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0 };
 let rightPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0 };
 let leftScore = 0;
 let rightScore = 0;
-let maxScore = 5;
+let maxScore = 50000000;
 let gameOver = false;
 let isPaused = false;
 let winner = "";
@@ -130,7 +130,8 @@ document.getElementById("pauseButton").addEventListener("click", () => {
 	isPaused = !isPaused;
 });
 document.getElementById("goHome").addEventListener("click", () => {
-	window.location.href = "./index.html";
+	document.getElementById("goHome").disabled = true;
+	window.location.href = "../templates/index";
 });
 
 function update() {
@@ -184,8 +185,8 @@ function checkGameOver() {
 function resetBall() {
 	ball.x = canvas.width / 2;
 	ball.y = canvas.height / 2;
-	ball.dx = (Math.random() > 0.5 ? 4 : -4);
-	ball.dy = (Math.random() > 0.5 ? 4 : -4);
+	ball.dx = (Math.random() > 0.5 ? 4 : -4)*1000;
+	ball.dy = (Math.random() > 0.5 ? 4 : -4)*1000;
 }
 
 //Reinicia el juego para el siguiente partido del torneo
@@ -237,8 +238,8 @@ function gameLoop() {
 	}
 }
 
-//Inicio del torneo
-const players = ["Bob", "Alice", "Charlie", "David", "Eve", "Frank", "Grace", "Heidi"];
+
+//const players = ["Bob", "Alice", "Charlie", "David", "Eve", "Frank", "Grace", "Heidi"];
 const tournament = new Tournament(players);
 let currentMatch = tournament.getCurrentMatch();
 log("Inicio del torneo");
@@ -251,17 +252,13 @@ gameLoop();
  * 5. Conexión con API *
  ***********************/
 
-// Función para enviar los resultados del torneo al backend
 async function submitTournamentResults() {
-    // Recopilar todos los partidos jugados
     const allMatches = tournament.match.flat();
     const results = [];
-    
-    // Convertir los partidos a formato ganador/perdedor
+
     allMatches.forEach(match => {
         if (match.winner && match.winner !== "BYE") {
             const loser = match.winner === match.player1 ? match.player2 : match.player1;
-            // Solo incluir partidos donde el perdedor no sea "BYE"
             if (loser !== "BYE") {
                 results.push({
                     winner: match.winner,
@@ -276,7 +273,7 @@ async function submitTournamentResults() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'), // Función para obtener el token CSRF
+                'X-CSRFToken': getCookie('csrftoken'),
             },
             body: JSON.stringify({
                 name: `Torneo de Pong ${new Date().toLocaleDateString()}`,
@@ -297,7 +294,6 @@ async function submitTournamentResults() {
     }
 }
 
-// Función para obtener el token CSRF de las cookies
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -313,7 +309,6 @@ function getCookie(name) {
     return cookieValue;
 }
 
-// Función para cargar el historial de torneos
 async function loadTournamentHistory() {
     try {
         const response = await fetch('/tournaments/');
@@ -338,7 +333,6 @@ async function loadTournamentHistory() {
     }
 }
 
-// Función para cargar el ranking de jugadores
 async function loadPlayerRanking() {
     try {
         const response = await fetch('/users/');
@@ -348,7 +342,6 @@ async function loadPlayerRanking() {
             log("\n==== RANKING DE JUGADORES ====");
             
             if (data.results && data.results.length > 0) {
-                // Ordenar por número de victorias (de mayor a menor)
                 const sortedPlayers = [...data.results].sort((a, b) => b.wins - a.wins);
                 
                 sortedPlayers.forEach((player, index) => {
@@ -365,30 +358,26 @@ async function loadPlayerRanking() {
     }
 }
 
-// Modificar la función endMatch existente para guardar los resultados
-// Busca la función endMatch original en tu código y reemplázala con esta:
+
 function endMatch() {
     tournament.setWinner(winner);
     
     if (tournament.isTournamentOver()) {
         log("\n¡EL TORNEO HA FINALIZADO!");
         log(`El campeón es: ${winner}`);
-        submitTournamentResults(); // Enviar resultados al backend
+        submitTournamentResults();
     } else {
         setTimeout(resetGameForNextMatch, 2000);
     }
 }
 
-// Agregar botones al HTML para ver historial y ranking
 function addBackendButtons() {
-    // Buscar o crear contenedor para controles
     let controlsDiv = document.getElementById("gameControls");
     
     if (!controlsDiv) {
         controlsDiv = document.createElement("div");
         controlsDiv.id = "gameControls";
-        
-        // Colocar después del canvas o al final del body
+
         const canvas = document.getElementById("gameCanvas");
         if (canvas && canvas.parentNode) {
             canvas.parentNode.insertBefore(controlsDiv, canvas.nextSibling);
@@ -396,10 +385,8 @@ function addBackendButtons() {
             document.body.appendChild(controlsDiv);
         }
     }
-    
-    // Verificar si los botones ya existen
+
     if (!document.getElementById("historyButton")) {
-        // Botón para ver historial de torneos
         const historyButton = document.createElement("button");
         historyButton.id = "historyButton";
         historyButton.textContent = "Ver Historial";
@@ -409,7 +396,6 @@ function addBackendButtons() {
     }
     
     if (!document.getElementById("rankingButton")) {
-        // Botón para ver ranking de jugadores
         const rankingButton = document.createElement("button");
         rankingButton.id = "rankingButton";
         rankingButton.textContent = "Ver Ranking";
@@ -419,5 +405,4 @@ function addBackendButtons() {
     }
 }
 
-// Llamar a la función para agregar los botones cuando se carga la página
 document.addEventListener("DOMContentLoaded", addBackendButtons);

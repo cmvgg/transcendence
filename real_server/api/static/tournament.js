@@ -130,7 +130,8 @@ document.getElementById("pauseButton").addEventListener("click", () => {
 	isPaused = !isPaused;
 });
 document.getElementById("goHome").addEventListener("click", () => {
-	window.location.href = "./index.html";
+	document.getElementById("goHome").disabled = true;
+	window.location.href = "../templates/index";
 });
 
 function update() {
@@ -184,8 +185,8 @@ function checkGameOver() {
 function resetBall() {
 	ball.x = canvas.width / 2;
 	ball.y = canvas.height / 2;
-	ball.dx = (Math.random() > 0.5 ? 4 : -4);
-	ball.dy = (Math.random() > 0.5 ? 4 : -4);
+	ball.dx = (Math.random() > 0.5 ? 4 : -4)*1000;
+	ball.dy = (Math.random() > 0.5 ? 4 : -4)*1000;
 }
 
 //Reinicia el juego para el siguiente partido del torneo
@@ -341,7 +342,6 @@ async function loadPlayerRanking() {
             log("\n==== RANKING DE JUGADORES ====");
             
             if (data.results && data.results.length > 0) {
-                // Ordenar por número de victorias (de mayor a menor)
                 const sortedPlayers = [...data.results].sort((a, b) => b.wins - a.wins);
                 
                 sortedPlayers.forEach((player, index) => {
