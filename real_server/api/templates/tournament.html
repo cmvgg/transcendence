@@ -2,68 +2,85 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Registro de Jugador</title>
+    <title>Torneo</title>
     <style>
         body {
+            margin: 0; padding: 20px;
+            font-family: Arial, sans-serif;
             background-color: #1A3636;
             color: #D6BD98;
-            font-family: Arial, sans-serif;
-            padding: 40px;
         }
-
-        form {
+        canvas {
             background-color: #40534C;
-            padding: 20px;
-            border-radius: 8px;
-            max-width: 400px;
-            margin: auto;
+            border: 2px solid #667D6A;
+            display: block;
+            margin: 20px auto;
         }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 8px;
-            margin-bottom: 12px;
-            border: none;
-            background-color: #667D6A;
-            color: #fff;
+        .controlPause {
+            position: absolute;
+            top: 20px; right: 20px;
+            z-index: 1000;
         }
-
-        button {
-            background-color: #D6BD98;
-            color: #1A3636;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
+        .controlHome {
+            position: absolute;
+            top: 20px; left: 20px;
+            z-index: 1000;
         }
-
-        .success, .error {
-            text-align: center;
-            margin-top: 20px;
-        }
-
-        .success {
-            color: lightgreen;
-        }
-
-        .error {
-            color: salmon;
+        #log {
+            background: #667D6A;
+            padding: 10px;
+            height: 300px; width: 500px;
+            overflow-y: scroll;
+            font-family: monospace;
+            margin-top: 10px;
+            margin: 10px auto;
         }
     </style>
 </head>
 <body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
 
-    <h1>Registrar Jugador</h1>
+    <div class="controlPause">
+        <button id="pauseButton">Pausar</button>
+    </div>
+    <div class="controlHome">
+        <button id="goHome">Go Home</button>
+    </div>
+    <div id="log"></div>
 
-    <form method="post" action="{% url 'register_player' %}">
-        {% csrf_token %}
-        <label for="alias">Alias del jugador:</label>
-        <input type="text" id="alias" name="alias" required>
-        <button type="submit">Registrar</button>
-    </form>
+    <script src="../static/tournament.js"></script>
+    <script>
+        // Supongamos que tenemos un tournament_id en algún lugar
+        const tournament_id = 1;  // Ajusta este valor según convenga
 
-    {% if message %}
-        <div class="{{ message_type }}">{{ message }}</div>
-    {% endif %}
+        // Al cargar la página, obtenemos los jugadores desde el backend
+        async function getPlayers() {
+            try {
+                const response = await fetch(`/api/get_players/?tournament_id=${tournament_id}`);
+                const players = await response.json();
+                if (players && players.length > 0) {
+                    startTournament(players);
+                } else {
+                    log("No se han encontrado jugadores.");
+                }
+            } catch (error) {
+                log(`Error al cargar los jugadores: ${error.message}`);
+            }
+        }
 
+        // Inicia el torneo con los jugadores obtenidos desde la base de datos
+        function startTournament(players) {
+            const tournament = new Tournament(players);
+            let currentMatch = tournament.getCurrentMatch();
+            log("Inicio del torneo");
+            log("Jugadores: " + players);
+            log(`Primer partido: ${currentMatch.player1} vs ${currentMatch.player2}\n`);
+            gameLoop();
+        }
+
+        // Llamamos a la función para cargar los jugadores al cargar la página
+        getPlayers();
+    </script>
 </body>
 </html>
+

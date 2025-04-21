@@ -1,3 +1,4 @@
+6f4fa11 - Cesar Manuel Varela Garcia, 71 minutes ago : Actualización de: real_server/api/templates/tournament.html real_server/api/templates/tournament2.html real_server/pages/views.py  [21/04/2025 20:14]
 4ff6049 - Cesar Manuel Varela Garcia, 4 days ago : Pequeñas actualizaciones [17/04/2025 19:42]
 6034a28 - Cesar Manuel Varela Garcia, 4 days ago : Pequeñas actualizaciones [17/04/2025 19:42]
 5224fcf - Cesar Manuel Varela Garcia, 4 days ago : Actualización de: real_server/staticfiles/tournament.js  [17/04/2025 19:42]
