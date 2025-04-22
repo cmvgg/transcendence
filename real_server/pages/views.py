@@ -32,18 +32,34 @@ def register(request):
             InlineRadios('color'),
             TabHolder(Tab('Address', 'address'), Tab('More Info', 'more_info')))
 """
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
 from .forms import ExampleForm
+from api.models import UserProfile
+
 
 def register(request):
     if request.method == 'POST':
         form = ExampleForm(request.POST)
         if form.is_valid():
-            # Do something with the form data
-            pass
+            # Extraer datos del formulario
+            name = form.cleaned_data.get('name')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+
+            # Crear el usuario utilizando el nombre como username
+            user = User.objects.create_user(username=name, email=email, password=password)
+
+            # Crear automáticamente el perfil con alias igual a name (o modificar según convenga)
+            profile = UserProfile.objects.create(alias=name)
+
+            # Opcional: iniciar sesión automáticamente, enviar un mensaje, redirigir, etc.
+            return redirect('index')  # redirige a la página de inicio, por ejemplo
+
     else:
         form = ExampleForm()
     return render(request, 'register.html', {'form': form})
+
 
 def tournament(request):
     # Your tournament view logic here
