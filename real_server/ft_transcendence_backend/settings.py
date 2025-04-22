@@ -134,3 +134,32 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'json': {
+            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
+            'format': '%(asctime)s %(levelname)s %(name)s %(message)s'
+        },
+    },
+    'handlers': {
+        'logstash': {
+            'class': 'logging.handlers.DatagramHandler',
+            'host': 'logstash',  # nombre del servicio del contenedor Logstash
+            'port': 5044,
+            'formatter': 'json',
+        },
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'json',
+        }
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['logstash', 'console'],
+            'level': 'INFO',
+            'propagate': True,
+        },
+    }
+}

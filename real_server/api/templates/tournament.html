@@ -51,7 +51,14 @@
     <script src="../static/tournament.js"></script>
     <script>
         // Supongamos que tenemos un tournament_id en algún lugar
-        const tournament_id = 1;  // Ajusta este valor según convenga
+        const tournament_id = 1; // Este valor debería ser dinámico en un caso real
+        const logElement = document.getElementById("log");
+        const log = (message) => {
+            const logEntry = document.createElement("div");
+            logEntry.textContent = message;
+            logElement.appendChild(logEntry);
+            logElement.scrollTop = logElement.scrollHeight; // Desplazar hacia abajo
+        };
 
         // Al cargar la página, obtenemos los jugadores desde el backend
         async function getPlayers() {

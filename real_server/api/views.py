@@ -89,7 +89,7 @@ def tournament_results(request):
 
         return Response({
             'status': 'success',
-            'tournament_id': tournament.id,
+            'tournament_id': tournament_id,
             'message': f'Resultados procesados para torneo \"{tournament.name}\"'
         })
 
@@ -97,24 +97,15 @@ def tournament_results(request):
 
 @api_view(['GET'])
 def get_players(request):
-    # Depuración: imprimir el valor de 'tournament_id' recibido
     tournament_id = request.GET.get('tournament_id')
-    print(f"Received tournament_id: {tournament_id}")  # Log para depuración
-
-    if not tournament_id:
-        return Response({'error': 'Tournament ID is required'}, status=status.HTTP_400_BAD_REQUEST)
     
-    try:
-        # Intentar obtener el torneo con el id proporcionado
-        tournament = Tournament.objects.get(id=tournament_id)
-    except Tournament.DoesNotExist:
-        return Response({'error': 'Tournament not found'}, status=status.HTTP_404_NOT_FOUND)
-
-    # Obtener los participantes y devolver la lista
-    players = list(tournament.participants.values_list('alias', flat=True))
-    return Response(players)
-
-# Vista de registro para crear usuarios
+    if tournament_id:
+        players = UserProfile.objects.filter(tournaments__id=Tournament.id)  # Nota: field correcto
+    else:
+        players = UserProfile.objects.all()
+    
+    serializer = UserProfileSerializer(players, many=True)
+    return Response(serializer.data)
 class RegisterUserForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text='Required. Enter a valid email address.')
 
@@ -126,9 +117,7 @@ def register(request):
     if request.method == 'POST':
         form = RegisterUserForm(request.POST)
         if form.is_valid():
-            # Extraer datos y crear el usuario
             user = form.save()
-            # Crear el perfil asociado (usando el username como alias)
             profile = UserProfile.objects.create(alias=user.username)
             return redirect('index')
     else:
