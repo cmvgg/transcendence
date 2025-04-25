@@ -109,7 +109,7 @@ let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0 };
 let rightPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0 };
 let leftScore = 0;
 let rightScore = 0;
-let maxScore = 50000000;
+let maxScore = 5;
 let gameOver = false;
 let isPaused = false;
 let winner = "";
@@ -239,7 +239,7 @@ function gameLoop() {
 }
 
 
-//const players = ["Bob", "Alice", "Charlie", "David", "Eve", "Frank", "Grace", "Heidi"];
+const players = ["Bob", "Alice", "Charlie", "David", "Eve", "Frank", "Grace", "Heidi"];
 const tournament = new Tournament(players);
 let currentMatch = tournament.getCurrentMatch();
 log("Inicio del torneo");
