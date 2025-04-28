@@ -49,30 +49,6 @@ services:
     networks:
       - app-network
 
-
-  grafana:
-    build: ../monitoring/grafana/
-    ports:
-      - "3000:3000"
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ../monitoring/grafana/provisioning:/etc/grafana/provisioning
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    networks:
-      - app-network 
-
-  prometheus:
-    build: ../monitoring/prometheus/
-    ports:
-      - "9090:9090"
-    volumes:
-      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-      - prometheus_data:/prometheus
-    networks:
-      - app-network
-
 volumes:
   grafana_data:
   postgres_data:

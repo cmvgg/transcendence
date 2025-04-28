@@ -7,4 +7,5 @@ urlpatterns = [
 
     # Hello, world!
     path('index', views.index, name='index')
+    path('playground', views.index, name='playground')
 ]

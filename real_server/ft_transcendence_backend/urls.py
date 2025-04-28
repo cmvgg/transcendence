@@ -23,14 +23,11 @@ urlpatterns = [
     path('', include('django_prometheus.urls')),
 ]
 
-"""urlpatterns += [
-    path('index', include('pages.urls')),
-]
-
-from django.urls import path"""
 from pages import views
 
 urlpatterns += [
     path('index', views.index, name='index'),
     path('register', views.register, name='register'),
+    path('playground', views.playground, name='playground'),
+    path('about', views.playground, name='about')
 ]

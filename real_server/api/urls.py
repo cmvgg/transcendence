@@ -9,6 +9,8 @@ router.register(r'users', views.UserProfileViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
+    path('/playground', views.index, name='playground'),
+    path('/about', views.index, name='about'),
     path('user-profiles/', views.UserProfileList.as_view()),
     path('', include(router.urls)),
 	path('', include('django_prometheus.urls')),
