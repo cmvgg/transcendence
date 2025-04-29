@@ -3,9 +3,9 @@
  **********************/
 class Tournament {
 	constructor(players) {
-	  this.players = players.slice();
-	  this.match = this.createBracket(this.players);
-	  this.currentRound = 0;
+		this.players = players.slice();
+		this.match = this.createBracket(this.players);
+		this.currentRound = 0;
 	}
   
 	//Crea el bracket inicial; si la cantidad es impar, se agrega "BYE"
@@ -113,8 +113,8 @@ let directionY = Math.random() < 0.5 ? 1 : -1;
 let ball = {
     x: canvas.width / 2,
     y: canvas.height / 2,
-    dx: (directionX * 4 * Math.cos(angle))*1000,
-    dy: (directionY * 4 * Math.sin(angle))*1000,
+    dx: (directionX * 4 * Math.cos(angle)),
+    dy: (directionY * 4 * Math.sin(angle)),
     radius: 7, speed: 6
 };
 let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0 };
@@ -197,8 +197,8 @@ function checkGameOver() {
 function resetBall() {
 	ball.x = canvas.width / 2;
 	ball.y = canvas.height / 2;
-	ball.dx = (Math.random() > 0.5 ? 4 : -4)*1000;
-	ball.dy = (Math.random() > 0.5 ? 4 : -4)*1000;
+	ball.dx = (Math.random() > 0.5 ? 4 : -4);
+	ball.dy = (Math.random() > 0.5 ? 4 : -4);
 }
 
 //Reinicia el juego para el siguiente partido del torneo
@@ -235,57 +235,107 @@ function draw() {
 }
 
 function gameLoop() {
+	//log("ejecutando gameLoop");
 	update();
 	draw();
 	if (!gameOver) {
 		requestAnimationFrame(gameLoop);
+	} else {
+		log("Partido terminado");
 	}
 }
 
 
-const players = ["Bob", "Alice", "Charlie", "David"];
-const tournament = new Tournament(players);
-let currentMatch = tournament.getCurrentMatch();
+/* const players = ["Bob", "Alice", "Charlie", "David"];
+const tournament = new Tournament(players); */
+//startTournament();
+/* let currentMatch = tournament.getCurrentMatch();
 log("Inicio del torneo");
 log("Jugadores: " + players);
 log(`Primer partido: ${currentMatch.player1} vs ${currentMatch.player2}\n`);
 
-gameLoop();
-
+gameLoop(); */
 /***********************
  * 5. Conexión con API *
 ***********************/
 
-/* async function testPostRequest() {
-    try {
-        const response = await fetch('tournament-results/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'), // Si usas CSRF tokens
-            },
-            body: JSON.stringify({
-                test: true,
-                message: "PRUEBA de POST desde JavaScript"
-            })
-        });
+let tournament = null;
+const tournament_id = document.getElementById('tournamentId').value;
+//log("Tournament ID:", tournament_id);
 
-        if (response.ok) {
-            const data = await response.json();
-            console.log("POST exitoso:", data);
-        } else {
-            const errorText = await response.text();
-            console.error("ERROR en POST:", response.status, response.statusText, errorText);
-        }
-    } catch (error) {
-        console.error("	ERROR de conexión 8000:", error.message);
-    }
+document.addEventListener("DOMContentLoaded", async () => {
+	const players = await fetchPlayers();
+	log("\n==== GARGANDO TORNEO ====");
+	if (players.length >= 2) {
+		tournament = new Tournament(players);
+		let currentMatch = tournament.getCurrentMatch();
+		if (!currentMatch) {
+			log("No hay partidos disponibles.");
+			return;
+		}
+		log("Inicio del torneo");
+		log(`Primer partido: ${currentMatch.player1} vs ${currentMatch.player2}\n`);
+		log("gameLoop");
+		gameLoop();
+	} else {
+		log("No hay suficientes jugadores para iniciar el torneo.");
+	}
+});
+
+async function fetchPlayers() {
+	try {
+		const response = await fetch('/get_players/');
+		if (response.ok) {
+			const players = await response.json();
+            log("\n==== JUGADORES DEL TORNEO ====");
+            players.forEach(player => log(`Nombre: ${player.alias}`));
+            return players.map(player => player.alias);
+		} else {
+			log("Error al obtener los jugadores.");
+			return [];
+		}
+	} catch (error) {
+		log(`Error de conexión: ${error.message}`);
+		return [];
+	}
 }
 
-testPostRequest(); */
 
-const tournament_id = document.getElementById('tournamentId').value;
-log("Tournament ID:", tournament_id);
+async function verifyOrCreateTournament() {
+    const tournamentId = document.getElementById('tournamentId').value;
+
+    try {
+        const response = await fetch(`/tournaments/${tournamentId}/`);
+        
+        if (response.ok) {
+            const tournament = await response.json();
+            log(`Torneo encontrado: ID ${tournament.id}, Nombre: ${tournament.name}`);
+        } else if (response.status === 404) {
+            log(`Torneo con ID ${tournamentId} no encontrado. Creando uno nuevo...`);
+
+            const createResponse = await fetch('/create-tournament/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                }
+            });
+
+            if (createResponse.ok) {
+                const newTournament = await createResponse.json();
+                log(`Torneo creado con éxito: ID ${newTournament.tournament_id}, Nombre: ${newTournament.message}`);
+                document.getElementById('tournamentId').value = newTournament.tournament_id;
+            } else {
+                const errorText = await createResponse.text();
+                log(`Error al crear el torneo: ${errorText}`);
+            }
+        } else {
+            log(`Error al verificar el torneo: ${response.statusText}`);
+        }
+    } catch (error) {
+        log(`Error de conexión: ${error.message}`);
+    }
+}
 
 async function submitTournamentResults() {
     const allMatches = tournament.match.flat();
@@ -303,41 +353,7 @@ async function submitTournamentResults() {
 		}
 	});
 
-	const data = {
-        tournament_id: tournament_id,
-        name: `Torneo de Pong ${new Date().toLocaleDateString()}`,
-        results: results
-    };
-
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "tournament-results/", true);
-    xhr.setRequestHeader("Content-Type", "application/json");
-    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken')); // Si usas CSRF tokens
-
-    xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-            if (xhr.status === 200) {
-                const responseData = JSON.parse(xhr.responseText);
-                log("¡Torneo guardado correctamente!");
-                log("Respuesta del servidor:", responseData);
-            } else {
-                log("Error al guardar el torneo:", xhr.status, xhr.statusText, xhr.responseText);
-            }
-        }
-    };
-
-    xhr.onerror = function () {
-        log("Error de conexión al servidor.");
-    };
-
-    xhr.send(JSON.stringify(data));
-
-    /* try {
-		//log("Enviando datos al servidor:", JSON.stringify({
-		//	name: `Torneo de Pong ${new Date().toLocaleDateString()}`,
-		//	results: results
-		//}));
-
+    try {
         const response = await fetch('tournament-results/', {
             method: 'POST',
             headers: {
@@ -350,27 +366,44 @@ async function submitTournamentResults() {
                 results: results
             })
         });
-		//log("despues de response");
-		//log("Mensaje del servidor:", responseData);
-		//log("despues de usar response");
 		if (response.ok) {
 			const responseData = await response.json();
 			log("¡Torneo guardado correctamente!");
 			log("Respuesta del servidor:", responseData);
-            log("Entra en el if");
-			//log(`\n¡Torneo guardado correctamente! ID: ${response.status} \n`);
-			//log("Respuesta del servidor:", data);
-			//log("Mensaje del servidor2:", data.message);
-			//log("Mensaje del servidor3:", response.text());
-            //log(data.message);
         } else {
-			log("Entra en el else");
 			const errorData = await response.text();
             log(`Error al guardar el torneo: ${JSON.stringify(errorData)}`);
         }
     } catch (error) {
         log(`Error de conexión: ${error.message}`);
-    } */
+    }
+}
+
+//Función para obtener el valor de una cookie por su nombre (Sin acabar)
+async function loadTournamentParticipants() {
+	try {
+		const response = await fetch('get_players/?tournament_id=' + tournament_id);
+		
+		if (response.ok) {
+			const players = await response.json();
+			log("\n==== JUGADORES DEL TORNEO ====");
+
+			if (players && players.length > 0) {
+				players.forEach(player => {
+					log(`Nombre: ${player.alias} - Victorias: ${player.wins}, Derrotas: ${player.losses}`);
+				});
+
+				//const tournament = new Tournament(participants.map(p => p.alias));
+                //startTournament(tournament);
+			} else {
+				log("No hay jugadores registrados en el torneo.");
+			}
+		} else {
+			log("Error al cargar los jugadores del torneo.");
+		}
+	} catch (error) {
+		log(`Error de conexión: ${error.message}`);
+	}
 }
 
 function getCookie(name) {
@@ -445,9 +478,11 @@ function endMatch() {
 	if (tournament.isTournamentOver()) {
 		log("\n¡EL TORNEO HA FINALIZADO!");
 		log(`El campeón es: ${winner}`);
+		loadTournamentParticipants();
 		submitTournamentResults();
 	} else {
 		setTimeout(resetGameForNextMatch, 2000);
+		gameLoop();
 	}
 }
 

@@ -72,7 +72,8 @@ def create_tournament(request):
         return Response({
             "status": "success",
             "message": f"Torneo '{tournament.name}' creado con éxito.",
-            "tournament_id": tournament.id
+            "tournament_id": tournament.id,
+            "participants": [player.alias for player in tournament.participants.all()]
         }, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
