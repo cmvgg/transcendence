@@ -36,6 +36,27 @@
         display:flex
       }
       
+h3 { 
+	position: relative; 
+	float: left;
+	background: black;
+	color: #fff;
+	font-size: 2.5em;
+}
+
+h3 span {
+    position:absolute;
+    right:0;
+    width:0;
+    background: black;
+    border-left: 1px solid #000;
+    animation: escribir 5s steps(50) infinite alternate;
+}
+
+@keyframes escribir {
+    from { width: 100% }
+    to { width:0 }
+}
 
     </style>
   
@@ -46,13 +67,13 @@
       id="intro-example"
       class="p-5 text-center bg-image align-bottom"
       
-      style="background-image: url('https://images.pexels.com/photos/4842494/pexels-photo-4842494.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2');"
+      style="background-image: url('https://t3.ftcdn.net/jpg/09/03/00/26/360_F_903002635_ElRmPsa6jBx672XglYiXWrhCBHNB8eI9.jpg'); background-size: cover; background-position: center;"
     >
-     <div class="mask" style="background-color: rgba(0, 0, 0, 0.3);">
+     <div class="mask" >
         <div class="d-flex justify-content-center align-items-center h-100">
-          <div class="text-white" style="text-decoration-color: blueviolet;">
-            <h1 class="mb-3">So you think you are a pong master</h1>
-            <h3 class="mb-4" style="font-family: Pixelify Sans, sans-serif;">Try your best against an AI, another player or enroll a tournament</h3>
+          <div class="text-white" style="text-decoration-color: blueviolet; text-align: center;">
+            <h1 class="mb-3">So you think you are a pong master </h1>
+            
             <a
               data-mdb-ripple-init
               class="btn btn-outline-light btn-lg m-2"
@@ -76,6 +97,7 @@
     </div>
     <!-- Background image -->
   </header>
+  <h3 class="mb-4" style="font-family: Pixelify Sans, sans-serif; background-color: black;">Try your best against an AI, another player or enroll a tournament <span>&#150;</span> </h3>
 
   <div class="row justify-content-center" style=" max-width: 100%; height: auto;; font-family: Pixelify Sans, sans-serif;" class="shadow-lm text-center">
     <img class="img-fluid " src="https://i.postimg.cc/3xfnTQjs/D-NQ-NP-941976-MLA26076900203-092017-O.jpg" alt="arcade game">
