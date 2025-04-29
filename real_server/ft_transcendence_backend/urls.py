@@ -23,28 +23,10 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('api.urls')),
     path('', include('django_prometheus.urls')),
-]
-
-"""urlpatterns += [
-    path('index', include('pages.urls')),
-]
-
-from django.urls import path"""
-from pages import views
-
-urlpatterns += [
     path('index', views.index, name='index'),
     path('register', views.register, name='register'),
+    path('tournament', views.tournament, name='tournament'),
+	path('tournament.js', views.tournament, name='tournament.js'),
 ]
 
-"""urlpatterns += [
-    path('index', include('pages.urls')),
-]
-
-from django.urls import path"""
-from pages import views
-
-urlpatterns += [
-    path('index', views.index, name='index'),
-    path('register', views.register, name='register'),
-]
+urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

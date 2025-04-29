@@ -48,6 +48,40 @@ class TournamentViewSet(viewsets.ModelViewSet):
     queryset = Tournament.objects.all()
     serializer_class = TournamentSerializer
 
+
+
+
+
+@api_view(['POST'])
+def create_tournament(request):
+    """
+    Crea un torneo con participantes de prueba.
+    """
+    try:
+        # Crea algunos jugadores de prueba si no existen
+        player1, _ = UserProfile.objects.get_or_create(alias="Player1")
+        player2, _ = UserProfile.objects.get_or_create(alias="Player2")
+        player3, _ = UserProfile.objects.get_or_create(alias="Player3")
+        player4, _ = UserProfile.objects.get_or_create(alias="Player4")
+
+        # Crea el torneo
+        tournament = Tournament.objects.create(name="Torneo de Prueba")
+        tournament.participants.set([player1, player2, player3, player4])
+        tournament.save()
+
+        return Response({
+            "status": "success",
+            "message": f"Torneo '{tournament.name}' creado con éxito.",
+            "tournament_id": tournament.id
+        }, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
 @api_view(['POST'])
 def tournament_results(request):
     """
@@ -61,7 +95,9 @@ def tournament_results(request):
         try:
             tournament = Tournament.objects.get(id=tournament_id)
         except Tournament.DoesNotExist:
-            return Response({'error': 'Tournament not found'}, status=status.HTTP_404_NOT_FOUND)
+            return Response({
+                'error': f'Tournament with ID {tournament_id} not found. Please verify the ID.'
+            }, status=status.HTTP_404_NOT_FOUND)
 
         players = list(tournament.participants.all())
         if len(players) < 2:
@@ -100,7 +136,12 @@ def get_players(request):
     tournament_id = request.GET.get('tournament_id')
     
     if tournament_id:
-        players = UserProfile.objects.filter(tournaments__id=Tournament.id)  # Nota: field correcto
+        #players = UserProfile.objects.filter(tournaments__id=Tournament.id)  # Nota: field correcto
+        try:
+            tournament = Tournament.objects.get(id=tournament_id)
+            players = tournament.participants.all()
+        except Tournament.DoesNotExist:
+            return Response({'error': 'Tournament not found'}, status=status.HTTP_404_NOT_FOUND)
     else:
         players = UserProfile.objects.all()
     

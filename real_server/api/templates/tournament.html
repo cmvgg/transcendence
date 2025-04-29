@@ -48,23 +48,21 @@
     </div>
     <div id="log"></div>
 
+    <input type="hidden" id="tournamentId" value="1"> <!-- ID del torneo temporal -->
     <script src="../static/tournament.js"></script>
     <script>
         // Supongamos que tenemos un tournament_id en algún lugar
-        const tournament_id = 1; // Este valor debería ser dinámico en un caso real
-        const logElement = document.getElementById("log");
-        const log = (message) => {
-            const logEntry = document.createElement("div");
-            logEntry.textContent = message;
-            logElement.appendChild(logEntry);
-            logElement.scrollTop = logElement.scrollHeight; // Desplazar hacia abajo
-        };
+        //const tournament_id = 1; // Este valor debería ser dinámico en un caso real
 
         // Al cargar la página, obtenemos los jugadores desde el backend
         async function getPlayers() {
             try {
-                const response = await fetch(`/api/get_players/?tournament_id=${tournament_id}`);
+                const response = await fetch(`/user-profiles/`);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
                 const players = await response.json();
+                //log(`Jugadores obtenidos: ${JSON.stringify(players)}`);
                 if (players && players.length > 0) {
                     startTournament(players);
                 } else {

@@ -104,7 +104,19 @@ const ctx = canvas.getContext("2d");
 const paddleWidth = 10;
 const paddleHeight = 100;
 const borderHeight = 10;
-let ball = { x: canvas.width / 2, y: canvas.height / 2, dx: 4, dy: 4, radius: 7 };
+let angle;
+do {
+    angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+} while (Math.abs(Math.cos(angle)) > 0.99);
+let directionX = Math.random() < 0.5 ? 1 : -1;
+let directionY = Math.random() < 0.5 ? 1 : -1;
+let ball = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    dx: (directionX * 4 * Math.cos(angle))*1000,
+    dy: (directionY * 4 * Math.sin(angle))*1000,
+    radius: 7, speed: 6
+};
 let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0 };
 let rightPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0 };
 let leftScore = 0;
@@ -203,14 +215,6 @@ function resetGameForNextMatch() {
 	gameLoop();
 }
 
-//Finaliza el partido, notifica al torneo y, si aún no termina el torneo, reinicia para el siguiente partido
-function endMatch() {
-	tournament.setWinner(winner);
-	if (!tournament.isTournamentOver()) {
-		setTimeout(resetGameForNextMatch, 2000);
-	}
-}
-
 function draw() {
 	ctx.fillStyle = "white";
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -219,11 +223,11 @@ function draw() {
 	ctx.beginPath();
 	ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
 	ctx.fill();
-
+	
 	ctx.font = "60px Courier New";
 	ctx.fillText(leftScore, canvas.width / 3, 60);
 	ctx.fillText(rightScore, (canvas.width / 4) * 2.5, 60);
-
+	
 	if (isPaused) {
 		ctx.font = "30px Courier New";
 		ctx.fillText("PAUSED", canvas.width / 2 - 60, canvas.height / 2);
@@ -239,7 +243,7 @@ function gameLoop() {
 }
 
 
-const players = ["Bob", "Alice", "Charlie", "David", "Eve", "Frank", "Grace", "Heidi"];
+const players = ["Bob", "Alice", "Charlie", "David"];
 const tournament = new Tournament(players);
 let currentMatch = tournament.getCurrentMatch();
 log("Inicio del torneo");
@@ -250,58 +254,133 @@ gameLoop();
 
 /***********************
  * 5. Conexión con API *
- ***********************/
+***********************/
+
+/* async function testPostRequest() {
+    try {
+        const response = await fetch('tournament-results/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'), // Si usas CSRF tokens
+            },
+            body: JSON.stringify({
+                test: true,
+                message: "PRUEBA de POST desde JavaScript"
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log("POST exitoso:", data);
+        } else {
+            const errorText = await response.text();
+            console.error("ERROR en POST:", response.status, response.statusText, errorText);
+        }
+    } catch (error) {
+        console.error("	ERROR de conexión 8000:", error.message);
+    }
+}
+
+testPostRequest(); */
+
+const tournament_id = document.getElementById('tournamentId').value;
+log("Tournament ID:", tournament_id);
 
 async function submitTournamentResults() {
     const allMatches = tournament.match.flat();
     const results = [];
 
-    allMatches.forEach(match => {
-        if (match.winner && match.winner !== "BYE") {
-            const loser = match.winner === match.player1 ? match.player2 : match.player1;
-            if (loser !== "BYE") {
-                results.push({
-                    winner: match.winner,
-                    loser: loser
-                });
+	allMatches.forEach(match => {
+		if (match.winner && match.winner !== "BYE" && match.player1 && match.player2) {
+			const loser = match.winner === match.player1 ? match.player2 : match.player1;
+			if (loser && loser !== "BYE") {
+				results.push({
+					winner: match.winner,
+					loser: loser
+				});
+			}
+		}
+	});
+
+	const data = {
+        tournament_id: tournament_id,
+        name: `Torneo de Pong ${new Date().toLocaleDateString()}`,
+        results: results
+    };
+
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "tournament-results/", true);
+    xhr.setRequestHeader("Content-Type", "application/json");
+    xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken')); // Si usas CSRF tokens
+
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+                const responseData = JSON.parse(xhr.responseText);
+                log("¡Torneo guardado correctamente!");
+                log("Respuesta del servidor:", responseData);
+            } else {
+                log("Error al guardar el torneo:", xhr.status, xhr.statusText, xhr.responseText);
             }
         }
-    });
-    
-    try {
-        const response = await fetch('/tournament-results/', {
+    };
+
+    xhr.onerror = function () {
+        log("Error de conexión al servidor.");
+    };
+
+    xhr.send(JSON.stringify(data));
+
+    /* try {
+		//log("Enviando datos al servidor:", JSON.stringify({
+		//	name: `Torneo de Pong ${new Date().toLocaleDateString()}`,
+		//	results: results
+		//}));
+
+        const response = await fetch('tournament-results/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 'X-CSRFToken': getCookie('csrftoken'),
             },
             body: JSON.stringify({
+				tournament_id: tournament_id,
                 name: `Torneo de Pong ${new Date().toLocaleDateString()}`,
                 results: results
             })
         });
-        
-        if (response.ok) {
-            const data = await response.json();
-            log(`\n¡Torneo guardado correctamente! ID: ${data.tournament_id}`);
-            log(data.message);
+		//log("despues de response");
+		//log("Mensaje del servidor:", responseData);
+		//log("despues de usar response");
+		if (response.ok) {
+			const responseData = await response.json();
+			log("¡Torneo guardado correctamente!");
+			log("Respuesta del servidor:", responseData);
+            log("Entra en el if");
+			//log(`\n¡Torneo guardado correctamente! ID: ${response.status} \n`);
+			//log("Respuesta del servidor:", data);
+			//log("Mensaje del servidor2:", data.message);
+			//log("Mensaje del servidor3:", response.text());
+            //log(data.message);
         } else {
-            const errorData = await response.json();
+			log("Entra en el else");
+			const errorData = await response.text();
             log(`Error al guardar el torneo: ${JSON.stringify(errorData)}`);
         }
     } catch (error) {
         log(`Error de conexión: ${error.message}`);
-    }
+    } */
 }
 
 function getCookie(name) {
-    let cookieValue = null;
+	let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
-        const cookies = document.cookie.split(';');
+		const cookies = document.cookie.split(';');
         for (let i = 0; i < cookies.length; i++) {
             const cookie = cookies[i].trim();
             if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+				cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
                 break;
             }
         }
@@ -310,84 +389,85 @@ function getCookie(name) {
 }
 
 async function loadTournamentHistory() {
-    try {
-        const response = await fetch('/tournaments/');
+	try {
+		const response = await fetch('/tournaments/');
         
         if (response.ok) {
-            const data = await response.json();
+			const data = await response.json();
             log("\n==== HISTORIAL DE TORNEOS ====");
             
             if (data.results && data.results.length > 0) {
-                data.results.forEach(tournament => {
-                    const date = new Date(tournament.start_date).toLocaleString();
+				data.results.forEach(tournament => {
+					const date = new Date(tournament.start_date).toLocaleString();
                     log(`ID: ${tournament.id} | Nombre: ${tournament.name} | Fecha: ${date}`);
                 });
             } else {
-                log("No hay torneos registrados.");
+				log("No hay torneos registrados.");
             }
         } else {
-            log("Error al cargar el historial de torneos.");
+			log("Error al cargar el historial de torneos.");
         }
     } catch (error) {
-        log(`Error de conexión: ${error.message}`);
+		log(`Error de conexión: ${error.message}`);
     }
 }
 
 async function loadPlayerRanking() {
-    try {
-        const response = await fetch('/users/');
+	try {
+		const response = await fetch('/users/');
         
         if (response.ok) {
-            const data = await response.json();
+			const data = await response.json();
             log("\n==== RANKING DE JUGADORES ====");
             
             if (data.results && data.results.length > 0) {
                 const sortedPlayers = [...data.results].sort((a, b) => b.wins - a.wins);
                 
                 sortedPlayers.forEach((player, index) => {
-                    log(`${index + 1}. ${player.alias} - Victorias: ${player.wins}, Derrotas: ${player.losses}`);
+					log(`${index + 1}. ${player.alias} - Victorias: ${player.wins}, Derrotas: ${player.losses}`);
                 });
             } else {
-                log("No hay jugadores registrados.");
+				log("No hay jugadores registrados.");
             }
         } else {
-            log("Error al cargar el ranking de jugadores.");
+			log("Error al cargar el ranking de jugadores.");
         }
     } catch (error) {
-        log(`Error de conexión: ${error.message}`);
+		log(`Error de conexión: ${error.message}`);
     }
 }
 
-
+//Finaliza el partido, notifica al torneo y, si aún no termina el torneo, reinicia para el siguiente partido
+//Si el torneo terminó, envía los resultados al backend 
 function endMatch() {
-    tournament.setWinner(winner);
-    
-    if (tournament.isTournamentOver()) {
-        log("\n¡EL TORNEO HA FINALIZADO!");
-        log(`El campeón es: ${winner}`);
-        submitTournamentResults();
-    } else {
-        setTimeout(resetGameForNextMatch, 2000);
-    }
+	tournament.setWinner(winner);
+
+	if (tournament.isTournamentOver()) {
+		log("\n¡EL TORNEO HA FINALIZADO!");
+		log(`El campeón es: ${winner}`);
+		submitTournamentResults();
+	} else {
+		setTimeout(resetGameForNextMatch, 2000);
+	}
 }
 
 function addBackendButtons() {
-    let controlsDiv = document.getElementById("gameControls");
+	let controlsDiv = document.getElementById("gameControls");
     
     if (!controlsDiv) {
-        controlsDiv = document.createElement("div");
+		controlsDiv = document.createElement("div");
         controlsDiv.id = "gameControls";
-
+		
         const canvas = document.getElementById("gameCanvas");
         if (canvas && canvas.parentNode) {
-            canvas.parentNode.insertBefore(controlsDiv, canvas.nextSibling);
+			canvas.parentNode.insertBefore(controlsDiv, canvas.nextSibling);
         } else {
-            document.body.appendChild(controlsDiv);
+			document.body.appendChild(controlsDiv);
         }
     }
-
+	
     if (!document.getElementById("historyButton")) {
-        const historyButton = document.createElement("button");
+		const historyButton = document.createElement("button");
         historyButton.id = "historyButton";
         historyButton.textContent = "Ver Historial";
         historyButton.className = "game-button";
@@ -396,7 +476,7 @@ function addBackendButtons() {
     }
     
     if (!document.getElementById("rankingButton")) {
-        const rankingButton = document.createElement("button");
+		const rankingButton = document.createElement("button");
         rankingButton.id = "rankingButton";
         rankingButton.textContent = "Ver Ranking";
         rankingButton.className = "game-button";
