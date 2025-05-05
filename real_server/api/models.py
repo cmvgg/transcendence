@@ -17,6 +17,8 @@ class UserProfile(models.Model):
         ordering = ['-wins', 'alias']
 
 class Tournament(models.Model):
+    #Campo para el ID del torneo
+    #tournament_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
     name = models.CharField(max_length=100)
     start_date = models.DateTimeField(auto_now_add=True)
     participants = models.ManyToManyField('UserProfile', related_name='tournaments')
@@ -28,6 +30,13 @@ class Tournament(models.Model):
     )
     
     end_date = models.DateTimeField(null=True, blank=True)
+
+    """ def save(self, *args, **kwargs):
+        # Asignar un ID personalizado si no existe
+        if not self.custom_id:
+            last_tournament = Tournament.objects.order_by('-custom_id').first()
+            self.custom_id = (last_tournament.custom_id + 1) if last_tournament else 1
+        super().save(*args, **kwargs) """
 
     def __str__(self):
         return self.name

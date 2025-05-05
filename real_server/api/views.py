@@ -52,27 +52,57 @@ class TournamentViewSet(viewsets.ModelViewSet):
 
 
 
+#def generate_players_names():
+#    """    Genera nombres de jugadores de prueba.    """
+#    #"Player1", "Player2", "Player3", "Player4",
+#    return [
+#        "Player5", "Player6", "Player7", "Player8"
+#    ]
+
+#@api_view(['POST'])
+
+def generate_random_player_names():
+    """
+    Genera nombres de jugadores aleatorios.
+    """
+    return ["Player1", "Player2", "Player3", "Player4"]
+
 @api_view(['POST'])
-def create_tournament(request):
+def generate_players_names(request):
+    """
+    Genera nombres de jugadores y crea un torneo.
+    """
+    try:
+        # Generar nombres de jugadores
+        player_names = generate_random_player_names()
+
+        # Crear el torneo con los nombres generados
+        return create_tournament(player_names)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+def create_tournament(player_names):
     """
     Crea un torneo con participantes de prueba.
     """
     try:
-        # Crea algunos jugadores de prueba si no existen
-        player1, _ = UserProfile.objects.get_or_create(alias="Player1")
-        player2, _ = UserProfile.objects.get_or_create(alias="Player2")
-        player3, _ = UserProfile.objects.get_or_create(alias="Player3")
-        player4, _ = UserProfile.objects.get_or_create(alias="Player4")
+        # Generar nombres de jugadores
+        #player_names = generate_players_names()
+        players = []
+        for name in player_names:
+            player, _ = UserProfile.objects.get_or_create(alias=name)
+            players.append(player)
 
-        # Crea el torneo
+        # Crear el torneo
         tournament = Tournament.objects.create(name="Torneo de Prueba")
-        tournament.participants.set([player1, player2, player3, player4])
+        tournament.participants.set(players)
         tournament.save()
 
+        #"tournament_id": tournament.tournament_id,
         return Response({
             "status": "success",
             "message": f"Torneo '{tournament.name}' creado con éxito.",
-            "tournament_id": tournament.id,
+            "tournament_id": 1,
             "participants": [player.alias for player in tournament.participants.all()]
         }, status=status.HTTP_201_CREATED)
     except Exception as e:
