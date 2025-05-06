@@ -28,3 +28,7 @@ def playground(request):
 def about(request):
     
     return render(request, 'about.html')
+
+def select(request):
+    
+    return render(request, 'select.html')
