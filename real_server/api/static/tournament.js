@@ -263,30 +263,17 @@ const tournament = new Tournament(players); */
  * 5. Conexión con API *
 ***********************/
 
-//const tournament_id = document.getElementById('tournamentId').value;
-let tournament_id = 0;
+const tournament_id = document.getElementById('tournamentId').value;
+//let tournament_id = 0;
 let tournament = null;
-(async () => {
-	try {
-		if (tournament_id <= 0) {
-			log("Error: Invalid tournament ID. Please provide a valid tournament ID.");
-			return;
-		}
-		const response = await fetch('get_players/?tournament_id=' + tournament_id);
-		if (!response.ok) {
-			throw new Error(`HTTP error! status: ${response.status}`);
-		}
-		const data = await response.json();
-		if (data && data.tournament_id) {
-			tournament_id = data.tournament_id;
-			log(`Tournament ID: ${tournament_id}\n`);
-		} else {
-			log("Error: Tournament ID not found in the response.");
-		}
-	} catch (error) {
-		log(`Error fetching tournament data: ${error.message}`);
-	}
-})();
+/* (async () => {
+	const response = await fetch('get_players/');
+	const data = await response.json();
+	tournament_id = data.tournament_id;
+	log(`Tournament ID: ${tournament_id}\n`);
+})(); */
+
+
 
 document.addEventListener("DOMContentLoaded", async () => {
 	const players = await fetchPlayers();

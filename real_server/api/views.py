@@ -1,15 +1,22 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.contrib.auth.models import User
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+from django.forms import TextInput, EmailInput, Textarea
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework import viewsets
-from django.shortcuts import render
+from rest_framework import status, viewsets
+from rest_framework.decorators import api_view
+from django.utils import timezone
+from .models import UserProfile, Tournament
+from .serializers import (
+    UserProfileSerializer,
+    TournamentSerializer,
+    TournamentResultSerializer
+)
 
 def index(request):
     return render(request, 'index.html')
-
-from .models import UserProfile
-from .serializers import UserProfileSerializer
 
 class UserProfileList(APIView):
     """
@@ -34,41 +41,157 @@ class UserProfileViewSet(viewsets.ModelViewSet):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
 
+class TournamentViewSet(viewsets.ModelViewSet):
+    """
+    API endpoint que permite ver y editar torneos.
+    """
+    queryset = Tournament.objects.all()
+    serializer_class = TournamentSerializer
 
-""" para crear un formulario de crispy forms
-    https://www.makeuseof.com/django-crispy-forms-style/
-"""
 
-from django import forms
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
-from django.forms import ModelForm, TextInput, EmailInput,ImageField, Textarea
 
+
+
+#def generate_players_names():
+#    """    Genera nombres de jugadores de prueba.    """
+#    #"Player1", "Player2", "Player3", "Player4",
+#    return [
+#        "Player5", "Player6", "Player7", "Player8"
+#    ]
+
+#@api_view(['POST'])
+
+def generate_random_player_names():
+    """
+    Genera nombres de jugadores aleatorios.
+    """
+    return ["Player1", "Player2", "Player3", "Player4"]
+
+@api_view(['POST'])
+def generate_players_names(request):
+    """
+    Genera nombres de jugadores y crea un torneo.
+    """
+    try:
+        # Generar nombres de jugadores
+        player_names = generate_random_player_names()
+
+        # Crear el torneo con los nombres generados
+        return create_tournament(player_names)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+def create_tournament(player_names):
+    """
+    Crea un torneo con participantes de prueba.
+    """
+    try:
+        # Generar nombres de jugadores
+        #player_names = generate_players_names()
+        players = []
+        for name in player_names:
+            player, _ = UserProfile.objects.get_or_create(alias=name)
+            players.append(player)
+
+        # Crear el torneo
+        tournament = Tournament.objects.create(name="Torneo de Prueba")
+        tournament.participants.set(players)
+        tournament.save()
+
+        #"tournament_id": tournament.tournament_id,
+        return Response({
+            "status": "success",
+            "message": f"Torneo '{tournament.name}' creado con éxito.",
+            "tournament_id": 1,
+            "participants": [player.alias for player in tournament.participants.all()]
+        }, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+
+
+
+@api_view(['POST'])
+def tournament_results(request):
+    """
+    Endpoint para procesar resultados de un torneo, tomando los participantes desde la base de datos.
+    """
+    serializer = TournamentResultSerializer(data=request.data)
+    if serializer.is_valid():
+        tournament_id = serializer.validated_data['tournament_id']
+        results = serializer.validated_data['results']
+
+        try:
+            tournament = Tournament.objects.get(id=tournament_id)
+        except Tournament.DoesNotExist:
+            return Response({
+                'error': f'Tournament with ID {tournament_id} not found. Please verify the ID.'
+            }, status=status.HTTP_404_NOT_FOUND)
+
+        players = list(tournament.participants.all())
+        if len(players) < 2:
+            return Response({'error': 'Not enough players registered for the tournament'}, status=status.HTTP_400_BAD_REQUEST)
+
+        for match in results:
+            winner_alias = match.get('winner')
+            loser_alias = match.get('loser')
+
+            if winner_alias and loser_alias and winner_alias != "BYE" and loser_alias != "BYE":
+                try:
+                    winner = UserProfile.objects.get(alias=winner_alias)
+                    loser = UserProfile.objects.get(alias=loser_alias)
+                except UserProfile.DoesNotExist:
+                    continue
+
+                winner.wins += 1
+                loser.losses += 1
+
+                winner.save()
+                loser.save()
+
+        tournament.status = 'finished'
+        tournament.save()
+
+        return Response({
+            'status': 'success',
+            'tournament_id': tournament_id,
+            'message': f'Resultados procesados para torneo \"{tournament.name}\"'
+        })
+
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_players(request):
+    tournament_id = request.GET.get('tournament_id')
+    
+    if tournament_id:
+        #players = UserProfile.objects.filter(tournaments__id=Tournament.id)  # Nota: field correcto
+        try:
+            tournament = Tournament.objects.get(id=tournament_id)
+            players = tournament.participants.all()
+        except Tournament.DoesNotExist:
+            return Response({'error': 'Tournament not found'}, status=status.HTTP_404_NOT_FOUND)
+    else:
+        players = UserProfile.objects.all()
+    
+    serializer = UserProfileSerializer(players, many=True)
+    return Response(serializer.data)
 class RegisterUserForm(UserCreationForm):
-        email = forms.EmailField(max_length=254, help_text='Required. Enter a valid email address.')
-class Meta:
+    email = forms.EmailField(max_length=254, help_text='Required. Enter a valid email address.')
+
+    class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 
-
-class PersonalDataForm(forms.Form):
-    first_name = forms.CharField(required=True, max_length=255)
-    last_name = forms.CharField(required=True, max_length=255)
-    email = forms.EmailField(required=True)
-    phone = forms.CharField(required=True, max_length=200)
-    address = forms.CharField(max_length=1000, widget=forms.Textarea())
-
-    def __init__(self, *args, **kwargs):
-        super(PersonalDataForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_id = 'id-personal-data-form'
-        self.helper.form_method = 'post'
-        self.helper.form_action = reverse('submit_form')
-        self.helper.add_input(Submit('submit', 'Submit'))
-        self.helper.form_class = 'form-horizontal'
-        self.helper.layout = Layout(
-            Fieldset('Name', Div('first_name', css_class='form-group col-4'), Div('last_name', css_class='form-group col-4')),
-            Fieldset('Contact data', 'email', 'phone', style="color: brown;"),
-            InlineRadios('color'),
-            TabHolder(Tab('Address', 'address'), Tab('More Info', 'more_info'))
-        )
+def register(request):
+    if request.method == 'POST':
+        form = RegisterUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            profile = UserProfile.objects.create(alias=user.username)
+            return redirect('index')
+    else:
+        form = RegisterUserForm()
+    return render(request, 'register.html', {'form': form})

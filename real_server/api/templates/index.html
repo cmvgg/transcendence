@@ -14,6 +14,17 @@
 
 </head>
 
+<style>
+  .footer_nav{
+    text-decoration: none;
+    font-size: 35px;
+  }
+  .footer_nav:hover{
+    text-decoration:dotted;
+    font-size: 40px;
+  }
+</style>
+
 <body style="background-color: black;">
 <header>
     <!-- Intro settings -->
@@ -94,6 +105,7 @@ h3 span {
     </div>
     <!-- Background image -->
   </header>
+  <br>
   <div class="row " style="background-color: black; height: 40%; display: flex; flex-direction: row; justify-content: center;">
     <h3 class="mb-4" style="font-family: Pixelify Sans, sans-serif; ">Try your best against an AI, another player or enroll a tournament  \<span>&#151;</span> </h3>
   </div>
@@ -103,7 +115,7 @@ h3 span {
         <img class="img-fluid" src="https://cdn.dribbble.com/userupload/23061258/file/original-bed35260fcc9b31c32143bd2b91925dd.gif" alt="arcade game machine" >
     </div>
     <div style=" font-family: Honk, system-ui; display: flex; justify-content: center; max-width: 500px;"  class="col-8 shadow">
-        <h3>Retropong project, the old school arcade experience brougth to live. Pixel is cool dude!</h3>
+        <h3>Retropong project, the old school arcade experience brougth to live.<br>Retro gamers do it better!</h3>
     </div>
     <div class="col">
     </div>
@@ -112,33 +124,37 @@ h3 span {
   <div class="row  " style="background-color: black ; display: flex; flex-direction: row; justify-content: space-around; align-items: center; height: 500px;">
     
     <div style=" font-family: Honk, system-ui; display: flex; justify-content: center; max-width: 500px;"  class="col-8 shadow">
-        <h3>80s gaming because Pixel is cool dude!</h3>
-    </div>
-    <div class="col-md-6" style="height: 500px; justify-content: center; background-image: url(https://i.postimg.cc/3xfnTQjs/D-NQ-NP-941976-MLA26076900203-092017-O.jpg); background-size: cover;">
+        <h3>80s gaming because Pixel is cool dude!<br>We love arcade and music cassettes, the old school.</h3>
     </div>
     
+    <div class="col-md-6" style="height: 350px; width: 500px; justify-content: end; background-image: url(https://cdnb.artstation.com/p/assets/images/images/061/684/511/original/irina-savchishina-diamond-scale.gif?1681389007); background-repeat: no-repeat; background-size: contain; background-position: end;">
+    </div>
+    
+    https://i.postimg.cc/3xfnTQjs/D-NQ-NP-941976-MLA26076900203-092017-O.jpg
   </div>
 
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
   Launch demo modal
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Sign in form</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
       <div class="modal-body">
-        <h2>Form goes here</h2>
+        ... <p>Some text to modal you</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Sign</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
       </div>
     </div>
   </div>
@@ -146,49 +162,49 @@ h3 span {
 
 
   <!-- Footer -->
-  <footer class="text-center text-white" style="background-color: #cd09d4">
+  <footer class="text-center text-white" style="background-image: url('https://preview.redd.it/bpxxqqvps4h91.gif?width=1080&crop=smart&auto=webp&s=79e43e61455bc523307e1ba9284a4afaaae951c5'); background-position: center bottom; background-size: cover;";> <!--  #cd09d4 -->
     <!-- Grid container -->
     <div class="container">
       <!-- Section: Links -->
-      <section class="mt-5">
+      <section class="mt-5" style="height: 50px;">
         <!-- Grid row-->
-        <div class="row text-center d-flex justify-content-center pt-3" style="font-family: Honk, system-ui; font-size: 50%;">
+        <div class="row text-center d-flex justify-content-center pt-3" style="font-family: Honk, system-ui;">
           <!-- Grid column -->
           <div class="col-md-2">
-            <h6 class="text-uppercase font-weight-bold">
-              <a href="/about" class="text-white" style="text-decoration: none;">About us</a>
+            <h6 class="footer_nav">
+              <a href="/index">Home</a>
             </h6>
           </div>
           <!-- Grid column -->
 
           <!-- Grid column -->
           <div class="col-md-2">
-            <h6 class="text-uppercase font-weight-bold">
-              <a href="/playground" class="text-white" style="text-decoration: none;">Play</a>
+            <h6 class="footer_nav">
+              <a href="/playground">Play</a>
             </h6>
           </div>
           <!-- Grid column -->
 
           <!-- Grid column -->
           <div class="col-md-2">
-            <h6 class="text-uppercase font-weight-bold">
-              <a href="/register" class="text-white" style="text-decoration: none;">Sign in</a>
+            <h6 class="footer_nav">
+              <a href="/register">Sign in</a>
             </h6>
           </div>
           <!-- Grid column -->
 
           <!-- Grid column -->
           <div class="col-md-2">
-            <h6 class="text-uppercase font-weight-bold">
-              <a href="#!" class="text-white" style="text-decoration: none;">Help</a>
+            <h6 class="footer_nav">
+              <a href="/select.html">Select</a>
             </h6>
           </div>
           <!-- Grid column -->
 
           <!-- Grid column -->
           <div class="col-md-2">
-            <h6 class="text-uppercase font-weight-bold">
-              <a href="#!" class="text-white" style="text-decoration: none;">Contact</a>
+            <h6 class="footer_nav">
+              <a href="/about.html">About us</a>
             </h6>
           </div>
           <!-- Grid column -->
@@ -197,7 +213,7 @@ h3 span {
       </section>
       <!-- Section: Links -->
 
-      <hr class="my-5" />
+      <hr class="my-2" />
 
       <!-- Section: Text -->
       <section class="mb-5">
@@ -232,6 +248,5 @@ h3 span {
     
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Qi+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
-
 </body>
 </html>

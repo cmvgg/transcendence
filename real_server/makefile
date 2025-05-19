@@ -1,10 +1,12 @@
 all:
+	@chmod +x setup_monitoring.sh
+	@bash setup_monitoring.sh
 	@docker-compose up --build -d
 
 down:
 	@docker-compose down
 
-re:
+re: clean
 	@docker-compose down && docker-compose up --build -d
 
 run:
