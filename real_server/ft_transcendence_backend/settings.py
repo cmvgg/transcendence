@@ -82,14 +82,13 @@ WSGI_APPLICATION = 'ft_transcendence_backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-	'USER': 'postgres',
-	'PASSWORD': 'postgres',
+        'NAME': 'mydatabase',
+	'USER': 'myuser',
+	'PASSWORD': 'mypassword',
 	'HOST': 'db',
 	'PORT': '5432',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

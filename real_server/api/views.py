@@ -18,6 +18,12 @@ from .serializers import (
 def index(request):
     return render(request, 'index.html')
 
+def playground(request):
+    return render(request, 'playground.html')
+
+def profile(request):
+    return render(request, 'profile.html')
+
 class UserProfileList(APIView):
     """
     Lista todos los perfiles de usuario o crea uno nuevo.

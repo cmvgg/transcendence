@@ -63,11 +63,24 @@ h3 span {
     border-left: 1px solid #000;
     animation: escribir 5s steps(51) infinite alternate;
 }
+   
+h3 blink-text{
+  animation: blink 0.8s infinite;
+}
+
 
 @keyframes escribir {
     from { width: 100% }
     to { width:0 }
 }
+
+@keyframes blink {
+
+0% {opacity: 0}
+49%{opacity: 0}
+50% {opacity: 1}
+}
+
 </style>
 
     <!-- Background image -->
@@ -86,7 +99,7 @@ h3 span {
               data-mdb-ripple-init
               class="btn btn-outline-light btn-lg m-2"
               style="font-family: Pixelify Sans, sans-serif;"
-              href="https://www.youtube.com/watch?v=c9B4TPnak1A"
+              href="https://www.youtube.com/watch?v=kvkdw4ZpdTA"
               role="button"
               rel="nofollow"
               target="_blank"
@@ -107,7 +120,7 @@ h3 span {
   </header>
   <br>
   <div class="row " style="background-color: black; height: 40%; display: flex; flex-direction: row; justify-content: center;">
-    <h3 class="mb-4" style="font-family: Pixelify Sans, sans-serif; ">Try your best against an AI, another player or enroll a tournament  \<span>&#151;</span> </h3>
+    <h3 class="mb-4 " style="font-family: Pixelify Sans, sans-serif; ">Try your best against an AI, another player or enroll a tournament  \<span> <blink-text>&#9632; </blink-text> </span> </h3>
   </div>
   
   <div class="row  " style="background-color: black ; display: flex; flex-direction: row; justify-content: space-around; align-items: center;">
@@ -135,7 +148,7 @@ h3 span {
 
 
 <!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="exampleModal">
   Launch demo modal
 </button>
 
