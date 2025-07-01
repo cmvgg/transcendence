@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Select</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Honk&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P:wght@400&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+    </style>
+    <link rel="shortcut icon" type="image/png" href="{% static 'images/favicon.png' %}" >
+    <link rel="shortcut icon" type="image/ico" href="/static/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="../../staticfiles/rest_framework/css/team.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+
+<style>
+  .arcade_botton{
+      position: relative;
+      border-style: double;
+      height: 115px;
+      width: 140px;
+      background-color: rgba(174, 13, 13, 0.966);
+      border: 5px solid rgba(252, 252, 252, 0.771);
+      box-shadow: 0 4px white;
+      color: aqua;
+      font-family: 'Press Start 2P', system-ui;
+      transition: all 0.1s ease;
+  }
+  
+  .arcade_botton:active{
+  top: 5px;
+  box-shadow: 0 2px #666;
+  color: rgb(255, 255, 255);
+  border: 5px solid white;
+}
+</style>  
+
+<style>
+  * {
+  box-sizing: border-box;
+}
+</style>
+
+
+<style>
+body {
+  margin: 0;
+  padding: 0;
+}
+  .videobg {
+  height: 80vh;
+  overflow: hidden;
+  position: relative; /* requires for to position video properly */
+}
+
+video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  object-fit: cover; /* combined with 'absolute', works like background-size, but for DOM elements */
+}
+
+</style>
+
+<style>
+  .footer_nav{
+    text-decoration: none;
+    font-size: 35px;
+  }
+  .footer_nav:hover{
+    text-decoration:dotted;
+    font-size: 40px;
+  }
+</style>
+
+<body>
+
+<!-- Navbar -->
+
+<nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
+  45deg,
+  hsla(168, 85%, 52%, 0.5),
+  hsla(263, 88%, 45%, 0.5) 100%
+)">
+  <div class="container-fluid" style="color: aqua; "> 
+    <button
+      data-mdb-collapse-init
+      class="navbar-toggler"
+      type="button"
+      data-mdb-target="#navbarExample01"
+      aria-controls="navbarExample01"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="fas fa-bars" style="color: aqua;"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarExample01">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="font-family: Pixelify Sans, sans-serif;">
+        <li class="nav-item active">
+          <a class="nav-link"  aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" target="_self" href="/playground">Play</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/register">Sign in</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Tournament</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- Navbar -->
+
+<!-- recursos
+https://www.shutterstock.com/shutterstock/videos/3467987197/preview/stock-footage--k-abstract-pixel-animation-multicolored-digital-background-geometric-of-square-pattern-moving-with.webm
+https://us.123rf.com/450wm/tetsuobuseteru/tetsuobuseteru1701/tetsuobuseteru170100005/68319422-m%C3%A1quina-de-juego-de-arcade-retro-ilustraci%C3%B3n-del-vector.jpg
+-->
+
+
+<div class="videobg" >
+  <video autoplay loop muted>
+    <source src="https://www.shutterstock.com/shutterstock/videos/3467987197/preview/stock-footage--k-abstract-pixel-animation-multicolored-digital-background-geometric-of-square-pattern-moving-with.webm" type="video/webm">
+  </video>
+  <div class="row " style="height: 10vw; ">
+    <h1 style="font-size:4vw; font-family: Tourney, sans-serif; color:aqua;" class="d-flex justify-content-center " >Select game choice</h1>
+  </div>
+  <div class="row fit-content" style="display: flex; justify-content: space-around;">
+    <div class="col text-center" style=" display: flex; justify-content: flex-start; height: 250px; max-width: 200px;">
+      <button class="arcade_botton border-5  rounded-circle">One Player</button>
+    </div>
+    <div class="col text-center" style="display: flex; justify-content: flex-end; height: 250px; max-width: 200px;font-family: Pixelify Sans, sans-serif;" >
+      <button class="arcade_botton border-5  rounded-circle">Two Players</button>
+    </div>
+
+  </div>
+ 
+  <div class="row fit-content" style="display: flex; justify-content: space-around; margin-bottom: 8%;">
+    <div class="col text-center" style="display: flex; justify-content: flex-end; height: 250px; max-width: 200px; font-family: Pixelify Sans, sans-serif;">
+      <button class=" arcade_botton border-5  rounded-circle">Duel</button>   
+    </div>
+    <div class="col text-center" style=" display: flex; justify-content: flex-start; height: 250px; max-width: 200px;font-family: Pixelify Sans, sans-serif;" >
+      <button class="arcade_botton border border-5  rounded-circle" >Tour nament</button>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Footer -->
+<footer class="text-center text-white" style="margin-top: -50px ;background-image: url('https://cdn.dribbble.com/userupload/28311765/file/original-b3d1b68257e6c14b3eca96fc95f0649c.gif');background-repeat: no-repeat; background-size: cover ;background-position: center center;";> <!--  #cd09d4 -->
+  <!-- Grid container -->
+  <div class="container">
+    <!-- Section: Links -->
+    <section class="mt-5" style="height: 50px;">
+      <!-- Grid row-->
+      <div class="row text-center d-flex justify-content-center pt-3" style="font-family: Honk, system-ui;">
+        <!-- Grid column -->
+        <div class="col-md-2">
+          <h6 class="footer_nav">
+            <a href="/index">Home</a>
+          </h6>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-2">
+          <h6 class="footer_nav">
+            <a href="/playground">Play</a>
+          </h6>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-2">
+          <h6 class="footer_nav">
+            <a href="/register">Sign in</a>
+          </h6>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-2">
+          <h6 class="footer_nav">
+            <a href="/select.html">Select</a>
+          </h6>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-2">
+          <h6 class="footer_nav">
+            <a href="/about.html">About us</a>
+          </h6>
+        </div>
+        <!-- Grid column -->
+      </div>
+      <!-- Grid row-->
+    </section>
+    <!-- Section: Links -->
+
+    <hr class="my-2" />
+
+    <!-- Section: Text -->
+    <section class="mb-5">
+      <div class="row d-flex justify-content-center pt-3">
+        <div class="col-lg-10">
+          <p style="font-family: Honk, system-ui; font-size: 30px;">
+            Lorem ipsum transcendeces sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
+            commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
+          </p>
+        </div>
+      </div>
+    </section>
+    <!-- Section: Text -->
+
+  </div>
+  <!-- Grid container -->
+
+  <!-- Copyright -->
+  <div
+       class="text-center p-3"
+       style="background-color: rgba(0, 0, 0, 0.2)"
+       >
+    © 2025 Copyright:
+    <a class="text-white" href="https://mdbootstrap.com/"
+       >Retropong</a
+      >
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->
+  
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
+
