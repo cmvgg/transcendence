@@ -1,0 +1,8 @@
+https://www.youtube.com/watch?v=Y073GMdAZkw
+https://www.youtube.com/watch?v=lds14HqkJTg
+https://www.youtube.com/watch?v=k78Oi383DRc
+
+
+SASS
+https://www.accordbox.com/blog/how-use-scss-sass-your-django-project-python-way/
+https://www.w3schools.com/sass/default.php

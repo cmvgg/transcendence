@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pong mania</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T6c9IE9Ud4/bQv9lnJgffn18/G/2+H/xMOv9ikP0GlnFoum/5k7n9m7k9Xm/9Xm" crossorigin="anonymous">
+    <link rel="shortcut icon" type="image/ico" href="/pong.png">
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Honk&family=Pixelify+Sans:wght@400..700&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+
+</head>
+
+<style>
+  .footer_nav{
+    text-decoration: none;
+    font-size: 35px;
+  }
+  .footer_nav:hover{
+    text-decoration:dotted;
+    font-size: 40px;
+  }
+</style>
+
+<body style="background-color: black;">
+<header>
+    <!-- Intro settings -->
+    <style>
+      /* Default height for small devices */
+      #intro-example {
+        height: 400px;
+      }
+  
+      /* Height for devices larger than 992px */
+      @media (min-width: 992px) {
+        #intro-example {
+          height: 600px;
+        }
+      }
+      .mb-3 {
+        font-family: "Tourney", sans-serif;
+        font-size: 7rem;
+        padding-top: 8%;
+        display:flex
+      }
+      
+h3 { 
+	position: relative; 
+	float: left;
+	background: black;
+	color: #fff;
+	font-size: 2.5em;
+}
+
+h3 span {
+    position:absolute;
+    right:0;
+    width:0;
+    background: black;
+    border-left: 1px solid #000;
+    animation: escribir 5s steps(51) infinite alternate;
+}
+   
+h3 blink-text{
+  animation: blink 0.8s infinite;
+}
+
+
+@keyframes escribir {
+    from { width: 100% }
+    to { width:0 }
+}
+
+@keyframes blink {
+
+0% {opacity: 0}
+49%{opacity: 0}
+50% {opacity: 1}
+}
+
+</style>
+
+    <!-- Background image -->
+    <div
+      id="intro-example"
+      class="p-5 text-center bg-image align-bottom"
+      
+      style="background-image: url('https://t3.ftcdn.net/jpg/09/03/00/26/360_F_903002635_ElRmPsa6jBx672XglYiXWrhCBHNB8eI9.jpg'); background-size: cover; background-position: center;"
+    >
+     <div class="mask" >
+        <div class="d-flex justify-content-center align-items-center h-100">
+          <div class="text-white" style="text-decoration-color: blueviolet; text-align: center;">
+            <h1 class="mb-3">So you think you are a pong master </h1>
+            
+            <a
+              data-mdb-ripple-init
+              class="btn btn-outline-light btn-lg m-2"
+              style="font-family: Pixelify Sans, sans-serif;"
+              href="https://www.youtube.com/watch?v=kvkdw4ZpdTA"
+              role="button"
+              rel="nofollow"
+              target="_blank"
+            >Start</a>
+            <a
+              data-mdb-ripple-init
+              class="btn btn-outline-light btn-lg m-2"
+              style="font-family: Pixelify Sans, sans-serif;"
+              href="/register"
+              target="_blank"
+              role="button"
+            >Sign in</a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Background image -->
+  </header>
+  <br>
+  <div class="row " style="background-color: black; height: 40%; display: flex; flex-direction: row; justify-content: center;">
+    <h3 class="mb-4 " style="font-family: Pixelify Sans, sans-serif; ">Try your best against an AI, another player or enroll a tournament  \<span> <blink-text>&#9632; </blink-text> </span> </h3>
+  </div>
+  
+  <div class="row  " style="background-color: black ; display: flex; flex-direction: row; justify-content: space-around; align-items: center;">
+    <div class="col-md-6">
+        <img class="img-fluid" src="https://cdn.dribbble.com/userupload/23061258/file/original-bed35260fcc9b31c32143bd2b91925dd.gif" alt="arcade game machine" >
+    </div>
+    <div style=" font-family: Honk, system-ui; display: flex; justify-content: center; max-width: 500px;"  class="col-8 shadow">
+        <h3>Retropong project, the old school arcade experience brougth to live.<br>Retro gamers do it better!</h3>
+    </div>
+    <div class="col">
+    </div>
+  </div>
+
+  <div class="row  " style="background-color: black ; display: flex; flex-direction: row; justify-content: space-around; align-items: center; height: 500px;">
+    
+    <div style=" font-family: Honk, system-ui; display: flex; justify-content: center; max-width: 500px;"  class="col-8 shadow">
+        <h3>80s gaming because Pixel is cool dude!<br>We love arcade and music cassettes, the old school.</h3>
+    </div>
+    
+    <div class="col-md-6" style="height: 350px; width: 500px; justify-content: end; background-image: url(https://cdnb.artstation.com/p/assets/images/images/061/684/511/original/irina-savchishina-diamond-scale.gif?1681389007); background-repeat: no-repeat; background-size: contain; background-position: end;">
+    </div>
+    
+    https://i.postimg.cc/3xfnTQjs/D-NQ-NP-941976-MLA26076900203-092017-O.jpg
+  </div>
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="exampleModal">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ... <p>Some text to modal you</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Footer -->
+  <footer class="text-center text-white" style="background-image: url('https://preview.redd.it/bpxxqqvps4h91.gif?width=1080&crop=smart&auto=webp&s=79e43e61455bc523307e1ba9284a4afaaae951c5'); background-position: center bottom; background-size: cover;";> <!--  #cd09d4 -->
+    <!-- Grid container -->
+    <div class="container">
+      <!-- Section: Links -->
+      <section class="mt-5" style="height: 50px;">
+        <!-- Grid row-->
+        <div class="row text-center d-flex justify-content-center pt-3" style="font-family: Honk, system-ui;">
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="footer_nav">
+              <a href="/index">Home</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="footer_nav">
+              <a href="/playground">Play</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="footer_nav">
+              <a href="/register">Sign in</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="footer_nav">
+              <a href="/select.html">Select</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="footer_nav">
+              <a href="/about.html">About us</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+        </div>
+        <!-- Grid row-->
+      </section>
+      <!-- Section: Links -->
+
+      <hr class="my-2" />
+
+      <!-- Section: Text -->
+      <section class="mb-5">
+        <div class="row d-flex justify-content-center pt-3">
+          <div class="col-lg-10">
+            <p style="font-family: Honk, system-ui; font-size: 30px;">
+              Lorem ipsum transcendeces sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
+              commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- Section: Text -->
+
+    </div>
+    <!-- Grid container -->
+
+    <!-- Copyright -->
+    <div
+         class="text-center p-3"
+         style="background-color: rgba(0, 0, 0, 0.2)"
+         >
+      © 2025 Copyright:
+      <a class="text-white" href="https://mdbootstrap.com/"
+         >Retropong</a
+        >
+    </div>
+    <!-- Copyright -->
+  </footer>
+  <!-- Footer -->
+
+    
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Qi+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+</body>
+</html>

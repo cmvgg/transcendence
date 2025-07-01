@@ -1,0 +1,6 @@
+https://www.w3schools.com/django/django_db_create_rds.php
+https://stackpython.medium.com/how-to-start-django-project-with-a-database-postgresql-aaa1d74659d8
+https://www.youtube.com/watch?v=KqcS3P32s6Y&ab_channel=VeryAcademy
+https://www.youtube.com/watch?v=74IWNUja05w&ab_channel=DatabaseStar
+https://neon.tech/postgresql/tutorial
+https://www.postgresql.org/docs/current/tutorial.html
