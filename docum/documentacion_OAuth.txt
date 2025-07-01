@@ -1,5 +1,0 @@
-https://www.youtube.com/watch?v=ZDuRmhLSLOY&ab_channel=ByteMonk
-https://www.digitalocean.com/community/tutorials/an-introduction-to-oauth-2
-https://developers.google.com/identity/protocols/oauth2?hl=es-419
-https://oauth.net/getting-started/
-https://www.youtube.com/watch?app=desktop&v=d7OxfJZOIhQ&t=560s&ab_channel=CryceTruly
