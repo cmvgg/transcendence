@@ -11,6 +11,8 @@ RUN pip install django-crispy-forms
 
 RUN pip install python-json-logger
 
+RUN pip install elasticsearch
+
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
 	postgresql-client \
