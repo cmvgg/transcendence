@@ -1,9 +1,9 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-const paddleWidth = 10;
-const paddleHeight = 100;
-const borderHeight = 10;
+const paddleWidth = 5;
+const paddleHeight = 40;
+const borderHeight = 5;
 const maxSpeed = 8;
 
 let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0, color: "white" };
@@ -19,11 +19,11 @@ let ball = {
     y: canvas.height / 2,
     dx: directionX * 4 * Math.cos(angle),
     dy: directionY * 4 * Math.sin(angle),
-    radius: 7, speed: 6
+    radius: 4, speed: 4
 };
 let leftScore = 0;
 let rightScore = 0;
-let maxScore = 5;
+let maxScore = 5; //!
 let colorEffect = false;
 let gameOver = false;
 let isPaused = true;
@@ -128,25 +128,13 @@ function checkGameOver() {
     } else {
         resetBall();
     }
-
-
-    //TODO: Conectar a la API
-    /* //Enviar datos al servidor
-    if (gameOver) {
-
-        fetch('http://localhost:5500/api/')
-        .then(response => response.json())
-        .then(data => console.log('Data sent successfully:', data))
-        .catch(error => console.error('Error sending data:', error.message));
-
-    } */
 }
 
 function resetBall() {
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
     ball.speed = 4;
-    ball.radius = 7;
+    ball.radius = 4;
 
     let angle;
     do {
@@ -189,13 +177,13 @@ function draw() {
         ctx.fillRect(canvas.width - paddleWidth, rightPaddle.y, paddleWidth, paddleHeight);
         
         ctx.fillStyle = "white";
-        ctx.font = "60px Courier New";
-        ctx.fillText(leftScore, canvas.width / 3, 60);
-        ctx.fillText(rightScore, (canvas.width / 4) * 2.5, 60);
+        ctx.font = "20px Courier New";
+        ctx.fillText(leftScore, canvas.width / 3, 20);
+        ctx.fillText(rightScore, (canvas.width / 4) * 2.5, 20);
 
         if (isPaused) {
             ctx.font = "30px Courier New";
-            ctx.fillText("PAUSED", canvas.width / 2 - 60, canvas.height / 2);
+            ctx.fillText("PAUSED", canvas.width / 2 - 55, canvas.height / 2);
         }
         
         let ballColor = "white";
