@@ -8,7 +8,7 @@ all:
 down:
 	@docker-compose down
 
-re:
+re: clean
 	@docker-compose down && docker-compose up --build -d
 
 run:

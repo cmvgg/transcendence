@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retropong team</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Honk&family=Pixelify+Sans:wght@400..700&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+    </style>
+    <link rel="shortcut icon" type="image/ico" href="/static/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="../../staticfiles/rest_framework/css/team.css">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+
+<style>
+  .footer_nav{
+    text-decoration: none;
+    font-size: 35px;
+  }
+  .footer_nav:hover{
+    text-decoration:dotted;
+    font-size: 40px;
+  }
+</style>
+
+
+<style>
+
+  img:hover {
+    animation: shake 0.5s;
+    animation-iteration-count: infinite;
+    src: url('https://ih1.redbubble.net/image.269457003.3660/raf,750x1000,075,t,FFFFFF:97ab1c12de.u3.jpg');
+    
+  }
+  
+  @keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
+  </style>
+
+<style>
+  .picture_cesar{
+    height: 200px;
+    width: 200px;
+    content:url('https://cdn.intra.42.fr/users/53be5aefb6e0d9897f50ca4760232574/cvarela-.jpeg');
+  }
+  .picture_cesar:hover{
+    content:url('https://ih1.redbubble.net/image.269457003.3660/raf,750x1000,075,t,FFFFFF:97ab1c12de.u3.jpg');;
+  }
+</style>
+
+<style>
+  .picture_jeffrey{
+    height: 200px;
+    width: 200px;
+    content:url('https://cdn.intra.42.fr/users/f06bf946eb169dec428f691c2757e5c2/jeffrey.jpg');
+  }
+  .picture_jeffrey:hover{
+    content:url('https://static.vecteezy.com/system/resources/previews/060/513/150/non_2x/pixel-art-skeleton-character-in-retro-arcade-style-vector.jpg');
+  }
+</style>
+
+<style>
+  .picture_izaro{
+    height: 200px;
+    width: 200px;
+    content:url('https://cdn.intra.42.fr/users/3908a5634fc8a6bc0219aefba97cf8e6/iarbaiza.jpg');
+  }
+  .picture_izaro:hover{
+    content:url('https://art.pixilart.com/d42430702bfd576.png');
+    background-color: white;
+  }
+</style>
+
+<style>
+  .picture_basabe{
+    height: 200px;
+    width: 200px;
+    content:url('https://cdn.intra.42.fr/users/1cb0bae58ca995cd6b933bef09655761/xbasabe-.jpg');
+  }
+  .picture_basabe:hover{
+    content:url('https://ih1.redbubble.net/image.959937603.3529/bg,f8f8f8-flat,750x,075,f-pad,750x1000,f8f8f8.jpg');
+  }
+</style>
+
+
+
+<!-- Navbar -->
+
+<nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
+  45deg,
+  hsla(168, 85%, 52%, 0.8),
+  hsla(263, 88%, 45%, 0.7) 100%
+)">
+  <div class="container-fluid" style="color: aqua; "> 
+    <button
+      data-mdb-collapse-init
+      class="navbar-toggler"
+      type="button"
+      data-mdb-target="#navbarExample01"
+      aria-controls="navbarExample01"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="fas fa-bars" style="color: aqua;"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarExample01">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="font-family: Pixelify Sans, sans-serif;">
+        <li class="nav-item active">
+          <a class="nav-link"  aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" target="_self" href="/playground">Play</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/register">Sign in</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Tournament</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- Navbar -->
+
+<body style="background-image: url('https://i.pinimg.com/originals/1d/a3/66/1da3663ce1d7d0f6098a31a667e862b4.gif'); background-size: cover;">
+
+<div class="row " style="height: 8vw; ">
+    <h1 style="font-size:6vw; font-family: Tourney, sans-serif; color:aqua;" class="d-flex justify-content-center " >The Retropong team</h1>
+</div>
+
+<div class="row fit-content" style="display: flex; justify-content: space-around; ">
+  <div class="col text-center" style="height: 350px; max-width: 300px; font-family: Pixelify Sans, sans-serif;">
+    <h3 style="color: white;">César Varela</h3>
+    <img class="picture_cesar img-fluid  rounded-circle border border-5 border-white" >
+    <div class="shadow bg-white rounded-3">
+      <h5>Bakcend &amp; Monitoring survivor.</h5>
+      <p> Dockers tamer. Also known as the code breaker.</p>
+    </div>
+  </div>
+  <div class="col text-center" style="height: 350px; max-width: 300px;font-family: Pixelify Sans, sans-serif;" >
+      <h3 style="color: white;">Izaro Arbaiza</h3>
+      <img class="picture_izaro img-fluid rounded-circle border border-5 border-white">
+      <div class="shadow bg-white rounded-3">
+        <h5>IA gaming &amp; Paddle algorythm.</h5>  
+        <p>Will code for chocolate. Don't laugh, she can stab you.</p>
+      </div>
+    </div>
+</div>
+
+<div class="row fit-content" style="display: flex; justify-content: space-around;">
+  <div class="col text-center" style="height: 350px; max-width: 300px; font-family: Pixelify Sans, sans-serif;">
+    <h3 style="color: white;">Jeffrey Bones</h3>
+    <img class="picture_jeffrey img-fluid rounded-circle border border-5 border-white "></img>
+    <div class="shadow bg-white rounded-3">  
+      <h5 >Project manager &amp; Scrum master. QA tester.</h5>    
+      <p >Is the team leader, always smiles. Never complains.</p>
+    </div>    
+    </div>
+  <div class="col text-center" style="height: 350px; max-width: 300px;font-family: Pixelify Sans, sans-serif;" >
+      <h3 style="color: white;">Xabier Basabe</h3>
+      <img class="picture_basabe img-fluid rounded-circle border border-5 border-white">
+      <div class="shadow bg-white rounded-3" style="font-family: Pixelify Sans, sans-serif;">  
+        <h5 >Frontend &amp; Pixel enthusiast.</h5>
+        <p>The last mohican, the legends tells he made the first pool.</p>
+      </div>
+  </div>
+
+</div>
+
+
+ 
+ <!-- Footer -->
+<footer class="text-center text-white" style="background-image: url('https://i.pinimg.com/originals/77/ca/a3/77caa32884d735d439ade45ba37feaf2.gif'); background-position: center bottom;";> <!--  #cd09d4 -->
+  <!-- Grid container -->
+  <div class="container">
+    <!-- Section: Links -->
+    <section class="mt-5" style="height: 50px;">
+      <!-- Grid row-->
+      <div class="row text-center d-flex justify-content-center pt-3" style="font-family: Honk, system-ui;">
+        <!-- Grid column -->
+        <div class="col-md-2">
+          <h6 class="footer_nav">
+            <a href="/index">Home</a>
+          </h6>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-2">
+          <h6 class="footer_nav">
+            <a href="/playground">Play</a>
+          </h6>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-2">
+          <h6 class="footer_nav">
+            <a href="/register">Sign in</a>
+          </h6>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-2">
+          <h6 class="footer_nav">
+            <a href="/select">Select</a>
+          </h6>
+        </div>
+        <!-- Grid column -->
+
+        <!-- Grid column -->
+        <div class="col-md-2">
+          <h6 class="footer_nav">
+            <a href="/about">About us</a>
+          </h6>
+        </div>
+        <!-- Grid column -->
+      </div>
+      <!-- Grid row-->
+    </section>
+    <!-- Section: Links -->
+
+    <hr class="my-2" />
+
+    <!-- Section: Text -->
+    <section class="mb-5">
+      <div class="row d-flex justify-content-center pt-3">
+        <div class="col-lg-10">
+          <p style="font-family: Honk, system-ui; font-size: 30px;">
+            Lorem ipsum transcendeces sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
+            commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
+          </p>
+        </div>
+      </div>
+    </section>
+    <!-- Section: Text -->
+
+  </div>
+  <!-- Grid container -->
+
+  <!-- Copyright -->
+  <div
+       class="text-center p-3"
+       style="background-color: rgba(0, 0, 0, 0.2)"
+       >
+    © 2025 Copyright:
+    <a class="text-white" href="https://mdbootstrap.com/"
+       >Retropong</a
+      >
+  </div>
+  <!-- Copyright -->
+</footer>
+<!-- Footer -->
+  
+
+</body>
+
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
+
