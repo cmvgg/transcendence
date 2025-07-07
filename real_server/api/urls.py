@@ -12,4 +12,5 @@ urlpatterns = [
     path('tournament-results/', views.tournament_results, name='tournament_results'),
     path('get_players/', views.get_players, name='get_players'),
     path('', include(router.urls)),
+	path('', include('django_prometheus.urls')),
 ]
