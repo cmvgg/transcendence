@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -123,10 +124,9 @@
 
             <div style=" font-family: Tourney, sans-serif; height: 650px; display: flex; justify-content: center; background-size:contain; background-position: center top; background-repeat: no-repeat" class="col-7 shadow display: flex; flex-direction: row">
               <canvas class=" border border-5 border-white " id="gameCanvas"  style=" margin-top: 10% ; width:90%; height: 90%; background-color:black; border-radius: 20px;">
-                   
-                  <script type="text/javascript" src="../../staticfiles/1vs1.js"></script>
-                </canvas>
+                </canvas>	
             </div>
+			<script src="{% static '1vs1.js' %}"></script>
             <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
               
               <img src="../../staticfiles/avatar2.jpg" alt="player two avatar" width="200" height="200">
