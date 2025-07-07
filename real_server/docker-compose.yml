@@ -34,15 +34,6 @@ services:
       python manage.py collectstatic --noinput &&
       python manage.py migrate &&
       python manage.py runserver 0.0.0.0:8000"
-    command: >
-      sh -c "
-      until pg_isready -h db -p 5432; do
-      echo 'Esperando a que la base de datos esté lista...';
-      sleep 1;
-      done &&
-      python manage.py collectstatic --noinput &&
-      python manage.py migrate &&
-      python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
@@ -61,7 +52,6 @@ services:
 
 
   grafana:
-    build: ../monitoring/grafana/
     build: ../monitoring/grafana/
     ports:
       - "3000:3000"
@@ -152,5 +142,4 @@ volumes:
 
 networks:
   app-network: 
-    driver: bridge
     driver: bridge
