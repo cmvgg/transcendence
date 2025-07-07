@@ -29,21 +29,6 @@ let gameOver = false;
 let isPaused = false;
 let winner = "";
 
-function showGameOverPopup() {
-    document.getElementById("winnerText").innerText = winner;
-    document.getElementById("gameOverModal").style.display = "flex";
-}
-document.getElementById("playAgain").addEventListener("click", () => {
-    document.getElementById("gameOverModal").style.display = "none";
-    resetGame();
-});
-document.getElementById("goHome").addEventListener("click", () => {
-    window.location.href = "../index.html";
-});
-document.getElementById("pauseButton").addEventListener("click", () => {
-    isPaused = !isPaused;
-});
-
 document.addEventListener("keydown", (e) => {
     if (e.key === "w")
         leftPaddle.dy = -5;
