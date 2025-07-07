@@ -1,19 +1,23 @@
+version: '3.8'
+
 services:
   db:
-    image: postgres:15
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
-      - POSTGRES_DB=postgres
+    image: postgres:15-alpine
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
     networks:
-      - app-network
+      - app-network 
 
   postgres_exporter:
     image: prometheuscommunity/postgres-exporter
     environment:
-      - DATA_SOURCE_NAME=postgresql://postgres:postgres@db:5432/postgres?sslmode=disable
+      - DATA_SOURCE_NAME=postgresql://myuser:mypassword@db:5432/mydatabase?sslmode=disable
     ports:
       - "9187:9187"
     depends_on:
@@ -33,93 +37,24 @@ services:
       python manage.py migrate &&
       python manage.py runserver 0.0.0.0:8000"
     volumes:
-    - .:/app
+      - .:/app
     ports:
       - "8000:8000"
     environment:
-      - POSTGRES_NAME=postgres
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=postgres
       - DJANGO_SETTINGS_MODULE=ft_transcendence_backend.settings
       - DJANGO_DEBUG=True
-      - DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+      - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase
+      - DJANGO_SETTINGS_MODULE=ft_transcendence_backend.settings
+      - DJANGO_DEBUG=True
+      - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase
     depends_on:
       - db
     networks:
       - app-network
 
-  prometheus:
-    build: ../monitoring/prometheus
-    ports:
-      - "9090:9090"
-    volumes:
-      - ../monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
-      - prometheus_data:/prometheus
-    networks:
-      - app-network
-
-  grafana:
-    build: ../monitoring/grafana
-    ports:
-      - "3000:3000"
-    volumes:
-      - grafana_data:/var/lib/grafana
-      - ../monitoring/grafana/provisioning:/etc/grafana/provisioning
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
-    depends_on:
-      - prometheus
-    networks:
-      - app-network
-  
-  elasticsearch:
-    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
-    container_name: elasticsearch
-    environment:
-      - discovery.type=single-node
-      - xpack.security.enabled=false
-      - ES_JAVA_OPTS=-Xms512m -Xmx512m
-    ports:
-      - "9200:9200"
-    networks:
-      - app-network
-
-  logstash:
-    image: docker.elastic.co/logstash/logstash:8.13.4
-    container_name: logstash
-    environment:
-      - LS_JAVA_OPTS=-Xms256m -Xmx512m
-    ports:
-      - "5044:5044"
-    volumes:
-      - ./logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
-    depends_on:
-      - elasticsearch
-    networks:
-      - app-network
-
-
-  kibana:
-    image: docker.elastic.co/kibana/kibana:8.12.0
-    container_name: kibana
-    environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-    ports:
-      - "5601:5601"
-    networks:
-      - app-network
-    depends_on:
-      - elasticsearch
-
-
 volumes:
-  prometheus_data:
+  postgres_data:
   frontend_data: 
-  elasticsearch_data:
-  logstash_data:
-  kibana_data:
 
 networks:
   app-network: 

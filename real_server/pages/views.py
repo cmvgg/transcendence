@@ -32,8 +32,7 @@ def register(request):
             InlineRadios('color'),
             TabHolder(Tab('Address', 'address'), Tab('More Info', 'more_info')))
 """
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
+from django.shortcuts import render
 from .forms import ExampleForm
 from api.models import UserProfile
 
@@ -54,13 +53,8 @@ def register(request):
             profile = UserProfile.objects.create(alias=name)
 
             # Opcional: iniciar sesión automáticamente, enviar un mensaje, redirigir, etc.
-            return redirect('index')  # redirige a la página de inicio, por ejemplo
+           # return redirect('http://localhost:8000/')  # redirige a la página de inicio, por ejemplo
 
     else:
         form = ExampleForm()
     return render(request, 'register.html', {'form': form})
-
-
-def tournament(request):
-    # Your tournament view logic here
-    return render(request, 'tournament.html')
