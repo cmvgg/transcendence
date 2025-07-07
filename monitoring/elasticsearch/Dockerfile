@@ -1,4 +1,5 @@
 FROM docker.elastic.co/elasticsearch/elasticsearch:8.10.2
+<<<<<<< HEAD
 ENV xpack.security.enabled=true
 ENV xpack.monitoring.enabled=true
 
@@ -15,3 +16,7 @@ ENV ELASTICSEARCH_SSL_ENABLED=false
 ENV ELASTICSEARCH_SSL_CERT=./config/certs/elastic-certificates.p12
 ENV ELASTICSEARCH_SSL_CA=./config/certs/elastic-stack-ca.p12
 ENV ELASTICSEARCH_SSL_CIPHERS=TLSv1.2
+=======
+ENV xpack.security.enabled=false
+ENV ES_JAVA_OPTS="-Xms512m -Xmx512m"
+>>>>>>> origin/iarbaizaaa

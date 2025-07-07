@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="es">
-    <head>
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pong</title>
+    <script src="https://www.youtube.com/iframe_api"></script>
     <style>
-        body { margin: 0;
+        body {
+            margin: 0;
             padding: 20px;
             font-family: Arial, sans-serif;
             background-color: #1A3636;
             color: #D6BD98;
             text-align: center;
         }
-        a { display: inline-block;
+
+        a {
+            display: inline-block;
             background-color: #40534C;
             color: #D6BD98;
             text-decoration: none;
@@ -21,20 +26,182 @@
             border: 2px solid #667D6A;
             border-radius: 5px;
         }
-        a:hover {background-color: #667D6A;}
-        h1 {font-size: 2.5em; margin-bottom: 30px;}
+
+        a:hover {
+            background-color: #667D6A;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 30px;
+        }
+
+        #videoModal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 9999;
+        }
+
+        #videoContainer {
+            position: relative;
+            width: 70%;
+            margin: 5% auto;
+        }
+
+        #closeBtn {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background: red;
+            color: white;
+            font-size: 16px;
+            border: none;
+            padding: 5px 10px;
+            cursor: not-allowed;
+        }
+
+        #closeBtn.enabled {
+            cursor: pointer;
+        }
     </style>
-    </head>
-    <body>
-        <h1>Pong Game</h1>
-        <!-- <audio autoplay loop src="Bonnie_Tyler_Hero.mp3"></audio> -->  <!--TODO: Esto es muy importante!!-->
-        <a href="srcHtml/1vs1.html">1 VS 1</a>
-        <a href="srcHtml/1vsIA.html">1 VS IA</a>
-        <a href="srcHtml/2vs2.html">2 VS 2</a>
-        <br>
-        <a href="srcHtml/tournament.html">Torneo</a>
-        
-        
-        <br><footer><p>Las Supernenas - 2025</p></footer>
-    </body>
+</head>
+
+<body>
+    <h1>Pong Game</h1>
+    <!-- <audio autoplay loop src="Bonnie_Tyler_Hero.mp3"></audio> --> <!--TODO: Esto es muy importante!!-->
+    <a href="srcHtml/1vs1.html">1 VS 1</a>
+    <a href="srcHtml/1vsIA.html">1 VS IA</a>
+    <a href="srcHtml/2vs2.html">2 VS 2</a>
+    <br>
+    <a href="srcHtml/tournament.html">Torneo</a>
+
+    <button id="testButton">Probar Popup</button>
+
+    <p id="statusMessage">Estado: Esperando inicialización...</p>
+
+    <div id="videoModal">
+        <div id="videoContainer">
+            <div id="player"></div>
+            <button id="closeBtn" disabled>X</button>
+        </div>
+    </div>
+
+    <script>
+        /* window.open('https://www.youtube.com/watch?v=b0wXOojqlHQ&autoplay=1', 'popup', 'left=400, top=250, width=700, height=400, toolbar=0, resizable=1'); */
+        let player;
+        let modal = document.getElementById("videoModal");
+        let closeBtn = document.getElementById("closeBtn");
+        let modalVisible = false;
+
+        // Cargar reproductor YouTube
+        function onYouTubeIframeAPIReady() {
+            const statusMessage = document.getElementById("statusMessage");
+            statusMessage.textContent = "Cargando reproductor de YouTube...";
+            player = new YT.Player('player', {
+                height: '360',
+                width: '640',
+                videoId: 'b0wXOojqlHQ', // ID del video de YouTube
+                playerVars: {
+                    'autoplay': 1,
+                    'controls': 1,
+                    'rel': 0,
+                    'showinfo': 0,
+                    'modestbranding': 1
+                },
+                events: {
+                    'onReady': function () {
+                        statusMessage.textContent = "Reproductor inicializado.";
+                    },
+                    'onStateChange': onPlayerStateChange
+                }
+            });
+        }
+
+        function onPlayerReady(event) {
+            scheduleNextPopup();
+        }
+
+        function onPlayerStateChange(event) {
+            // Si el video terminó
+            if (event.data === YT.PlayerState.ENDED) {
+                enableCloseButton();
+            }
+        }
+
+        function enableCloseButton() {
+            closeBtn.disabled = false;
+            closeBtn.classList.add("enabled");
+            closeBtn.style.cursor = "pointer";
+        }
+
+        function disableCloseButton() {
+            closeBtn.disabled = true;
+            closeBtn.classList.remove("enabled");
+            closeBtn.style.cursor = "not-allowed";
+        }
+
+        closeBtn.onclick = function () {
+            if (player.getPlayerState() === YT.PlayerState.ENDED) {
+                modal.style.display = "none";
+                modalVisible = false;
+                scheduleNextPopup(); // programar otro popup aleatorio
+            } else {
+                player.seekTo(0);
+                player.playVideo();
+            }
+        };
+
+        function showPopupVideo() {
+            if (modalVisible) return; // evitar múltiples popups
+
+            modal.style.display = "block";
+            modalVisible = true;
+            disableCloseButton();
+            player.seekTo(0);
+            player.playVideo();
+        }
+
+        function scheduleNextPopup() {
+            const minTime = 30 * 1000; // mínimo 30 segundos
+            const maxTime = 120 * 1000; // máximo 2 minutos     //Cambiar a 10 minutos 600
+            const randomDelay = Math.floor(Math.random() * (maxTime - minTime)) + minTime;
+
+            setTimeout(() => {
+                showPopupVideo();
+            }, randomDelay);
+        }
+
+        document.getElementById("testButton").onclick = function () {
+            const statusMessage = document.getElementById("statusMessage");
+            if (player && typeof player.getPlayerState === 'function') {
+                statusMessage.textContent = "Reproductor inicializado, programando popup...";
+                scheduleNextPopup();
+            } else {
+                statusMessage.textContent = "El reproductor no está inicializado.";
+            }
+        };
+
+        // Por si el usuario navega mucho tiempo, lanzar múltiples popups
+        window.onload = function () {
+            const statusMessage = document.getElementById("statusMessage");
+            if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {
+                statusMessage.textContent = "Esperando a que se cargue la API de YouTube...";
+                setTimeout(window.onload, 100);
+            } else {
+                statusMessage.textContent = "API de YouTube cargada correctamente.";
+            }
+        };
+    </script>
+
+    <br>
+    <footer>
+        <p>Las Supernenas - 2025</p>
+    </footer>
+</body>
+
 </html>
