@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>pong arena</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Honk&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P:wght@400&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
+    </style>
+
+<style> @font-face {
+  font-family: 'Press Start 2P';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url(@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff2) format('woff2'), url(@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff) format('woff');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+</style> 
+
+<style>
+  .arcade_botton{
+      position: relative;
+      border-style: double;
+      height: 90px;
+      width: 110px;
+      background-color: rgba(174, 13, 13, 0.966);
+      border: 5px solid rgba(252, 252, 252, 0.771);
+      box-shadow: 0 4px #999;
+      font-family: 'Press Start 2P', system-ui;
+      transition: all 0.1s ease;
+  }
+  
+  .arcade_botton:active{
+  top: 5px;
+  box-shadow: 0 2px #666;
+  color: rgb(255, 255, 255);
+  border: 5px solid greenyellow;
+}
+</style>    
+
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+</head>
+<body class="bg-info bg-gradient" sytle="background-image: url('https://us.123rf.com/450wm/tetsuobuseteru/tetsuobuseteru1701/tetsuobuseteru170100005/68319422-m%C3%A1quina-de-juego-de-arcade-retro-ilustraci%C3%B3n-del-vector.jpg'); background-size:cover;">
+
+<!-- Navbar -->
+
+<nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
+  45deg,
+  hsla(168, 85%, 52%, 0.5),
+  hsla(263, 88%, 45%, 0.5) 100%
+)">
+  <div class="container-fluid" style="color: aqua; "> 
+    <button
+      data-mdb-collapse-init
+      class="navbar-toggler"
+      type="button"
+      data-mdb-target="#navbarExample01"
+      aria-controls="navbarExample01"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="fas fa-bars" style="color: aqua;"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarExample01">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="font-family: Pixelify Sans, sans-serif;">
+        <li class="nav-item active">
+          <a class="nav-link"  aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" target="_self" href="/playground">Play</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/register">Sign in</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/select">Select</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+<!-- Navbar -->    
+
+https://i.etsystatic.com/12076554/r/il/961a7f/2402228954/il_1588xN.2402228954_6e1g.jpg
+https://i0.wp.com/gameongrafix.com/wp-content/uploads/2023/09/2023-09-18_09-56-14.jpg?resize=300%2C300&ssl=1
+    <div style="background-image: url('../../staticfiles/machine_top.jpg');background-size: cover; background-repeat: no-repeat ; background-position: center top;">
+    <h1 style="font-size:6vw; font-family: Tourney, sans-serif; color:aqua" class="d-flex justify-content-center">Pong Arena. Start!</h1>
+    </div>
+        <div class="row img-fluid  rounded">
+            <h3 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:aqua">Old school retro gaming</h3>
+        </div>
+        <h1 style="margin-bottom: -1%; font-size:4vw; font-family: 'Press Start 2P', system-ui; color:white; background-color: black;" class="d-flex justify-content-center">Pong. Start!</h1>
+        
+        <div class="row  " style=" display: flex; justify-content: center; height: 1100px; background-color: black;">
+            <div class="col">
+              <h1 style="font-family: 'Press Start 2P', system-ui; color:white">1UP</h1>
+              <h3 style="font-family: 'Press Start 2P', system-ui; color:white">[player name]</h3>
+              <button class="arcade_botton border border-5  rounded-circle" >Play</button>
+            
+            </div>
+            <div style=" font-family: Tourney, sans-serif; padding: -3%; height: 1100px; display: flex; justify-content: center; background-image: url('https://i.etsystatic.com/12076554/r/il/aa0083/1758385225/il_1588xN.1758385225_qfel.jpg'); background-size:contain; background-position: center center; background-repeat: no-repeat" class="col-8 shadow display: flex; flex-direction: row">
+              
+              <canvas class="border border-5 border-white " id="gameCanvas"  style=" margin-top: 21% ; width:56%; height: 48%; background-color:black; border-radius: 30px;">
+                   
+                  <script type="text/javascript" src="../../staticfiles/1vs1.js"></script></canvas>
+            </div>
+            <div class="col"><h1 style="font-family: 'Press Start 2P', system-ui; color: white;">2UP</h1></div>
+        </div>
+
+
+<div class="row"> <button class="border border-5  rounded-circle" style="height: 110px; width: 110px; background-color:rgba(174, 13, 13, 0.966); border-color: rgba(100, 4, 4, 0.771) ;font-family: 'Press Start 2P', system-ui;">Play</button></div>
+
+  
+
+<div class="row" style="background-image: url('../../staticfiles/bezel_top.jpg');background-size: cover; background-repeat: no-repeat ; background-position: center bottom; height: 250px"></div>
+<div class="row">
+  <div class="col" style="background-image: url('../../staticfiles/bezel_left.jpg'); background-size: cover; background-repeat: no-repeat ; "><h1>Player one</h1></div>
+  <div class="col-8" style="background-color: chartreuse; height: 850px;"><h1>THE PONG GAME HERE</h1></div>
+  <div class="col" style="background-image: url('../../staticfiles/bezel_right.jpg'); background-size: cover; background-repeat: no-repeat ;"><h1>Player two</h1></div>
+</div>
+<div class="row" style="background-image: url('../../staticfiles/bezel_bottom.jpg'); background-size: cover; background-repeat: no-repeat ; height: 250px;"></div>
+
+<div class="row" style="background-image: url('../../staticfiles/machine_top.jpg');background-size: cover; background-repeat: no-repeat ; background-position: center bottom; height: 250px"></div>
+<div class="row">
+  <div class="col" style="background-image: url('../../staticfiles/machine_left.jpg'); background-size: cover; background-repeat: no-repeat ; background-position: end; "><h1>Player one</h1></div>
+  <div class="col-8" >
+    <div class="row" style="background-image: url('../../staticfiles/bezel_top.jpg');background-size: cover; background-repeat: no-repeat ; background-position: center bottom; height: 250px"></div>
+<div class="row">
+  <div class="col" style="background-image: url('../../staticfiles/bezel_left.jpg'); background-size: cover; background-repeat: no-repeat ; background-position: end; "><h1>Player one</h1></div>
+  <div class="col-8" style="background-color: chartreuse; height: 650px;"><h1>THE PONG GAME HERE</h1></div>
+  <div class="col" style="background-image: url('../../staticfiles/bezel_right.jpg'); background-size: cover; background-repeat: no-repeat; background-position: start;"><h1>Player two</h1></div>
+</div>
+<div class="row" style="background-image: url('../../staticfiles/bezel_bottom.jpg'); background-size: cover; background-repeat: no-repeat ; height: 250px; background-position: top;"></div>
+
+  </div>
+  <div class="col" style="background-image: url('../../staticfiles/machine_right.jpg'); background-size: cover; background-repeat: no-repeat; background-position: start;"><h1>Player two</h1></div>
+</div>
+<div class="row" style="background-image: url('../../staticfiles/machine_bottom.jpg'); background-size: cover; background-repeat: no-repeat ; height: 250px; background-position: top;"></div>
+
+
+  <!-- Footer -->
+  <footer class="text-center text-white" style="background-color: #cd09d4">
+    <!-- Grid container -->
+    <div class="container">
+      <!-- Section: Links -->
+      <section class="mt-5">
+        <!-- Grid row-->
+        <div class="row text-center d-flex justify-content-center pt-3" style="font-family: Honk, system-ui; font-size: 50%;">
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="text-uppercase font-weight-bold">
+              <a href="/about" class="text-white" style="text-decoration: none;">About us</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="text-uppercase font-weight-bold">
+              <a href="/playground" class="text-white" style="text-decoration: none;">Play</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="text-uppercase font-weight-bold">
+              <a href="/register" class="text-white" style="text-decoration: none;">Sign in</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="text-uppercase font-weight-bold">
+              <a href="#!" class="text-white" style="text-decoration: none;">Help</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="text-uppercase font-weight-bold">
+              <a href="#!" class="text-white" style="text-decoration: none;">Contact</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+        </div>
+        <!-- Grid row-->
+      </section>
+      <!-- Section: Links -->
+
+      <hr class="my-5" />
+
+      <!-- Section: Text -->
+      <section class="mb-5">
+        <div class="row d-flex justify-content-center pt-3">
+          <div class="col-lg-10">
+            <p style="font-family: Honk, system-ui; font-size: 30px;">
+              Lorem ipsum transcendeces sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
+              commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- Section: Text -->
+
+    </div>
+    <!-- Grid container -->
+
+    <!-- Copyright -->
+    <div
+         class="text-center p-3"
+         style="background-color: rgba(0, 0, 0, 0.2)"
+         >
+      © 2025 Copyright:
+      <a class="text-white" href="https://mdbootstrap.com/"
+         >Retropong</a
+        >
+    </div>
+    <!-- Copyright -->
+  </footer>
+  <!-- Footer -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>
