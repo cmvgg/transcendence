@@ -24,6 +24,15 @@ def playground(request):
 def profile(request):
     return render(request, 'profile.html')
 
+def about(request):
+    return render(request, 'about.html')
+
+def select(request):
+    return render(request, 'select.html')
+
+def profile(request):
+    return render(request, 'profile.html')
+
 class UserProfileList(APIView):
     """
     Lista todos los perfiles de usuario o crea uno nuevo.

@@ -1,6 +1,8 @@
 all:
 	@chmod +x setup_monitoring.sh
 	@bash setup_monitoring.sh
+	@chmod +x setup_certs.sh
+	@bash setup_certs.sh
 	@docker-compose up --build -d
 
 down:

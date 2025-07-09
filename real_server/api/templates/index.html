@@ -108,9 +108,10 @@ h3 blink-text{
               data-mdb-ripple-init
               class="btn btn-outline-light btn-lg m-2"
               style="font-family: Pixelify Sans, sans-serif;"
-              href="/register"
+              
               target="_blank"
               role="button"
+              onclick="openRegister()"
             >Sign in</a>
           </div>
         </div>
@@ -147,10 +148,16 @@ h3 blink-text{
   </div>
 
 
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="exampleModal">
-  Launch demo modal
-</button>
+<!-- Launch register as pop up -->
+
+<button class="btn btn-primary" onclick="openRegister()">Dare to register</button>
+
+<script>
+function openRegister() {
+  // Abre una nueva ventana con la URL especificada, un nombre y características
+  window.open("http://localhost:8000/register", "registration form", "width=1200,height=800,left=300,top=100");
+}
+</script>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -185,7 +192,7 @@ h3 blink-text{
           <!-- Grid column -->
           <div class="col-md-2">
             <h6 class="footer_nav">
-              <a href="/index">Home</a>
+              <a href="/">Home</a>
             </h6>
           </div>
           <!-- Grid column -->
@@ -209,7 +216,7 @@ h3 blink-text{
           <!-- Grid column -->
           <div class="col-md-2">
             <h6 class="footer_nav">
-              <a href="/select.html">Select</a>
+              <a href="/select">Select</a>
             </h6>
           </div>
           <!-- Grid column -->
@@ -217,7 +224,7 @@ h3 blink-text{
           <!-- Grid column -->
           <div class="col-md-2">
             <h6 class="footer_nav">
-              <a href="/about.html">About us</a>
+              <a href="/about">About us</a>
             </h6>
           </div>
           <!-- Grid column -->

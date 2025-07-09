@@ -44,6 +44,9 @@ services:
       - DJANGO_SETTINGS_MODULE=ft_transcendence_backend.settings
       - DJANGO_DEBUG=True
       - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase
+      - DJANGO_SETTINGS_MODULE=ft_transcendence_backend.settings
+      - DJANGO_DEBUG=True
+      - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase
     depends_on:
       - db
     networks:

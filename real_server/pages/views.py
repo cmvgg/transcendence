@@ -53,7 +53,7 @@ def register(request):
             profile = UserProfile.objects.create(alias=name)
 
             # Opcional: iniciar sesión automáticamente, enviar un mensaje, redirigir, etc.
-            return redirect('index')  # redirige a la página de inicio, por ejemplo
+           # return redirect('http://localhost:8000/')  # redirige a la página de inicio, por ejemplo
 
     else:
         form = ExampleForm()
