@@ -99,7 +99,7 @@ h3 blink-text{
               data-mdb-ripple-init
               class="btn btn-outline-light btn-lg m-2"
               style="font-family: Pixelify Sans, sans-serif;"
-              href="https://www.youtube.com/watch?v=kvkdw4ZpdTA"
+              onclick="openSignIn()"
               role="button"
               rel="nofollow"
               target="_blank"
@@ -158,6 +158,13 @@ function openRegister() {
   window.open("http://localhost:8000/register", "registration form", "width=1200,height=800,left=300,top=100");
 }
 </script>
+
+<script>
+  function openSignIn() {
+    // Abre una nueva ventana con la URL especificada, un nombre y características
+    window.open("http://localhost:8000/signin", "Sign in form", "width=1200,height=800,left=300,top=100");
+  }
+  </script>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">

@@ -14,6 +14,7 @@ urlpatterns = [
     path('about', views.about, name='about'),
     path('select', views.select, name='select'),
     path('profile', views.profile, name='profile'),
+    path('signin', views.signIn, name='signin'),
     path('user-profiles/', views.UserProfileList.as_view()),
 	#path('tournamet', views.TournamentViewSet.as_view()),
 	path('generate_players_names/', views.generate_players_names, name='generate_players_names'),

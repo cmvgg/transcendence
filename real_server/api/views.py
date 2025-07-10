@@ -30,8 +30,8 @@ def about(request):
 def select(request):
     return render(request, 'select.html')
 
-def profile(request):
-    return render(request, 'profile.html')
+def signIn(request):
+    return render(request, 'signin.html')
 
 class UserProfileList(APIView):
     """
