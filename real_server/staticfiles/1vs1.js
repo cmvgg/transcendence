@@ -1,5 +1,6 @@
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+window.onload = function() {
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
 
 const paddleWidth = 5;
 const paddleHeight = 40;
@@ -207,4 +208,4 @@ function gameLoop() {
         requestAnimationFrame(gameLoop);
 }
 
-gameLoop();
+gameLoop();}

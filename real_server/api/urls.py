@@ -10,10 +10,11 @@ router.register(r'tournaments', views.TournamentViewSet)
 
 urlpatterns = [
     path('', views.index, name='index'),
-    path('playground', views.index, name='playground'),
-    path('about', views.index, name='about'),
-    path('select', views.index, name='select'),
+    path('playground', views.playground, name='playground'),
+    path('about', views.about, name='about'),
+    path('select', views.select, name='select'),
     path('profile', views.profile, name='profile'),
+	path('tournament', views.tournament, name='tournament'),
     path('user-profiles/', views.UserProfileList.as_view()),
 	#path('tournamet', views.TournamentViewSet.as_view()),
 	path('generate_players_names/', views.generate_players_names, name='generate_players_names'),

@@ -30,8 +30,8 @@ def about(request):
 def select(request):
     return render(request, 'select.html')
 
-def profile(request):
-    return render(request, 'profile.html')
+def tournament(request):
+    return render(request, 'tournament.html')
 
 class UserProfileList(APIView):
     """
@@ -131,7 +131,7 @@ def create_tournament(player_names):
 @api_view(['POST'])
 def tournament_results(request):
     """
-    Endpoint para procesar resultados de un torneo, tomando los participantes desde la base de datos.
+    Endpoint para procesar resultados de un torneo y actualizar estadísticas.
     """
     serializer = TournamentResultSerializer(data=request.data)
     if serializer.is_valid():
@@ -149,6 +149,7 @@ def tournament_results(request):
         if len(players) < 2:
             return Response({'error': 'Not enough players registered for the tournament'}, status=status.HTTP_400_BAD_REQUEST)
 
+        # Procesar resultados del torneo
         for match in results:
             winner_alias = match.get('winner')
             loser_alias = match.get('loser')
@@ -158,6 +159,7 @@ def tournament_results(request):
                     winner = UserProfile.objects.get(alias=winner_alias)
                     loser = UserProfile.objects.get(alias=loser_alias)
                 except UserProfile.DoesNotExist:
+                    print(f"Alias no encontrado: winner={winner_alias}, loser={loser_alias}")
                     continue
 
                 winner.wins += 1
@@ -166,8 +168,40 @@ def tournament_results(request):
                 winner.save()
                 loser.save()
 
-        tournament.status = 'finished'
-        tournament.save()
+        # Actualizar o copiar datos a api_userTournamentStats
+        try:
+            with connection.cursor() as cursor:
+                for player in players:
+                    print(f"Procesando jugador: {player.alias}, ID: {player.id}, Wins: {player.wins}, Losses: {player.losses}")
+                    # Verificar si el jugador ya existe en api_userTournamentStats
+                    cursor.execute("""
+                        SELECT id FROM api_userTournamentStats WHERE user_id = %s
+                    """, [player.id])
+                    result = cursor.fetchone()
+
+                    if result:
+                        # Actualizar estadísticas existentes
+                        print(f"Actualizando estadísticas para el jugador: {player.alias}")
+                        cursor.execute("""
+                            UPDATE api_userTournamentStats
+                            SET wins = %s, losses = %s, tournaments_won = tournaments_won + %s
+                            WHERE user_id = %s
+                        """, [player.wins, player.losses, 1 if player.losses == 0 else 0, player.id])
+                    else:
+                        # Insertar nuevo registro
+                        print(f"Insertando nuevo registro para el jugador: {player.alias}")
+                        cursor.execute("""
+                            INSERT INTO api_userTournamentStats (user_id, username, wins, losses, tournaments_won)
+                            VALUES (%s, %s, %s, %s, %s)
+                        """, [player.id, player.alias, player.wins, player.losses, 1 if player.losses == 0 else 0])
+        except Exception as e:
+            print(f"Error al actualizar estadísticas: {e}")
+
+        try:
+            tournament.status = 'finished'
+            tournament.save()
+        except Exception as e:
+            return Response({'error': f'Error al guardar el torneo: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response({
             'status': 'success',
@@ -176,6 +210,7 @@ def tournament_results(request):
         })
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def get_players(request):

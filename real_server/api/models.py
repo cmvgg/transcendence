@@ -48,3 +48,17 @@ class Tournament(models.Model):
 
     class Meta:
         ordering = ['-start_date']
+
+""" #Nueva clase para almacenar estadísticas de torneos por usuario
+# Esta clase almacena estadísticas de torneos por usuario, como victorias, derrotas y
+# torneos ganados. Se relaciona con el modelo UserProfile para obtener el alias del usuario.
+class UserTournamentStats(models.Model):
+    user_id = models.PositiveIntegerField()
+    username = models.CharField(max_length=100)
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
+    tournaments_won = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = "User Tournament Stats"
+        verbose_name_plural = "User Tournament Stats" """
