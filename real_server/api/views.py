@@ -146,7 +146,7 @@ def tournament_results(request):
             }, status=status.HTTP_404_NOT_FOUND)
 
         players = list(tournament.participants.all())
-        if len(players) < 2:
+        if len(players) < 4:
             return Response({'error': 'Not enough players registered for the tournament'}, status=status.HTTP_400_BAD_REQUEST)
 
         # Procesar resultados del torneo
@@ -184,9 +184,9 @@ def tournament_results(request):
                         print(f"Actualizando estadísticas para el jugador: {player.alias}")
                         cursor.execute("""
                             UPDATE api_userTournamentStats
-                            SET wins = %s, losses = %s, tournaments_won = tournaments_won + %s
+                            SET wins = %s, losses = %s, tournaments_won = CASE WHEN %s = 0 THEN tournaments_won + 1 ELSE tournaments_won END
                             WHERE user_id = %s
-                        """, [player.wins, player.losses, 1 if player.losses == 0 else 0, player.id])
+                        """, [player.wins, player.losses, player.losses, player.id])
                     else:
                         # Insertar nuevo registro
                         print(f"Insertando nuevo registro para el jugador: {player.alias}")
