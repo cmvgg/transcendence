@@ -24,3 +24,5 @@ urlpatterns = [
     path('', include(router.urls)),
 	path('', include('django_prometheus.urls')),
 ]
+
+

@@ -354,17 +354,18 @@ async function submitTournamentResults() {
     const allMatches = tournament.match.flat();
     const results = [];
 
-	allMatches.forEach(match => {
-		if (match.winner && match.winner !== "BYE" && match.player1 && match.player2) {
-			const loser = match.winner === match.player1 ? match.player2 : match.player1;
-			if (loser && loser !== "BYE") {
-				results.push({
-					winner: match.winner,
-					loser: loser
-				});
-			}
-		}
-	});
+    allMatches.forEach(match => {
+        if (match.winner && match.winner !== "BYE" && match.player1 && match.player2) {
+            const loser = match.winner === match.player1 ? match.player2 : match.player1;
+            if (loser && loser !== "BYE") {
+                results.push({
+                    winner: match.winner,
+                    loser: loser
+                });
+            }
+        }
+    });
+
     try {
         const response = await fetch('tournament-results/', {
             method: 'POST',
@@ -373,17 +374,18 @@ async function submitTournamentResults() {
                 'X-CSRFToken': getCookie('csrftoken'),
             },
             body: JSON.stringify({
-				tournament_id: tournament_id,
+                tournament_id: tournament_id,
                 name: `Torneo de Pong ${new Date().toLocaleDateString()}`,
                 results: results
             })
         });
-		if (response.ok) {
-			const responseData = await response.json();
-			log("¡Torneo guardado correctamente!");
-			log("Respuesta del servidor:", responseData);
+
+        if (response.ok) {
+            const responseData = await response.json();
+            log("¡Torneo guardado correctamente!");
+            log("Respuesta del servidor:", responseData);
         } else {
-			const errorData = await response.text();
+            const errorData = await response.text();
             log(`Error al guardar el torneo: ${JSON.stringify(errorData)}`);
         }
     } catch (error) {
@@ -468,11 +470,7 @@ function endMatch() {
 		log(`El campeón es: ${winner}`);
 		submitTournamentResults();
 	} else {
-		setTimeout(resetGameForNextMatch, 2000);
-		/* log("Preparando el siguiente partido...");
-        setTimeout(() => {
-            resetGameForNextMatch();
-        }, 2000); */
+		resetGameForNextMatch();
 	}
 }
 

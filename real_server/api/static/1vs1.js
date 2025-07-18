@@ -2,10 +2,9 @@ window.onload = function() {
     const canvas = document.getElementById("gameCanvas");
     const ctx = canvas.getContext("2d");
 
-const paddleWidth = 5;
-const paddleHeight = 40;
+const paddleWidth = 3;
+const paddleHeight = 30;
 const borderHeight = 5;
-const maxSpeed = 8;
 
 let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0, color: "white" };
 let rightPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0, color: "white" };
@@ -18,9 +17,9 @@ let directionY = Math.random() < 0.5 ? 1 : -1;
 let ball = {
     x: canvas.width / 2,
     y: canvas.height / 2,
-    dx: directionX * 4 * Math.cos(angle),
-    dy: directionY * 4 * Math.sin(angle),
-    radius: 4, speed: 4
+    dx: directionX * 2 * Math.cos(angle), //Antes era un 4 en vez de un 2
+    dy: directionY * 2 * Math.sin(angle),
+    radius: 3, speed: 2
 };
 let leftScore = 0;
 let rightScore = 0;
@@ -40,10 +39,13 @@ document.getElementById("playAgain").addEventListener("click", () => {
 });
 document.getElementById("goHome").addEventListener("click", () => {
     window.location.href = "../index.html";
-});
-document.getElementById("pauseButton").addEventListener("click", () => {
-    isPaused = !isPaused;
 });*/
+document.getElementById("pauseButton").addEventListener("click", () => {
+    isPaused = true;
+});
+document.getElementById("startButton").addEventListener("click", () => {
+    isPaused = false;
+});
 
 document.addEventListener("keydown", (e) => {
     if (e.key === "w")
@@ -74,9 +76,9 @@ function update() {
     if (gameOver || isPaused)
         return ;
 
-    let extraSpeed = Math.sqrt(ball.dx ** 2 + ball.dy ** 2);
-    ball.dx *= (extraSpeed + 0.01) / extraSpeed;
-    ball.dy *= (extraSpeed + 0.01) / extraSpeed;
+    let extraSpeed = Math.sqrt(ball.dx ** 2 + ball.dy ** 2); //Cambiar veloccidad de la pelota al empez
+    ball.dx *= (extraSpeed + 0.00001) / extraSpeed;
+    ball.dy *= (extraSpeed + 0.00001) / extraSpeed;
 
     //Mover paletas
     leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y + leftPaddle.dy));
@@ -134,8 +136,8 @@ function checkGameOver() {
 function resetBall() {
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
-    ball.speed = 4;
-    ball.radius = 4;
+    ball.speed = 2;
+    ball.radius = 3;
 
     let angle;
     do {
@@ -167,10 +169,23 @@ function draw() {
     let max = 600;
     let random = Math.floor(Math.random() * (max - min + 3)) + min;
     const currentSpeed = Math.sqrt(Math.pow(ball.dx, 2) + ball.dy ** 2); //ball² === ball**2
-    const minSpeed = 4; 
+    const minSpeed = 3; 
     const maxSpeedForColor = 18; 
     const normalizedSpeed = Math.min(1, Math.max(0, (currentSpeed - minSpeed) / (maxSpeedForColor - minSpeed)));
     
+    ctx.strokeStyle = "white";
+    ctx.lineWidth = 1;
+    const segmentHeight = 5;
+    const segmentGap = 4;
+    const centerX = canvas.width / 2;
+
+    for (let y = borderHeight; y < canvas.height - borderHeight; y += segmentHeight + segmentGap) {
+        ctx.beginPath();
+        ctx.moveTo(centerX, y);
+        ctx.lineTo(centerX, y + segmentHeight);
+        ctx.stroke();
+    }
+
     if (!gameOver) {
         ctx.fillStyle = leftPaddle.color;
         ctx.fillRect(0, leftPaddle.y, paddleWidth, paddleHeight);
@@ -178,13 +193,13 @@ function draw() {
         ctx.fillRect(canvas.width - paddleWidth, rightPaddle.y, paddleWidth, paddleHeight);
         
         ctx.fillStyle = "white";
-        ctx.font = "20px Courier New";
+        ctx.font = "20px FreeMono";
         ctx.fillText(leftScore, canvas.width / 3, 20);
         ctx.fillText(rightScore, (canvas.width / 4) * 2.5, 20);
 
         if (isPaused) {
-            ctx.font = "30px Courier New";
-            ctx.fillText("PAUSED", canvas.width / 2 - 55, canvas.height / 2);
+            ctx.font = "20px DejaVu Sans Mono";
+            ctx.fillText("PAUSED", canvas.width / 2 - 28, canvas.height / 2 - 20);
         }
         
         let ballColor = "white";

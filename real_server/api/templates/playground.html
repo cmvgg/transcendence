@@ -153,10 +153,10 @@
               hsla(120, 95%, 47%, 0.6),
               hsla(22, 100%, 49%, 0.8) 75%);  border-radius: 10px; padding: 15px 0px 15px 15px; justify-content: space-around;">
                 <button id="startButton" class="arcade_botton border border-5  rounded-circle" style=" margin-left: 15px;">Start</button>
-                <script>document.getElementById("startButton").addEventListener("click", () => {isPaused = !isPaused; music.play();});
+                <script>document.getElementById("startButton").addEventListener("click", () => {isPaused = false; music.play();});
                 </script>
                 <button id="pauseButton" class="arcade_botton border border-5  rounded-circle" style=" margin-left: 15px;">Pause</button>
-                <script>document.getElementById("pauseButton").addEventListener("click", () => {isPaused = !isPaused; ; music.pause();});
+                <script>document.getElementById("pauseButton").addEventListener("click", () => {isPaused = true; ; music.pause();});
                 </script>
             </div>
             <div class="col"></div>
