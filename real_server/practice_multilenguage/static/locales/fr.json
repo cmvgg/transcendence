@@ -1,0 +1,12 @@
+{
+	"nav": {
+	  "home": "Accueil",
+	  "about": "A propos"
+	},
+	"welcome": "Bienvenue à Transcendence",
+	"about": {
+		"title": "A propos de nous",
+		"description": "Ceci est la page a propos du proyect Transcendence."
+	}
+  }
+  

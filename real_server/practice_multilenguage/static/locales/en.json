@@ -1,0 +1,22 @@
+{
+	"nav": {
+		"home": "Home",
+		"play": "Play",
+		"signin": "Sign in",
+		"select": "Select",
+		"about": "About us"
+	},
+
+	"1up": "1UP",
+	"player1_name": "[player 1 name]",
+	"2up": "2UP",
+	"player2_name": "[player 2 name]",
+	
+	"button": {
+		"start": "Start",
+		"pause": "Pause"
+	},
+	
+	"score": "High score: [unknown player]"
+}
+  

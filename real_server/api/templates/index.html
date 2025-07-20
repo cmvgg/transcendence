@@ -26,14 +26,13 @@
 </style>
 
 <body style="background-color: black;">
-<header>
+  <header>
     <!-- Intro settings -->
     <style>
       /* Default height for small devices */
       #intro-example {
         height: 400px;
       }
-  
       /* Height for devices larger than 992px */
       @media (min-width: 992px) {
         #intro-example {
@@ -46,55 +45,44 @@
         padding-top: 8%;
         display:flex
       }
-      
-h3 { 
-	position: relative; 
-	float: left;
-	background: black;
-	color: #fff;
-	font-size: 2.5em;
-}
-
-h3 span {
-    position:absolute;
-    right:0;
-    width:0;
-    background: black;
-    border-left: 1px solid #000;
-    animation: escribir 5s steps(51) infinite alternate;
-}
-   
-h3 blink-text{
-  animation: blink 0.8s infinite;
-}
-
-
-@keyframes escribir {
-    from { width: 100% }
-    to { width:0 }
-}
-
-@keyframes blink {
-
-0% {opacity: 0}
-49%{opacity: 0}
-50% {opacity: 1}
-}
-
-</style>
-
+      h3 { 
+        position: relative; 
+        float: left;
+        background: black;
+        color: #fff;
+        font-size: 2.5em;
+      }
+      h3 span {
+        position:absolute;
+        right:0;
+        width:0;
+        background: black;
+        border-left: 1px solid #000;
+        animation: escribir 5s steps(51) infinite alternate;
+      }
+      h3 blink-text{
+        animation: blink 0.8s infinite;
+      }
+      @keyframes escribir {
+        from { width: 100% }
+        to { width:0 }
+      }
+      @keyframes blink {
+        0% {opacity: 0}
+        49%{opacity: 0}
+        50% {opacity: 1}
+      }
+    </style>
     <!-- Background image -->
     <div
       id="intro-example"
       class="p-5 text-center bg-image align-bottom"
-      
       style="background-image: url('https://t3.ftcdn.net/jpg/09/03/00/26/360_F_903002635_ElRmPsa6jBx672XglYiXWrhCBHNB8eI9.jpg'); background-size: cover; background-position: center;"
     >
-     <div class="mask" >
+    <div class="mask" >
         <div class="d-flex justify-content-center align-items-center h-100">
           <div class="text-white" style="text-decoration-color: blueviolet; text-align: center;">
             <h1 class="mb-3">So you think you are a pong master </h1>
-            
             <a
               data-mdb-ripple-init
               class="btn btn-outline-light btn-lg m-2"
@@ -108,7 +96,6 @@ h3 blink-text{
               data-mdb-ripple-init
               class="btn btn-outline-light btn-lg m-2"
               style="font-family: Pixelify Sans, sans-serif;"
-              
               target="_blank"
               role="button"
               onclick="openRegister()"
@@ -136,50 +123,44 @@ h3 blink-text{
   </div>
 
   <div class="row  " style="background-color: black ; display: flex; flex-direction: row; justify-content: space-around; align-items: center; height: 500px;">
-    
     <div style=" font-family: Honk, system-ui; display: flex; justify-content: center; max-width: 500px;"  class="col-8 shadow">
         <h3>80s gaming because Pixel is cool dude!<br>We love arcade and music cassettes, the old school.</h3>
     </div>
-    
     <div class="col-md-6" style="height: 350px; width: 500px; justify-content: end; background-image: url(https://cdnb.artstation.com/p/assets/images/images/061/684/511/original/irina-savchishina-diamond-scale.gif?1681389007); background-repeat: no-repeat; background-size: contain; background-position: end;">
     </div>
-    
     https://i.postimg.cc/3xfnTQjs/D-NQ-NP-941976-MLA26076900203-092017-O.jpg
   </div>
 
+  <!-- Launch register as pop up -->
+  <button class="btn btn-primary" onclick="openRegister()">Dare to register</button>
 
-<!-- Launch register as pop up -->
+  <script>
+    function openRegister() {
+      // Abre una nueva ventana con la URL especificada, un nombre y características
+      window.open("http://localhost:8000/register", "registration form", "width=1200,height=800,left=300,top=100");
+    }
+  </script>
 
-<button class="btn btn-primary" onclick="openRegister()">Dare to register</button>
-
-<script>
-function openRegister() {
-  // Abre una nueva ventana con la URL especificada, un nombre y características
-  window.open("http://localhost:8000/register", "registration form", "width=1200,height=800,left=300,top=100");
-}
-</script>
-
-<!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        ... <p>Some text to modal you</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          ... <p>Some text to modal you</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
-
 
   <!-- Footer -->
   <footer class="text-center text-white" style="background-image: url('https://preview.redd.it/bpxxqqvps4h91.gif?width=1080&crop=smart&auto=webp&s=79e43e61455bc523307e1ba9284a4afaaae951c5'); background-position: center bottom; background-size: cover;";> <!--  #cd09d4 -->
@@ -272,9 +253,8 @@ function openRegister() {
     <!-- Copyright -->
   </footer>
   <!-- Footer -->
-
-    
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Qi+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+   
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Qi+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
 </body>
 </html>
