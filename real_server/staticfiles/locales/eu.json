@@ -1,0 +1,60 @@
+{
+	/* playground.html */
+	"nav": {
+		"home": "Hasiera",
+		"play": "Jolastu",
+		"signin": "Saioa hasi",
+		"select": "Hautatu",
+		"about": "Guri buruz"
+	},
+
+	"1up": "1UP",
+	"player1_name": "[1 jokalariaren izena]",
+	"2up": "2UP",
+	"player2_name": "[2 jokalariaren izena]",
+
+	"button": {
+		"start": "Hasi",
+		"pause": "Pausatu"
+	},
+	
+	"score": "Puntuzio altuena: [jokalari ezezaguna]",
+
+
+	/* about.html */	
+	"team": {
+		"title": "Retropong taldea",
+		"members": {
+			"cesar": {
+				"position": "Bakcend eta Monitoreotik bizirik atera da.",
+				"description": "Dockersen hezitzailea. Kodeen deszifratzailea ere esaten zaio."
+			},
+			"izaro": {
+				"position": "Jolasetarako algoritmoa eta Paddle-la.",
+				"description": "Txokolate bidez programatuko du. Ez barre egin, sastakatu zaitzake."
+			},
+			"jeffrey": {
+				"position": "Proiektuen kudeatzailea eta Scrum Master. QA testerra.",
+				"description": "Taldeko liderra da, beti egiten du irribarre. Ez da inoiz kexatzen."
+			},
+			"basabe": {
+				"position": "Frontend eta pixelen zale amorratua.",
+				"description": "Azken mohikanoa, kondairaren arabera, lehen igerilekua egin zuen."
+			}
+		}
+	},
+
+
+	/* index.html */
+	"master": "Pongeko maisua zarela uste duzu?",
+	"start_a": "Hasi",
+	"signin_a": "Saioa hasi",
+	"ai": "Emaiozu zure onena IA baten aurka, beste jokalari baten aurka edo eman izena txapelketa batean\\",
+	"proyect": "Retropong proiektua, bizitzara ekarritako eskola zaharreko esperientzia arkaikoa. <br>Retro jokalariek hobeto egiten dute!",
+	"gaming": "80ko hamarkadako jokoak, Pixel mola delako, lagun!<br>Asko gustatzen zaizkigu arkuteriak eta musika-kaseteak, eskola zaharra.",
+	"dare": "Ausartu zaitez erregistratzera",
+	"modal_t": "Modalaren izenburua",
+	"modal_d": "Modalera bidaltzeko testua",
+	"close": "Itxi",
+	"save": "Gorde aldaketak"
+}

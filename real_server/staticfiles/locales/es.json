@@ -1,0 +1,61 @@
+{
+	/* playground.html */
+	"nav": {
+		"home": "Inicio",
+		"play": "Jugar",
+		"signin": "Iniciar sesion",
+		"select": "Seleccionar",
+		"about": "Acerca de nosotros"
+	},
+
+	"1up": "1UP",
+	"player1_name": "[Nombre jugador 1]",
+	"2up": "2UP",
+	"player2_name": "[Nombre jugador 2]",
+
+	"button": {
+		"start": "Iniciar",
+		"pause": "Pausar"
+	},
+	
+	"score": "Puntuaje mas alto: [jugador desconocido]",
+
+
+	/* about.html */
+	"team": {
+		"title": "Equipo Retropong",
+		"members": {
+			"cesar": {
+				"position": "Superviviente de Bakcend y Monitoreo.",
+				"description": "Domador de Dockers. También conocido como el descifrador de códigos."
+			},
+			"izaro": {
+				"position": "Algoritmo de IA para juegos y Paddle.",
+				"description": "Programará por chocolate. No te rías, puede apuñalarte."
+			},
+			"jeffrey": {
+				"position": "Gerente de proyectos y Scrum Master. Tester de QA.",
+				"description": "Es el líder del equipo, siempre sonríe. Nunca se queja."
+			},
+			"basabe": {
+				"position": "Entusiasta del frontend y los píxeles.",
+				"description": "El último mohicano, según la leyenda, hizo la primera piscina."
+			}
+		}
+	},
+
+
+	/* index.html */
+	"master": "¿Así que te crees un maestro del pong?",
+	"start_a": "Iniciar",
+	"signin_a": "Iniciar sesión",
+	"ai": "Dale lo mejor de ti contra una IA, otro jugador o inscríbete en un torneo\\",
+	"proyect": "Proyecto Retropong, la experiencia arcade de la vieja escuela traída a la vida.<br>¡Los jugadores retro lo hacen mejor!",
+	"gaming": "¡Juegos de los 80 porque Pixel mola, amigo!<br>Nos encantan los arcades y los casetes de música, la vieja escuela.",
+	"dare": "Atrévete a registrarte",
+	"modal_t": "Título del modal",
+	"modal_d": "Texto para enviarte al modal",
+	"close": "Cerrar",
+	"save": "Guardar cambios"
+}
+  

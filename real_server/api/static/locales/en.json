@@ -1,0 +1,60 @@
+{
+	"__comentario1": "playground.html",
+	"nav": {
+		"home": "Home",
+		"play": "Play",
+		"signin": "Sign in",
+		"select": "Select",
+		"about": "About us"
+	},
+
+	"1up": "1UP",
+	"player1_name": "[player 1 name]",
+	"2up": "2UP",
+	"player2_name": "[player 2 name]",
+	
+	"button": {
+		"start": "Start",
+		"pause": "Pause"
+	},
+	
+	"score": "High score: [unknown player]",
+
+
+	"__comentario2": "about.html",
+	"team": {
+		"title": "The Retropong team",
+		"members": {
+			"cesar": {
+				"position": "Backend & Monitoring survivor.",
+				"description": "Dockers tamer. Also known as the code breaker."
+			},
+			"izaro": {
+				"position": "AI gaming & Paddle algorithm.",
+				"description": "Will code for chocolate. Don't laugh, she can stab you."
+			},
+			"jeffrey": {
+				"position": "Project manager & Scrum master. QA tester.",
+				"description": "Is the team leader, always smiles. Never complains."
+			},
+			"basabe": {
+				"position": "Frontend & Pixel enthusiast.",
+				"description": "The last Mohican, the legends say he made the first pool."
+			}
+		}
+	},
+
+
+	"__comentario3": "index.html",
+	"master": "So you think you are a pong master",
+	"start_a": "Start",
+	"signin_a": "Sing in",
+	"ai": "Try your best against an AI, another player or enroll a tournament  \\",
+	"proyect": "Retropong project, the old school arcade experience brougth to live.<br>Retro gamers do it better!",
+	"gaming": "80s gaming because Pixel is cool dude!<br>We love arcade and music cassettes, the old school.",
+	"dare": "Dare to register",
+	"modal_t": "Modal title",
+	"modal_d": "Some text to modal you",
+	"close": "Close",
+	"save": "Save changes"
+}
