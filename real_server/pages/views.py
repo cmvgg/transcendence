@@ -50,10 +50,10 @@ def register(request):
             user = User.objects.create_user(username=name, email=email, password=password)
 
             # Crear automáticamente el perfil con alias igual a name (o modificar según convenga)
-            profile = UserProfile.objects.create(alias=name)
-
+            #profile = UserProfile.objects.create(alias=name)
+            #form.save()
             # Opcional: iniciar sesión automáticamente, enviar un mensaje, redirigir, etc.
-           # return redirect('http://localhost:8000/')  # redirige a la página de inicio, por ejemplo
+            #return redirect ('http://localhost:8000/profile')  # redirige a la página de inicio, por ejemplo
 
     else:
         form = ExampleForm()

@@ -22,4 +22,11 @@ urlpatterns = [
     path('tournament-results/', views.tournament_results, name='tournament_results'),
     path('get_players/', views.get_players, name='get_players'),
     path('', include(router.urls)),
+
+    #CUCU
+    path('cucu/', views.cucu, name='cucu'),
+    path('api/player/<int:player_id>/', views.get_player_data, name='get_player_data'),
+    path('api/player/update/', views.update_player_data, name='update_player_data'),
 ]
+
+

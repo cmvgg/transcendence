@@ -14,6 +14,9 @@ from .serializers import (
     TournamentSerializer,
     TournamentResultSerializer
 )
+from .forms import signInForm
+from .models import ProfileData
+
 
 def index(request):
     return render(request, 'index.html')
@@ -22,6 +25,8 @@ def playground(request):
     return render(request, 'playground.html')
 
 def profile(request):
+    #datos = UserProfileList.objects.all()  # Obtiene todos los objetos del modelo ProfileData
+    #return render(request, 'profile.html', {'datos': datos})
     return render(request, 'profile.html')
 
 def about(request):
@@ -31,7 +36,8 @@ def select(request):
     return render(request, 'select.html')
 
 def signIn(request):
-    return render(request, 'signin.html')
+    form_s = signInForm()
+    return render(request, 'signin.html' , {'form': form_s})
 
 class UserProfileList(APIView):
     """
@@ -200,13 +206,131 @@ class RegisterUserForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 
+#def register(request):
+#    if request.method == 'POST':
+#        form = RegisterUserForm(request.POST)
+#        if form.is_valid():
+#            user = form.save()
+#            profile = UserProfile.objects.create(alias=user.username)
+#            return redirect('index')
+#    else:
+#        form = RegisterUserForm()
+#    return render(request, 'register.html', {'form': form})
+
 def register(request):
     if request.method == 'POST':
-        form = RegisterUserForm(request.POST)
+        form = ExampleForm(request.POST)
         if form.is_valid():
-            user = form.save()
-            profile = UserProfile.objects.create(alias=user.username)
-            return redirect('index')
+            # Extraer datos del formulario
+            name = form.cleaned_data.get('name')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+
+            # Crear el usuario utilizando el nombre como username
+            user = User.objects.create_user(username=name, email=email, password=password)
+
+            # Crear automáticamente el perfil con alias igual a name (o modificar según convenga)
+            profile = UserProfile.objects.create(alias=name)
+            form.save()
+            # Opcional: iniciar sesión automáticamente, enviar un mensaje, redirigir, etc.
+            return redirect ('http://localhost:8000/profile')  # redirige a la página de inicio, por ejemplo
+
     else:
-        form = RegisterUserForm()
+        form = ExampleForm()
     return render(request, 'register.html', {'form': form})
+
+
+
+
+
+# CUCU views.py
+from django.shortcuts import render, get_object_or_404
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from .models import Player
+import json
+
+@login_required
+#def profile_view(request):
+def cucu(request):
+    """Vista para mostrar la página de perfil"""
+    return render(request, 'cucu.html')
+
+@login_required
+@require_http_methods(["GET"])
+def get_player_data(request, player_id):
+    """API endpoint para obtener datos del jugador"""
+    try:
+        player = get_object_or_404(Player, id=player_id)
+        
+        # Verificar si el usuario tiene permisos para ver este perfil
+        if request.user != player.user and not request.user.is_staff:
+            return JsonResponse({
+                'error': 'No tienes permisos para ver este perfil'
+            }, status=403)
+        
+        data = {
+            'id': player.id,
+            'nickname': player.nickname,
+            'level': player.level,
+            'experience': player.experience,
+            'score': player.score,
+            'avatar': player.avatar.url if player.avatar else None,
+            'created_at': player.created_at.strftime('%Y-%m-%d'),
+            'is_active': player.is_active,
+            'username': player.user.username,
+            'email': player.user.email,
+            'first_name': player.user.first_name,
+            'last_name': player.user.last_name,
+        }
+        
+        return JsonResponse({
+            'success': True,
+            'player': data
+        })
+        
+    except Player.DoesNotExist:
+        return JsonResponse({
+            'error': 'Jugador no encontrado'
+        }, status=404)
+    except Exception as e:
+        return JsonResponse({
+            'error': f'Error interno del servidor: {str(e)}'
+        }, status=500)
+
+@login_required
+@csrf_exempt
+@require_http_methods(["POST"])
+def update_player_data(request):
+    """API endpoint para actualizar datos del jugador"""
+    try:
+        data = json.loads(request.body)
+        player = get_object_or_404(Player, user=request.user)
+        
+        # Actualizar campos permitidos
+        if 'nickname' in data:
+            player.nickname = data['nickname']
+        if 'level' in data:
+            player.level = data['level']
+        if 'experience' in data:
+            player.experience = data['experience']
+        if 'score' in data:
+            player.score = data['score']
+            
+        player.save()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Datos actualizados correctamente'
+        })
+        
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'error': 'Formato JSON inválido'
+        }, status=400)
+    except Exception as e:
+        return JsonResponse({
+            'error': f'Error al actualizar: {str(e)}'
+        }, status=500)

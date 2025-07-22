@@ -163,11 +163,37 @@
         <p>data 1 here</p>
         <p>data 2 here</p>
     </div>
+    <button id="dataButton" onclick="fetchData()" class="arcade_botton border border-5  rounded-circle" style=" margin-left: 15px;">data</button>
+    <div id="container"></div>
+    <script>
+      async function fetchData() {
+          const respuesta = await fetch('http://127.0.0.1:5432/UserProfileList'); // Reemplaza con tu endpoint
+          const datos = await respuesta.json();
+          return datos;
+      }
+
+      const container = document.getElementById('contenedor-datos');
+
+      fetchData().then(datos => {
+          container.innerHTML = `
+              <h4>container inner data</h4>
+              <p>Nombre: ${datos.name}</p>
+              <p>Edad: ${datos.email}</p>
+              <p>Ciudad: ${datos.password}</p>
+              <div class="bio-desk">
+                  <h4 class="purple">Second example of data</h4>
+                  <p>data 1 here</p>
+                  <p>data 2 here</p>
+              </div>
+          `;
+      });
+  </script>
 
     <script>
         async function obtenerDatos() {
-            const respuesta = await fetch('http://127.0.0.1:5432'); // Reemplaza con tu endpoint
+            const respuesta = await fetch('http://127.0.0.1:5432/UserProfileList'); // Reemplaza con tu endpoint
             const datos = await respuesta.json();
+            console.log('User Data:', respuesta);
             return datos;
         }
 
@@ -186,6 +212,19 @@
             `;
         });
     </script>
+
+<h1>Datos</h1>
+<ul>
+  <h4>check, one two three</h4>
+    {% for item in datos %}
+     <h4>cositas</h4>
+        <li style="color:black">{{ item.alias }}</li>
+    {% endfor %}
+</ul>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  obtenerDatos();
+}); </script>
 
     <!-- Footer -->
   <footer class="text-center text-white" style="background-image: url('https://64.media.tumblr.com/647cfeeb6827dd332b390e6ce5e2b16a/175e171edbe54538-fe/s2048x3072/97e4760df288f74b0c7f817dbc5fa000552d8118.gifv'); background-position: center center; background-repeat: no-repeat; background-size: cover;";> <!--  #cd09d4 -->

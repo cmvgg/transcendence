@@ -85,9 +85,9 @@
     <div style="background-color: black ;color: whitesmoke; height: 350px; font-family: Pixelify Sans, sans-serif; background-image: url('../../staticfiles/oie_transparent.png'); background-repeat: no-repeat; background-position: center; background-size: cover; border-radius: 10px;" class="col-3 shadow-lm text-center border-5 border-white">
       
       <div class="container py-3">
-        <h5 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)">Sign in and become a retrogamer</h5>
+        <h5 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)">Sign up to retrogame</h5>
         {% block content %}
-        <form id="registerForm" method="post" onsubmit="return closeWindow()">
+        <form id="ExampleForm" method="post" onsubmit="return closeWindow()">
             {% csrf_token %}
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary" data-bs-toggle="popover">Submit</button>
@@ -101,13 +101,14 @@
 </div>
 <br><br><br><br>
 <div class="row" style="height: 150px;">
-  
+ 
+<!--
 <script>
   function closeWindow() {
     window.close();
   return true;
 }
-</script>
+</script> -->
   
   
 
@@ -187,7 +188,7 @@
        style="background-color: rgba(0, 0, 0, 0.2)"
        >
     © 2025 Copyright:
-    <a class="text-white" href="https://mdbootstrap.com/"
+    <a class="text-white" href="https://projects.intra.42.fr/ft_transcendence/xbasabe-"
        >Retropong</a
       >
   </div>
