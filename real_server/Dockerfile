@@ -1,4 +1,4 @@
-FROM python:3.11-slim-buster
+FROM python:latest
 
 WORKDIR /app
 
@@ -21,6 +21,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     nano \
     curl \
     && rm -rf /var/lib/apt/lists/*
+
+RUN python -m pip install Pillow
 
 COPY . .
 

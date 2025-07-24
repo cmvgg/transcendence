@@ -156,75 +156,280 @@
     </div>
     </div>
 
-    <h1>Ejemplo datos recibidos del backend</h1>
-    <div id="contenedor-datos"></div>
-    <div class="bio-desk">
-        <h4 class="purple">Example of data</h4>
-        <p>data 1 here</p>
-        <p>data 2 here</p>
-    </div>
-    <button id="dataButton" onclick="fetchData()" class="arcade_botton border border-5  rounded-circle" style=" margin-left: 15px;">data</button>
-    <div id="container"></div>
-    <script>
-      async function fetchData() {
-          const respuesta = await fetch('http://127.0.0.1:5432/UserProfileList'); // Reemplaza con tu endpoint
+  
+  
+<h1>Example data</h1>
+    
+
+<script>
+  async function obtenerPerfilUsuario() {
+      try {
+          // Endpoint corregido para UserProfile
+          const respuesta = await fetch('http://127.0.0.1:8000/api/userprofile/', {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': getCookie('csrftoken')
+              }
+          });
+          
+          if (!respuesta.ok) {
+              throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
+          }
+          
           const datos = await respuesta.json();
+          console.log('UserProfile Data:', datos);
+          
           return datos;
+          
+      } catch (error) {
+          console.error('Error al obtener perfil:', error);
+          throw error;
+      }
+  }
+
+  // Función para obtener un perfil específico por ID
+  async function obtenerPerfilPorId(userId) {
+      try {
+          const respuesta = await fetch(`http://127.0.0.1:8000/api/userprofile/${userId}/`, {
+              method: 'GET',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRFToken': getCookie('csrftoken')
+              }
+          });
+          
+          if (!respuesta.ok) {
+              throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
+          }
+          
+          const datos = await respuesta.json();
+          console.log('UserProfile específico:', datos);
+          
+          return datos;
+          
+      } catch (error) {
+          console.error('Error al obtener perfil específico:', error);
+          throw error;
+      }
+  }
+
+  // Función para calcular estadísticas adicionales
+  function calcularEstadisticas(perfil) {
+      const totalPartidas = perfil.wins + perfil.losses;
+      const winRate = totalPartidas > 0 ? (perfil.wins / totalPartidas * 100).toFixed(1) : 0;
+      const lossRate = totalPartidas > 0 ? (perfil.losses / totalPartidas * 100).toFixed(1) : 0;
+      
+      return {
+          totalPartidas,
+          winRate,
+          lossRate,
+          winRateDecimal: totalPartidas > 0 ? perfil.wins / totalPartidas : 0
+      };
+  }
+
+  // Función para obtener el token CSRF
+  function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+          const cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+              const cookie = cookies[i].trim();
+              if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+              }
+          }
+      }
+      return cookieValue;
+  }
+
+  // Función principal para cargar y mostrar el perfil
+  async function cargarPerfilUsuario(userId = null) {
+      const contenedor = document.getElementById('contenedor-datos');
+      
+      if (!contenedor) {
+          console.error('Elemento contenedor no encontrado');
+          return;
       }
 
-      const container = document.getElementById('contenedor-datos');
+      // Mostrar loading
+      contenedor.innerHTML = `
+          <div class="loading-container" style="text-align: center; padding: 20px;">
+              <p>🔄 Cargando perfil de usuario...</p>
+          </div>
+      `;
 
-      fetchData().then(datos => {
-          container.innerHTML = `
-              <h4>container inner data</h4>
-              <p>Nombre: ${datos.name}</p>
-              <p>Edad: ${datos.email}</p>
-              <p>Ciudad: ${datos.password}</p>
-              <div class="bio-desk">
-                  <h4 class="purple">Second example of data</h4>
-                  <p>data 1 here</p>
-                  <p>data 2 here</p>
+      try {
+          let datos;
+          
+          // Obtener datos según si se especifica un ID o no
+          if (userId) {
+              datos = await obtenerPerfilPorId(userId);
+          } else {
+              // Si no se especifica ID, obtener el perfil actual o lista
+              datos = await obtenerPerfilUsuario();
+          }
+          
+          // Si es una lista, tomar el primer elemento
+          const perfil = Array.isArray(datos) ? datos[0] : datos;
+          
+          if (!perfil) {
+              throw new Error('No se encontraron datos del perfil');
+          }
+          
+          // Calcular estadísticas
+          const stats = calcularEstadisticas(perfil);
+          
+          // Mostrar datos del perfil
+          contenedor.innerHTML = `
+              <div class="user-profile-card" style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                  <div class="profile-header" style="text-align: center; margin-bottom: 20px;">
+                      <h2 style="color: #333; margin-bottom: 10px;">🎮 ${perfil.alias}</h2>
+                      <div class="profile-badge" style="display: inline-block; padding: 5px 15px; background: linear-gradient(45deg, #667eea, #764ba2); color: white; border-radius: 20px; font-size: 14px;">
+                          Jugador ${stats.totalPartidas > 0 ? 'Activo' : 'Nuevo'}
+                      </div>
+                  </div>
+                  
+                  <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                      <div class="stat-card wins" style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                          <div style="font-size: 2em; font-weight: bold;">${perfil.wins}</div>
+                          <div style="font-size: 0.9em; opacity: 0.9;">🏆 Victorias</div>
+                      </div>
+                      
+                      <div class="stat-card losses" style="background: linear-gradient(135deg, #f44336, #d32f2f); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                          <div style="font-size: 2em; font-weight: bold;">${perfil.losses}</div>
+                          <div style="font-size: 0.9em; opacity: 0.9;">💔 Derrotas</div>
+                      </div>
+                      
+                      <div class="stat-card total" style="background: linear-gradient(135deg, #2196F3, #1976D2); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                          <div style="font-size: 2em; font-weight: bold;">${stats.totalPartidas}</div>
+                          <div style="font-size: 0.9em; opacity: 0.9;">🎯 Total</div>
+                      </div>
+                      
+                      <div class="stat-card winrate" style="background: linear-gradient(135deg, #FF9800, #F57C00); color: white; padding: 20px; border-radius: 10px; text-align: center;">
+                          <div style="font-size: 2em; font-weight: bold;">${stats.winRate}%</div>
+                          <div style="font-size: 0.9em; opacity: 0.9;">📊 Win Rate</div>
+                      </div>
+                  </div>
+                  
+                  <div class="progress-section" style="margin-bottom: 20px;">
+                      <h4 style="margin-bottom: 10px; color: #555;">📈 Rendimiento</h4>
+                      <div class="progress-bar" style="width: 100%; height: 20px; background: #f0f0f0; border-radius: 10px; overflow: hidden;">
+                          <div class="progress-fill" style="height: 100%; width: ${stats.winRate}%; background: linear-gradient(90deg, #4CAF50, #45a049); transition: width 0.5s ease; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">
+                              ${stats.winRate > 15 ? `${stats.winRate}% Win Rate` : ''}
+                          </div>
+                      </div>
+                      <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 12px; color: #666;">
+                          <span>0%</span>
+                          <span>50%</span>
+                          <span>100%</span>
+                      </div>
+                  </div>
+                  
+                  <div class="additional-info" style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                      <h4 style="margin-bottom: 10px; color: #555;">ℹ️ Información adicional</h4>
+                      <p><strong>ID:</strong> ${perfil.id || 'N/A'}</p>
+                      <p><strong>Alias único:</strong> ${perfil.alias}</p>
+                      <p><strong>Ratio W/L:</strong> ${stats.totalPartidas > 0 ? (perfil.wins / Math.max(perfil.losses, 1)).toFixed(2) : '0.00'}</p>
+                      <p><strong>Estado:</strong> ${stats.totalPartidas > 0 ? (stats.winRate >= 50 ? '🔥 En racha' : '💪 Mejorando') : '🆕 Comenzando'}</p>
+                  </div>
+                  
+                  <div class="actions" style="text-align: center; margin-top: 20px;">
+                      <button onclick="cargarPerfilUsuario(${perfil.id})" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
+                          🔄 Actualizar
+                      </button>
+                      <button onclick="cargarTodosLosPerfiles()" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                          👥 Ver todos
+                      </button>
+                  </div>
               </div>
           `;
-      });
-  </script>
+          
+      } catch (error) {
+          contenedor.innerHTML = `
+              <div class="error-container" style="text-align: center; padding: 20px; border: 1px solid #dc3545; border-radius: 8px; background: #f8d7da; color: #721c24;">
+                  <h4>❌ Error al cargar el perfil</h4>
+                  <p>No se pudieron obtener los datos del perfil de usuario.</p>
+                  <p><small>Error: ${error.message}</small></p>
+                  <button onclick="cargarPerfilUsuario()" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;">
+                      🔄 Reintentar
+                  </button>
+              </div>
+          `;
+      }
+  }
 
-    <script>
-        async function obtenerDatos() {
-            const respuesta = await fetch('http://127.0.0.1:5432/UserProfileList'); // Reemplaza con tu endpoint
-            const datos = await respuesta.json();
-            console.log('User Data:', respuesta);
-            return datos;
-        }
+  // Función para cargar todos los perfiles (ranking)
+  async function cargarTodosLosPerfiles() {
+      const contenedor = document.getElementById('contenedor-datos');
+      
+      try {
+          contenedor.innerHTML = '<div style="text-align: center; padding: 20px;">🔄 Cargando ranking...</div>';
+          
+          const datos = await obtenerPerfilUsuario();
+          const perfiles = Array.isArray(datos) ? datos : [datos];
+          
+          let rankingHtml = `
+              <div class="ranking-container" style="max-width: 800px; margin: 0 auto;">
+                  <h2 style="text-align: center; color: #333; margin-bottom: 20px;">🏆 Ranking de Jugadores</h2>
+                  <div class="ranking-list">
+          `;
+          
+          perfiles.forEach((perfil, index) => {
+              const stats = calcularEstadisticas(perfil);
+              const position = index + 1;
+              const medal = position === 1 ? '🥇' : position === 2 ? '🥈' : position === 3 ? '🥉' : `#${position}`;
+              
+              rankingHtml += `
+                  <div class="ranking-item" style="display: flex; align-items: center; padding: 15px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; background: white; cursor: pointer;" onclick="cargarPerfilUsuario(${perfil.id})">
+                      <div class="position" style="font-size: 1.2em; font-weight: bold; margin-right: 15px; min-width: 50px;">${medal}</div>
+                      <div class="profile-info" style="flex: 1;">
+                          <h4 style="margin: 0 0 5px 0; color: #333;">${perfil.alias}</h4>
+                          <div style="font-size: 0.9em; color: #666;">
+                              ${perfil.wins}W - ${perfil.losses}L (${stats.winRate}% WR)
+                          </div>
+                      </div>
+                      <div class="stats-mini" style="text-align: right;">
+                          <div style="font-weight: bold; color: #4CAF50;">${stats.totalPartidas} partidas</div>
+                      </div>
+                  </div>
+              `;
+          });
+          
+          rankingHtml += `
+                  </div>
+                  <div style="text-align: center; margin-top: 20px;">
+                      <button onclick="cargarPerfilUsuario()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                          👤 Ver mi perfil
+                      </button>
+                  </div>
+              </div>
+          `;
+          
+          contenedor.innerHTML = rankingHtml;
+          
+      } catch (error) {
+          console.error('Error al cargar ranking:', error);
+          contenedor.innerHTML = `
+              <div class="error-container" style="text-align: center; padding: 20px;">
+                  <h4 style="color: #dc3545;">❌ Error al cargar ranking</h4>
+                  <button onclick="cargarTodosLosPerfiles()" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                      🔄 Reintentar
+                  </button>
+              </div>
+          `;
+      }
+  }
 
-        const contenedor = document.getElementById('contenedor-datos');
+  // Cargar perfil cuando se carga la página
+  document.addEventListener('DOMContentLoaded', () => {
+      cargarPerfilUsuario(); // Cargar perfil del usuario actual
+  });
+</script>
 
-        obtenerDatos().then(datos => {
-            contenedor.innerHTML = `
-                <p>Nombre: ${datos.name}</p>
-                <p>Edad: ${datos.email}</p>
-                <p>Ciudad: ${datos.password}</p>
-                <div class="bio-desk">
-                    <h4 class="purple">Second example of data</h4>
-                    <p>data 1 here</p>
-                    <p>data 2 here</p>
-                </div>
-            `;
-        });
-    </script>
+<h4>END data</h4>
 
-<h1>Datos</h1>
-<ul>
-  <h4>check, one two three</h4>
-    {% for item in datos %}
-     <h4>cositas</h4>
-        <li style="color:black">{{ item.alias }}</li>
-    {% endfor %}
-</ul>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  obtenerDatos();
-}); </script>
 
     <!-- Footer -->
   <footer class="text-center text-white" style="background-image: url('https://64.media.tumblr.com/647cfeeb6827dd332b390e6ce5e2b16a/175e171edbe54538-fe/s2048x3072/97e4760df288f74b0c7f817dbc5fa000552d8118.gifv'); background-position: center center; background-repeat: no-repeat; background-size: cover;";> <!--  #cd09d4 -->

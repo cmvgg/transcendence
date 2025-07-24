@@ -1,10 +1,14 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 
+
+
 class UserProfile(models.Model):
     alias = models.CharField(max_length=50, unique=True)
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.alias
@@ -13,8 +17,13 @@ class UserProfile(models.Model):
         total = self.wins + self.losses
         return self.wins / total if total > 0 else 0
 
+    def total_games(self):
+        return self.wins + self.losses
+
     class Meta:
         ordering = ['-wins', 'alias']
+        verbose_name = 'Perfil de Usuario'
+        verbose_name_plural = 'Perfiles de Usuario'
 
 class Tournament(models.Model):
     #Campo para el ID del torneo

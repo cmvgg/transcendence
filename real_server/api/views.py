@@ -16,6 +16,7 @@ from .serializers import (
 )
 from .forms import signInForm
 from .models import ProfileData
+from .forms import ExampleForm
 
 
 def index(request):
@@ -38,6 +39,29 @@ def select(request):
 def signIn(request):
     form_s = signInForm()
     return render(request, 'signin.html' , {'form': form_s})
+
+def register(request):
+    if request.method == 'POST':
+        form = ExampleForm(request.POST)
+        if form.is_valid():
+            # Extraer datos del formulario
+            name = form.cleaned_data.get('name')
+            email = form.cleaned_data.get('email')
+            password = form.cleaned_data.get('password')
+
+            # Crear el usuario utilizando el nombre como username
+            user = User.objects.create_user(username=name, email=email, password=password)
+
+            # Crear automáticamente el perfil con alias igual a name (o modificar según convenga)
+            profile = UserProfile.objects.create(alias=name)
+            form.save()
+            # Opcional: iniciar sesión automáticamente, enviar un mensaje, redirigir, etc.
+            return redirect ('http://localhost:8000/profile')  # redirige a la página de inicio, por ejemplo
+
+    else:
+        form = ExampleForm(request.GET)
+    return render(request, 'register.html', {'form': form})
+
 
 class UserProfileList(APIView):
     """
@@ -217,120 +241,405 @@ class RegisterUserForm(UserCreationForm):
 #        form = RegisterUserForm()
 #    return render(request, 'register.html', {'form': form})
 
-def register(request):
-    if request.method == 'POST':
-        form = ExampleForm(request.POST)
-        if form.is_valid():
-            # Extraer datos del formulario
-            name = form.cleaned_data.get('name')
-            email = form.cleaned_data.get('email')
-            password = form.cleaned_data.get('password')
-
-            # Crear el usuario utilizando el nombre como username
-            user = User.objects.create_user(username=name, email=email, password=password)
-
-            # Crear automáticamente el perfil con alias igual a name (o modificar según convenga)
-            profile = UserProfile.objects.create(alias=name)
-            form.save()
-            # Opcional: iniciar sesión automáticamente, enviar un mensaje, redirigir, etc.
-            return redirect ('http://localhost:8000/profile')  # redirige a la página de inicio, por ejemplo
-
-    else:
-        form = ExampleForm()
-    return render(request, 'register.html', {'form': form})
 
 
 
 
 
-# CUCU views.py
+
+#claude example
+
 from django.shortcuts import render, get_object_or_404
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-from .models import Player
+from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
+from django.db.models import Q
+from .models import UserProfile
 import json
 
+# Vista para renderizar la página del perfil
 @login_required
-#def profile_view(request):
-def cucu(request):
+def profile_page(request):
     """Vista para mostrar la página de perfil"""
-    return render(request, 'cucu.html')
+    return render(request, 'profile.html')
 
-@login_required
+# API Views
 @require_http_methods(["GET"])
-def get_player_data(request, player_id):
-    """API endpoint para obtener datos del jugador"""
+def userprofile_list(request):
+    """
+    API endpoint para obtener lista de perfiles de usuario
+    GET /api/userprofile/
+    """
     try:
-        player = get_object_or_404(Player, id=player_id)
+        # Parámetros de consulta opcionales
+        search = request.GET.get('search', '')
+        page = request.GET.get('page', 1)
+        page_size = request.GET.get('page_size', 10)
+        ordering = request.GET.get('ordering', '-wins')  # Por defecto ordenar por wins descendente
         
-        # Verificar si el usuario tiene permisos para ver este perfil
-        if request.user != player.user and not request.user.is_staff:
-            return JsonResponse({
-                'error': 'No tienes permisos para ver este perfil'
-            }, status=403)
+        # Filtrar perfiles
+        queryset = UserProfile.objects.all()
+        
+        # Búsqueda por alias
+        if search:
+            queryset = queryset.filter(
+                Q(alias__icontains=search)
+            )
+        
+        # Ordenamiento
+        valid_orderings = ['wins', '-wins', 'losses', '-losses', 'alias', '-alias']
+        if ordering in valid_orderings:
+            queryset = queryset.order_by(ordering)
+        else:
+            queryset = queryset.order_by('-wins', 'alias')  # Ordenamiento por defecto del modelo
+        
+        # Paginación
+        try:
+            page_size = min(int(page_size), 100)  # Máximo 100 por página
+            paginator = Paginator(queryset, page_size)
+            profiles_page = paginator.get_page(page)
+        except (ValueError, TypeError):
+            profiles_page = Paginator(queryset, 10).get_page(1)
+        
+        # Serializar datos
+        profiles_data = []
+        for profile in profiles_page:
+            profiles_data.append({
+                'id': profile.id,
+                'alias': profile.alias,
+                'wins': profile.wins,
+                'losses': profile.losses,
+                'win_rate': profile.win_rate(),
+                'total_games': profile.wins + profile.losses,
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'data': profiles_data,
+            'pagination': {
+                'current_page': profiles_page.number,
+                'total_pages': paginator.num_pages,
+                'total_count': paginator.count,
+                'has_next': profiles_page.has_next(),
+                'has_previous': profiles_page.has_previous(),
+                'next_page': profiles_page.next_page_number() if profiles_page.has_next() else None,
+                'previous_page': profiles_page.previous_page_number() if profiles_page.has_previous() else None,
+            }
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error interno del servidor: {str(e)}'
+        }, status=500)
+
+@require_http_methods(["GET"])
+def userprofile_detail(request, profile_id):
+    """
+    API endpoint para obtener un perfil específico
+    GET /api/userprofile/{id}/
+    """
+    try:
+        profile = get_object_or_404(UserProfile, id=profile_id)
         
         data = {
-            'id': player.id,
-            'nickname': player.nickname,
-            'level': player.level,
-            'experience': player.experience,
-            'score': player.score,
-            'avatar': player.avatar.url if player.avatar else None,
-            'created_at': player.created_at.strftime('%Y-%m-%d'),
-            'is_active': player.is_active,
-            'username': player.user.username,
-            'email': player.user.email,
-            'first_name': player.user.first_name,
-            'last_name': player.user.last_name,
+            'id': profile.id,
+            'alias': profile.alias,
+            'wins': profile.wins,
+            'losses': profile.losses,
+            'win_rate': profile.win_rate(),
+            'total_games': profile.wins + profile.losses,
+            'win_rate_percentage': round(profile.win_rate() * 100, 1),
         }
         
         return JsonResponse({
             'success': True,
-            'player': data
+            'data': data
         })
         
-    except Player.DoesNotExist:
+    except UserProfile.DoesNotExist:
         return JsonResponse({
-            'error': 'Jugador no encontrado'
+            'success': False,
+            'error': 'Perfil de usuario no encontrado'
         }, status=404)
     except Exception as e:
         return JsonResponse({
+            'success': False,
             'error': f'Error interno del servidor: {str(e)}'
         }, status=500)
 
-@login_required
 @csrf_exempt
 @require_http_methods(["POST"])
-def update_player_data(request):
-    """API endpoint para actualizar datos del jugador"""
+def userprofile_create(request):
+    """
+    API endpoint para crear un nuevo perfil
+    POST /api/userprofile/create/
+    """
     try:
         data = json.loads(request.body)
-        player = get_object_or_404(Player, user=request.user)
         
-        # Actualizar campos permitidos
-        if 'nickname' in data:
-            player.nickname = data['nickname']
-        if 'level' in data:
-            player.level = data['level']
-        if 'experience' in data:
-            player.experience = data['experience']
-        if 'score' in data:
-            player.score = data['score']
-            
-        player.save()
+        # Validar datos requeridos
+        alias = data.get('alias', '').strip()
+        if not alias:
+            return JsonResponse({
+                'success': False,
+                'error': 'El alias es obligatorio'
+            }, status=400)
+        
+        # Verificar que el alias sea único
+        if UserProfile.objects.filter(alias=alias).exists():
+            return JsonResponse({
+                'success': False,
+                'error': 'Este alias ya está en uso'
+            }, status=400)
+        
+        # Crear perfil
+        profile = UserProfile.objects.create(
+            alias=alias,
+            wins=data.get('wins', 0),
+            losses=data.get('losses', 0)
+        )
         
         return JsonResponse({
             'success': True,
-            'message': 'Datos actualizados correctamente'
-        })
+            'message': 'Perfil creado exitosamente',
+            'data': {
+                'id': profile.id,
+                'alias': profile.alias,
+                'wins': profile.wins,
+                'losses': profile.losses,
+                'win_rate': profile.win_rate(),
+            }
+        }, status=201)
         
     except json.JSONDecodeError:
         return JsonResponse({
+            'success': False,
             'error': 'Formato JSON inválido'
         }, status=400)
     except Exception as e:
         return JsonResponse({
-            'error': f'Error al actualizar: {str(e)}'
+            'success': False,
+            'error': f'Error al crear perfil: {str(e)}'
+        }, status=500)
+
+@csrf_exempt
+@require_http_methods(["PUT", "PATCH"])
+def userprofile_update(request, profile_id):
+    """
+    API endpoint para actualizar un perfil específico
+    PUT/PATCH /api/userprofile/{id}/update/
+    """
+    try:
+        profile = get_object_or_404(UserProfile, id=profile_id)
+        data = json.loads(request.body)
+        
+        # Actualizar campos permitidos
+        if 'alias' in data:
+            new_alias = data['alias'].strip()
+            if not new_alias:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'El alias no puede estar vacío'
+                }, status=400)
+            
+            # Verificar que el nuevo alias sea único (excepto el perfil actual)
+            if UserProfile.objects.filter(alias=new_alias).exclude(id=profile_id).exists():
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Este alias ya está en uso'
+                }, status=400)
+            
+            profile.alias = new_alias
+        
+        if 'wins' in data:
+            wins = data['wins']
+            if isinstance(wins, int) and wins >= 0:
+                profile.wins = wins
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Las victorias deben ser un número entero no negativo'
+                }, status=400)
+        
+        if 'losses' in data:
+            losses = data['losses']
+            if isinstance(losses, int) and losses >= 0:
+                profile.losses = losses
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'error': 'Las derrotas deben ser un número entero no negativo'
+                }, status=400)
+        
+        profile.save()
+        
+        return JsonResponse({
+            'success': True,
+            'message': 'Perfil actualizado exitosamente',
+            'data': {
+                'id': profile.id,
+                'alias': profile.alias,
+                'wins': profile.wins,
+                'losses': profile.losses,
+                'win_rate': profile.win_rate(),
+                'total_games': profile.wins + profile.losses,
+            }
+        })
+        
+    except UserProfile.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'error': 'Perfil no encontrado'
+        }, status=404)
+    except json.JSONDecodeError:
+        return JsonResponse({
+            'success': False,
+            'error': 'Formato JSON inválido'
+        }, status=400)
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error al actualizar perfil: {str(e)}'
+        }, status=500)
+
+@csrf_exempt
+@require_http_methods(["DELETE"])
+def userprofile_delete(request, profile_id):
+    """
+    API endpoint para eliminar un perfil específico
+    DELETE /api/userprofile/{id}/delete/
+    """
+    try:
+        profile = get_object_or_404(UserProfile, id=profile_id)
+        alias = profile.alias  # Guardar para el mensaje
+        profile.delete()
+        
+        return JsonResponse({
+            'success': True,
+            'message': f'Perfil "{alias}" eliminado exitosamente'
+        })
+        
+    except UserProfile.DoesNotExist:
+        return JsonResponse({
+            'success': False,
+            'error': 'Perfil no encontrado'
+        }, status=404)
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error al eliminar perfil: {str(e)}'
+        }, status=500)
+
+@require_http_methods(["GET"])
+def userprofile_ranking(request):
+    """
+    API endpoint para obtener ranking de jugadores
+    GET /api/userprofile/ranking/
+    """
+    try:
+        # Parámetros opcionales
+        limit = request.GET.get('limit', 10)
+        try:
+            limit = min(int(limit), 100)  # Máximo 100
+        except (ValueError, TypeError):
+            limit = 10
+        
+        # Obtener top jugadores ordenados por wins descendente, luego por alias
+        top_profiles = UserProfile.objects.order_by('-wins', 'alias')[:limit]
+        
+        ranking_data = []
+        for index, profile in enumerate(top_profiles, 1):
+            ranking_data.append({
+                'position': index,
+                'id': profile.id,
+                'alias': profile.alias,
+                'wins': profile.wins,
+                'losses': profile.losses,
+                'win_rate': profile.win_rate(),
+                'win_rate_percentage': round(profile.win_rate() * 100, 1),
+                'total_games': profile.wins + profile.losses,
+            })
+        
+        return JsonResponse({
+            'success': True,
+            'data': ranking_data,
+            'total_players': UserProfile.objects.count()
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error al obtener ranking: {str(e)}'
+        }, status=500)
+
+@require_http_methods(["GET"])
+def userprofile_stats(request):
+    """
+    API endpoint para obtener estadísticas generales
+    GET /api/userprofile/stats/
+    """
+    try:
+        from django.db.models import Sum, Avg, Max, Min, Count
+        
+        stats = UserProfile.objects.aggregate(
+            total_players=Count('id'),
+            total_wins=Sum('wins'),
+            total_losses=Sum('losses'),
+            avg_wins=Avg('wins'),
+            avg_losses=Avg('losses'),
+            max_wins=Max('wins'),
+            min_wins=Min('wins'),
+            max_losses=Max('losses'),
+            min_losses=Min('losses'),
+        )
+        
+        # Calcular estadísticas adicionales
+        total_games = (stats['total_wins'] or 0) + (stats['total_losses'] or 0)
+        global_win_rate = (stats['total_wins'] or 0) / total_games if total_games > 0 else 0
+        
+        # Jugador con mejor win rate
+        best_player = UserProfile.objects.filter(
+            wins__gt=0, losses__gte=0
+        ).extra(
+            select={'win_rate': 'wins::float / NULLIF(wins + losses, 0)'}
+        ).order_by('-win_rate', '-wins').first()
+        
+        return JsonResponse({
+            'success': True,
+            'data': {
+                'general_stats': {
+                    'total_players': stats['total_players'],
+                    'total_games': total_games,
+                    'total_wins': stats['total_wins'] or 0,
+                    'total_losses': stats['total_losses'] or 0,
+                    'global_win_rate': round(global_win_rate, 3),
+                    'global_win_rate_percentage': round(global_win_rate * 100, 1),
+                },
+                'averages': {
+                    'avg_wins_per_player': round(stats['avg_wins'] or 0, 1),
+                    'avg_losses_per_player': round(stats['avg_losses'] or 0, 1),
+                },
+                'extremes': {
+                    'max_wins': stats['max_wins'] or 0,
+                    'min_wins': stats['min_wins'] or 0,
+                    'max_losses': stats['max_losses'] or 0,
+                    'min_losses': stats['min_losses'] or 0,
+                },
+                'best_player': {
+                    'id': best_player.id if best_player else None,
+                    'alias': best_player.alias if best_player else None,
+                    'win_rate': best_player.win_rate() if best_player else 0,
+                    'wins': best_player.wins if best_player else 0,
+                    'losses': best_player.losses if best_player else 0,
+                } if best_player else None
+            }
+        })
+        
+    except Exception as e:
+        return JsonResponse({
+            'success': False,
+            'error': f'Error al obtener estadísticas: {str(e)}'
         }, status=500)
