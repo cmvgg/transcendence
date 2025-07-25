@@ -15,7 +15,14 @@
 	
 	"button": {
 		"start": "Start",
-		"pause": "Pause"
+		"pause": "Pause",
+		"close": "Close",
+		"save": "Save changes",
+		"submit": "Submit",
+		"one_player": "One Player",
+		"two_player": "Two Players",
+		"duel": "Duel",
+		"tournament": "Tour nament"
 	},
 	
 	"score": "High score: [unknown player]",
@@ -46,15 +53,28 @@
 
 
 	"__comentario3": "index.html",
-	"master": "So you think you are a pong master",
-	"start_a": "Start",
-	"signin_a": "Sing in",
-	"ai": "Try your best against an AI, another player or enroll a tournament  \\",
-	"proyect": "Retropong project, the old school arcade experience brougth to live.<br>Retro gamers do it better!",
-	"gaming": "80s gaming because Pixel is cool dude!<br>We love arcade and music cassettes, the old school.",
-	"dare": "Dare to register",
-	"modal_t": "Modal title",
-	"modal_d": "Some text to modal you",
-	"close": "Close",
-	"save": "Save changes"
+	"hero": {
+		"title": "So you think you are a pong master",
+		"description": "Try your best against an AI, another player or enroll a tournament  \\",
+		"project": "Retropong project, the old school arcade experience brougth to live.<br>Retro gamers do it better!",
+		"gaming": "80s gaming because Pixel is cool dude!<br>We love arcade and music cassettes, the old school.",
+		"register": "Dare to register"
+	},
+	"modal": {
+		"title": "Modal title",
+		"desc": "Some text to modal you"
+	},
+
+
+	"__comentario4": "register.html",
+	"form": "sign in form",
+	"retrogamer": "Sign in and become a retrogamer",
+	
+
+	"__comentario5": "select.html",
+	"select": "Select",
+	"choice": "Select game choice",
+
+	
+	"__comentario6": "tournament.html"
 }

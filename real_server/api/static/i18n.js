@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const selector = document.getElementById("language-selector");
-  const lang = localStorage.getItem("language") || "es";
+  const lang = localStorage.getItem("language") || "en";
   selector.value = lang;
   loadLanguage(lang);
 

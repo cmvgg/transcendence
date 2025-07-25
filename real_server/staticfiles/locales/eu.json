@@ -1,5 +1,5 @@
 {
-	/* playground.html */
+	"__comentario1": "playground.html",
 	"nav": {
 		"home": "Hasiera",
 		"play": "Jolastu",
@@ -15,13 +15,20 @@
 
 	"button": {
 		"start": "Hasi",
-		"pause": "Pausatu"
+		"pause": "Pausatu",
+		"close": "Itxi",
+		"save": "Gorde aldaketak",
+		"submit": "Entregatu",
+		"one_player": "Jokalari bat",
+		"two_player": "Bi jokalari",
+		"duel": "Dolua",
+		"tournament": "Txapelketa"
 	},
 	
 	"score": "Puntuzio altuena: [jokalari ezezaguna]",
 
 
-	/* about.html */	
+	"__comentario2": "about.html",
 	"team": {
 		"title": "Retropong taldea",
 		"members": {
@@ -45,16 +52,29 @@
 	},
 
 
-	/* index.html */
-	"master": "Pongeko maisua zarela uste duzu?",
-	"start_a": "Hasi",
-	"signin_a": "Saioa hasi",
-	"ai": "Emaiozu zure onena IA baten aurka, beste jokalari baten aurka edo eman izena txapelketa batean\\",
-	"proyect": "Retropong proiektua, bizitzara ekarritako eskola zaharreko esperientzia arkaikoa. <br>Retro jokalariek hobeto egiten dute!",
-	"gaming": "80ko hamarkadako jokoak, Pixel mola delako, lagun!<br>Asko gustatzen zaizkigu arkuteriak eta musika-kaseteak, eskola zaharra.",
-	"dare": "Ausartu zaitez erregistratzera",
-	"modal_t": "Modalaren izenburua",
-	"modal_d": "Modalera bidaltzeko testua",
-	"close": "Itxi",
-	"save": "Gorde aldaketak"
+	"__comentario3": "index.html",
+	"hero": {
+		"title": "Pongeko maisua zarela uste duzu?",
+		"description": "Emaiozu zure onena IA baten aurka, beste jokalari baten aurka edo eman izena txapelketa batean\\",
+		"project": "Retropong proiektua, bizitzara ekarritako eskola zaharreko esperientzia arkaikoa. <br>Retro jokalariek hobeto egiten dute!",
+		"gaming": "80ko hamarkadako jokoak, Pixel mola delako, lagun!<br>Asko gustatzen zaizkigu arkuteriak eta musika-kaseteak, eskola zaharra.",
+		"register": "Ausartu zaitez erregistratzera"
+	},
+	"modal": {
+		"title": "Modalaren izenburua",
+		"desc": "Modalera bidaltzeko testua"
+	},
+
+
+	"__comentario4": "register.html",
+	"form": "Saioa hasteko formularioa",
+	"retrogamer": "Hasi saioa eta bihurtu erretrogamer",
+	
+
+	"__comentario5": "select.html",
+	"select": "Hautatu",
+	"choice": "Aukeratu jokoa",
+	
+	
+	"__comentario6": "tournament.html"
 }

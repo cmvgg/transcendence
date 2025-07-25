@@ -1,5 +1,5 @@
+{% load static %}
 <!DOCTYPE html>
-
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -74,6 +74,12 @@
       }
     </style>
     
+    <select id="language-selector">
+      <option value="en">🇬🇧 English</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="eu">🇵🇲 Euskera</option>
+      <option value="fr">🇫🇷 Français</option>
+    </select>
     <!-- Background image -->
     <div
       id="intro-example"
@@ -83,7 +89,7 @@
     <div class="mask" >
         <div class="d-flex justify-content-center align-items-center h-100">
           <div class="text-white" style="text-decoration-color: blueviolet; text-align: center;">
-            <h1 class="mb-3" data-i18n="master">So you think you are a pong master </h1>
+            <h1 class="mb-3" data-i18n="hero.title">So you think you are a pong master </h1>
             <a
               data-mdb-ripple-init
               class="btn btn-outline-light btn-lg m-2"
@@ -92,7 +98,7 @@
               role="button"
               rel="nofollow"
               target="_blank"
-              data-i18n="start_a"
+              data-i18n="button.start"
               >Start</a>
             <a
               data-mdb-ripple-init
@@ -101,7 +107,7 @@
               target="_blank"
               role="button"
               onclick="openRegister()"
-              data-i18n="signin_a"
+              data-i18n="nav.signin"
             >Sign in</a>
           </div>
         </div>
@@ -111,7 +117,8 @@
   </header>
   <br>
   <div class="row " style="background-color: black; height: 40%; display: flex; flex-direction: row; justify-content: center;">
-    <h3 class="mb-4 " style="font-family: Pixelify Sans, sans-serif; " data-i18n="ai">Try your best against an AI, another player or enroll a tournament  \<span> <blink-text>&#9632; </blink-text> </span> </h3>
+    <!--  data-i18n="hero.description" --> <!-- No funciona con la clase -->
+    <h3 class="mb-4 " style="font-family: Pixelify Sans, sans-serif; ">Try your best against an AI, another player or enroll a tournament  \<span> <blink-text>&#9632; </blink-text> </span> </h3>
   </div>
   
   <div class="row  " style="background-color: black ; display: flex; flex-direction: row; justify-content: space-around; align-items: center;">
@@ -119,7 +126,7 @@
         <img class="img-fluid" src="https://cdn.dribbble.com/userupload/23061258/file/original-bed35260fcc9b31c32143bd2b91925dd.gif" alt="arcade game machine" >
     </div>
     <div style=" font-family: Honk, system-ui; display: flex; justify-content: center; max-width: 500px;"  class="col-8 shadow">
-        <h3 data-i18n="proyect">Retropong project, the old school arcade experience brougth to live.<br>Retro gamers do it better!</h3>
+        <h3 data-i18n="hero.project">Retropong project, the old school arcade experience brougth to live.<br>Retro gamers do it better!</h3>
     </div>
     <div class="col">
     </div>
@@ -127,7 +134,7 @@
 
   <div class="row  " style="background-color: black ; display: flex; flex-direction: row; justify-content: space-around; align-items: center; height: 500px;">
     <div style=" font-family: Honk, system-ui; display: flex; justify-content: center; max-width: 500px;"  class="col-8 shadow">
-        <h3 data-i18n="gaming">80s gaming because Pixel is cool dude!<br>We love arcade and music cassettes, the old school.</h3>
+        <h3 data-i18n="hero.gaming">80s gaming because Pixel is cool dude!<br>We love arcade and music cassettes, the old school.</h3>
     </div>
     <div class="col-md-6" style="height: 350px; width: 500px; justify-content: end; background-image: url(https://cdnb.artstation.com/p/assets/images/images/061/684/511/original/irina-savchishina-diamond-scale.gif?1681389007); background-repeat: no-repeat; background-size: contain; background-position: end;">
     </div>
@@ -135,7 +142,7 @@
   </div>
 
   <!-- Launch register as pop up -->
-  <button class="btn btn-primary" onclick="openRegister()" data-i18n="dare">Dare to register</button>
+  <button class="btn btn-primary" onclick="openRegister()" data-i18n="hero.register">Dare to register</button>
 
   <script>
     function openRegister() {
@@ -149,17 +156,17 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel" data-i18n="modal_t">Modal title</h5>
+          <h5 class="modal-title" id="exampleModalLabel" data-i18n="modal.title">Modal title</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          ... <p data-i18n="modal_d">Some text to modal you</p>
+          ... <p data-i18n="modal.desc">Some text to modal you</p>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-dismiss="modal" data-i18n="close">Close</button>
-          <button type="button" class="btn btn-primary"  data-i18n="save">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal" data-i18n="button.close">Close</button>
+          <button type="button" class="btn btn-primary"  data-i18n="button.save">Save changes</button>
         </div>
       </div>
     </div>
@@ -254,5 +261,7 @@
    
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Qi+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+  <!-- Cambiar -->
+  <script src="{% static 'i18n.js' %}"></script>
 </body>
 </html>

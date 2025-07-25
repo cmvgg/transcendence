@@ -15,7 +15,14 @@
 
 	"button": {
 		"start": "Démarrer",
-		"pause": "Pause"
+		"pause": "Pause",
+		"close": "Fermer",
+		"save": "Enregistrer les modifications",
+		"submit": "Soumettre",
+		"one_player": "Un joueur",
+		"two_player": "Deux joueurs",
+		"duel": "Duel",
+		"tournament": "Tournoi"
 	},
 	
 	"score": "Meilleur score: [joueur inconnu]",
@@ -46,15 +53,28 @@
 
 
 	"__comentario3": "index.html",
-	"master": "Alors tu te prends pour un maître du pong ?",
-	"start_a": "Démarrer",
-	"signin_a": "Se connecter",
-	"ai": "Donnez tout contre une IA, un autre joueur ou inscrivez-vous à un tournoi",
-	"proyect": "Projet Retropong, l'expérience arcade à l'ancienne revisitée.<br>Les joueurs rétro sont meilleurs !",
-	"gaming": "Les jeux des années 80, parce que les pixels, c'est cool !<br>On adore les arcades et les cassettes de musique, à l'ancienne.",
-	"dare": "Osez vous inscrire",
-	"modal_t": "Titre de la fenêtre modale",
-	"modal_d": "Texte à envoyer à la fenêtre modale",
-	"close": "Fermer",
-	"save": "Enregistrer les modifications"
+	"hero": {
+		"title": "Alors tu te prends pour un maître du pong?",
+		"description": "Donnez tout contre une IA, un autre joueur ou inscrivez-vous à un tournoi",
+		"project": "Projet Retropong, l'expérience arcade à l'ancienne revisitée.<br>Les joueurs rétro sont meilleurs!",
+		"gaming": "Les jeux des années 80, parce que les pixels, c'est cool !<br>On adore les arcades et les cassettes de musique, à l'ancienne.",
+		"register": "Osez vous inscrire"
+	},
+	"modal": {
+		"title": "Titre de la fenêtre modale",
+		"desc": "Texte à envoyer à la fenêtre modale"
+	},
+
+
+	"__comentario4": "register.html",
+	"form": "Formulaire de connexion",
+	"retrogamer": "Connectez-vous et devenez un rétrogamer",
+	
+
+	"__comentario5": "select.html",
+	"select": "Sélectionner",
+	"choice": "Sélectionner le jeu souhaité",
+
+	
+	"__comentario6": "tournament.html"
 }

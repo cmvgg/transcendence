@@ -170,6 +170,19 @@ def tournament_results(request):
 
         # Actualizar o copiar datos a api_userTournamentStats
         try:
+            cursor.execute( """
+                INSERT INTO api_userTournamentStats (user_id, username, wins, losses, tournaments_won)
+                SELECT 
+                    u.id AS user_id,
+                    u.alias AS username,
+                    u.wins AS wins,
+                    u.losses AS losses,
+                    COUNT(CASE WHEN t.id IS NOT NULL AND t.status = 'finished' THEN 1 ELSE NULL END) AS tournaments_won
+                FROM api_userprofile u
+                LEFT JOIN api_tournament_participants tp ON tp.userprofile_id = u.id
+                LEFT JOIN api_tournament t ON t.id = tp.tournament_id
+                GROUP BY u.id, u.alias, u.wins, u.losses
+            """ )
             with connection.cursor() as cursor:
                 for player in players:
                     print(f"Procesando jugador: {player.alias}, ID: {player.id}, Wins: {player.wins}, Losses: {player.losses}")

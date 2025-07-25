@@ -15,7 +15,14 @@
 
 	"button": {
 		"start": "Iniciar",
-		"pause": "Pausar"
+		"pause": "Pausar",
+		"close": "Cerrar",
+		"save": "Guardar cambios",
+		"submit": "Entregar",
+		"one_player": "Un Jugador",
+		"two_player": "Dos Jugadores",
+		"duel": "Duelo",
+		"tournament": "Torneo"
 	},
 	
 	"score": "Puntuaje mas alto: [jugador desconocido]",
@@ -46,16 +53,28 @@
 
 
 	"__comentario3": "index.html",
-	"master": "¿Así que te crees un maestro del pong?",
-	"start_a": "Iniciar",
-	"signin_a": "Iniciar sesión",
-	"ai": "Dale lo mejor de ti contra una IA, otro jugador o inscríbete en un torneo\\",
-	"proyect": "Proyecto Retropong, la experiencia arcade de la vieja escuela traída a la vida.<br>¡Los jugadores retro lo hacen mejor!",
-	"gaming": "¡Juegos de los 80 porque Pixel mola, amigo!<br>Nos encantan los arcades y los casetes de música, la vieja escuela.",
-	"dare": "Atrévete a registrarte",
-	"modal_t": "Título del modal",
-	"modal_d": "Texto para enviarte al modal",
-	"close": "Cerrar",
-	"save": "Guardar cambios"
+	"hero": {
+		"title": "¿Así que te crees un maestro del pong?",
+		"description": "Dale lo mejor de ti contra una IA, otro jugador o inscríbete en un torneo\\",
+		"project": "Proyecto Retropong, la experiencia arcade de la vieja escuela traída a la vida.<br>¡Los jugadores retro lo hacen mejor!",
+		"gaming": "¡Juegos de los 80 porque Pixel mola, amigo!<br>Nos encantan los arcades y los casetes de música, la vieja escuela.",
+		"register": "Atrévete a registrarte"
+	},
+	"modal": {
+		"title": "Título del modal",
+		"desc": "Texto para enviarte al modal"
+	},
+
+
+	"__comentario4": "register.html",
+	"form": "Formulario de inicio de sesión",
+	"retrogamer": "Inicia sesión y conviértete en un retrogamer",
+	
+
+	"__comentario5": "select.html",
+	"select": "Seleccionar",
+	"choice": "Seleccionar elección de juego",
+
+	
+	"__comentario6": "tournament.html"
 }
-  
