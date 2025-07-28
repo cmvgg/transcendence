@@ -8,7 +8,7 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view
 from django.utils import timezone
-from .models import UserProfile, Tournament
+from .models import UserProfile, Tournament, TournamentStats
 from .serializers import (
     UserProfileSerializer,
     TournamentSerializer,
@@ -59,12 +59,6 @@ def register(request):
         form = ExampleForm(request.GET)
     return render(request, 'register.html', {'form': form})
 
-
-def about(request):
-    return render(request, 'about.html')
-
-def select(request):
-    return render(request, 'select.html')
 
 def tournament(request):
     return render(request, 'tournament.html')
@@ -173,6 +167,7 @@ def tournament_results(request):
     if serializer.is_valid():
         tournament_id = serializer.validated_data['tournament_id']
         results = serializer.validated_data['results']
+        tournament_winner_alias = serializer.validated_data.get('winner')  # Recibir el ganador del torneo
 
         try:
             tournament = Tournament.objects.get(id=tournament_id)
@@ -198,64 +193,42 @@ def tournament_results(request):
                     print(f"Alias no encontrado: winner={winner_alias}, loser={loser_alias}")
                     continue
 
+                # Actualizar estadísticas de los jugadores
                 winner.wins += 1
                 loser.losses += 1
 
                 winner.save()
                 loser.save()
 
-        # Actualizar o copiar datos a api_userTournamentStats
-        try:
-            cursor.execute( """
-                INSERT INTO api_userTournamentStats (user_id, username, wins, losses, tournaments_won)
-                SELECT 
-                    u.id AS user_id,
-                    u.alias AS username,
-                    u.wins AS wins,
-                    u.losses AS losses,
-                    COUNT(CASE WHEN t.id IS NOT NULL AND t.status = 'finished' THEN 1 ELSE NULL END) AS tournaments_won
-                FROM api_userprofile u
-                LEFT JOIN api_tournament_participants tp ON tp.userprofile_id = u.id
-                LEFT JOIN api_tournament t ON t.id = tp.tournament_id
-                GROUP BY u.id, u.alias, u.wins, u.losses
-            """ )
-            with connection.cursor() as cursor:
-                for player in players:
-                    print(f"Procesando jugador: {player.alias}, ID: {player.id}, Wins: {player.wins}, Losses: {player.losses}")
-                    # Verificar si el jugador ya existe en api_userTournamentStats
-                    cursor.execute("""
-                        SELECT id FROM api_userTournamentStats WHERE user_id = %s
-                    """, [player.id])
-                    result = cursor.fetchone()
+                # Actualizar TournamentStats para el ganador y el perdedor
+                winner_stats, _ = TournamentStats.objects.get_or_create(username=winner.alias)
+                winner_stats.wins = winner.wins
+                winner_stats.save()
 
-                    if result:
-                        # Actualizar estadísticas existentes
-                        print(f"Actualizando estadísticas para el jugador: {player.alias}")
-                        cursor.execute("""
-                            UPDATE api_userTournamentStats
-                            SET wins = %s, losses = %s, tournaments_won = CASE WHEN %s = 0 THEN tournaments_won + 1 ELSE tournaments_won END
-                            WHERE user_id = %s
-                        """, [player.wins, player.losses, player.losses, player.id])
-                    else:
-                        # Insertar nuevo registro
-                        print(f"Insertando nuevo registro para el jugador: {player.alias}")
-                        cursor.execute("""
-                            INSERT INTO api_userTournamentStats (user_id, username, wins, losses, tournaments_won)
-                            VALUES (%s, %s, %s, %s, %s)
-                        """, [player.id, player.alias, player.wins, player.losses, 1 if player.losses == 0 else 0])
-        except Exception as e:
-            print(f"Error al actualizar estadísticas: {e}")
+                loser_stats, _ = TournamentStats.objects.get_or_create(username=loser.alias)
+                loser_stats.losses = loser.losses
+                loser_stats.save()
 
-        try:
-            tournament.status = 'finished'
-            tournament.save()
-        except Exception as e:
-            return Response({'error': f'Error al guardar el torneo: {str(e)}'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        # Actualizar el ganador del torneo
+        # No se actualiza el ganador del torneo (tournament_winner_alias no debe estar correctamente asignado)
+        if tournament_winner_alias:
+            try:
+                tournament_winner = UserProfile.objects.get(alias=tournament_winner_alias)
+                tournament.winner = tournament_winner
+                tournament.status = 'finished'
+                tournament.save()
+
+                # Incrementar el contador de torneos ganados en TournamentStats
+                winner_stats, _ = TournamentStats.objects.get_or_create(username=tournament_winner.alias)
+                winner_stats.tournaments_won += 1  # Incrementar el campo tournaments_won
+                winner_stats.save()
+            except UserProfile.DoesNotExist:
+                return Response({'error': f'Winner alias "{tournament_winner_alias}" not found.'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({
             'status': 'success',
             'tournament_id': tournament_id,
-            'message': f'Resultados procesados para torneo \"{tournament.name}\"'
+            'message': f'Resultados procesados para torneo \"{tournament.name}\". Ganador: {tournament_winner_alias}'
         })
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

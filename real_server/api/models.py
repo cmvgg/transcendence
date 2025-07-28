@@ -7,8 +7,8 @@ class UserProfile(models.Model):
     alias = models.CharField(max_length=50, unique=True)
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
+    """ created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True) """
 
     def __str__(self):
         return self.alias
@@ -25,20 +25,29 @@ class UserProfile(models.Model):
         verbose_name = 'Perfil de Usuario'
         verbose_name_plural = 'Perfiles de Usuario'
 
+class TournamentStats(models.Model):
+    username = models.CharField(max_length=100, unique=True)
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
+    tournaments_won = models.IntegerField(default=0)
+
+    class Meta:
+        verbose_name = "Tournament Stats"
+        verbose_name_plural = "Tournament Stats"
+
 class Tournament(models.Model):
     #Campo para el ID del torneo
     #tournament_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
     name = models.CharField(max_length=100)
     start_date = models.DateTimeField(auto_now_add=True)
-    participants = models.ManyToManyField('UserProfile', related_name='tournaments')
-    
+    participants = models.ManyToManyField('UserProfile', related_name='tournaments')   
     status = models.CharField(
         max_length=20,
         choices=[('upcoming', 'Upcoming'), ('ongoing', 'Ongoing'), ('finished', 'Finished')],
         default='upcoming'
     )
-    
     end_date = models.DateTimeField(null=True, blank=True)
+    #winner = models.ForeignKey(UserProfile, on_delete=models.SET_NULL, null=True, blank=True, related_name='won_tournaments')
 
     """ def save(self, *args, **kwargs):
         # Asignar un ID personalizado si no existe

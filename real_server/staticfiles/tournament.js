@@ -366,6 +366,8 @@ async function submitTournamentResults() {
         }
     });
 
+    const tournamentWinner = tournament.match[tournament.match.length - 1][0].winner; // Último ganador
+
     try {
         const response = await fetch('tournament-results/', {
             method: 'POST',
@@ -375,8 +377,8 @@ async function submitTournamentResults() {
             },
             body: JSON.stringify({
                 tournament_id: tournament_id,
-                name: `Torneo de Pong ${new Date().toLocaleDateString()}`,
-                results: results
+                results: results,
+                winner: tournamentWinner  // Enviar el ganador del torneo
             })
         });
 
