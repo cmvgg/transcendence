@@ -367,6 +367,10 @@ async function submitTournamentResults() {
     });
 
     const tournamentWinner = tournament.match[tournament.match.length - 1][0].winner; // Último ganador
+	log("Ganador del torneo (frontend): ", tournamentWinner);
+	if (!tournamentWinner) {
+		console.error("No se pudo determinar el ganador del torneo.");
+	}
 
     try {
         const response = await fetch('tournament-results/', {
