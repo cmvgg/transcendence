@@ -165,7 +165,7 @@
   async function obtenerPerfilUsuario() {
       try {
           // Endpoint corregido para UserProfile
-          const respuesta = await fetch('http://127.0.0.1:8000/api/userprofile/', {
+          const respuesta = await fetch('/get_players/', {
               method: 'GET',
               headers: {
                   'Content-Type': 'application/json',

@@ -2,8 +2,8 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 
-
-class UserProfile(models.Model):
+"""
+class Userstatistics(models.Model):
     alias = models.CharField(max_length=50, unique=True)
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
@@ -24,6 +24,7 @@ class UserProfile(models.Model):
         ordering = ['-wins', 'alias']
         verbose_name = 'Perfil de Usuario'
         verbose_name_plural = 'Perfiles de Usuario'
+"""
 
 class Tournament(models.Model):
     #Campo para el ID del torneo
@@ -64,25 +65,20 @@ class ProfileData(models.Model):
     wins = models.IntegerField()
 
     def __str__(self):
-            return self.alias
+            return self.alias + self.wins
 
+#exampleForm
 
-# CUCU models.py
 from django.db import models
 from django.contrib.auth.models import User
 
-class Player(models.Model):
+class UserProfile(models.Model):
+    
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    nickname = models.CharField(max_length=100)
-    level = models.IntegerField(default=1)
-    experience = models.IntegerField(default=0)
-    score = models.IntegerField(default=0)
-    avatar = models.ImageField(upload_to='avatars/', blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    is_active = models.BooleanField(default=True)
-
+    alias = models.CharField(max_length=50, unique=True)
+    
+    # Add any additional fields you need for user profiles
+    
     def __str__(self):
-        return f"{self.nickname} - Level {self.level}"
+        return self.user.username
 
-    class Meta:
-        ordering = ['-score']
