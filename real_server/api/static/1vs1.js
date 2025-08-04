@@ -118,7 +118,7 @@ function update() {
     }
 }
  
-function checkGameOver() {
+/* function checkGameOver() {
     if (leftScore >= maxScore) {
         gameOver = true;
         winner = "¡Jugador de la izquierda ha ganado!";
@@ -128,6 +128,28 @@ function checkGameOver() {
     }
     if (gameOver) {
         showGameOverPopup();
+    } else {
+        resetBall();
+    }
+} */
+
+function checkGameOver() {
+    if (leftScore >= maxScore) {
+        gameOver = true;
+        winner = "Player1";
+        console.log(`¡${winner} ha ganado el partido!`);
+
+        // Actualizar estadísticas en la base de datos
+        updateUserProfile("Player1", 1, 0); // Incrementar victorias para Player1
+        updateUserProfile("Player2", 0, 1); // Incrementar derrotas para Player2
+    } else if (rightScore >= maxScore) {
+        gameOver = true;
+        winner = "Player2";
+        console.log(`¡${winner} ha ganado el partido!`);
+
+        // Actualizar estadísticas en la base de datos
+        updateUserProfile("Player2", 1, 0); // Incrementar victorias para Player2
+        updateUserProfile("Player1", 0, 1); // Incrementar derrotas para Player1
     } else {
         resetBall();
     }
@@ -223,4 +245,49 @@ function gameLoop() {
         requestAnimationFrame(gameLoop);
 }
 
-gameLoop();}
+gameLoop();
+
+
+async function updateUserProfile(username, wins, losses) {
+    try {
+        const response = await fetch('/update_user_profile/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'), // Incluye el token CSRF
+            },
+            body: JSON.stringify({
+                username: username,
+                wins: wins,
+                losses: losses
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log("UserProfile actualizado:", data);
+        } else {
+            const errorData = await response.json();
+            console.error("Error al actualizar UserProfile:", errorData);
+        }
+    } catch (error) {
+        console.error("Error de conexión:", error.message);
+    }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+}

@@ -8,12 +8,15 @@ from rest_framework.response import Response
 from rest_framework import status, viewsets
 from rest_framework.decorators import api_view
 from django.utils import timezone
-from .models import UserProfile, Tournament, TournamentStats
+from .models import UserProfile, Tournament
 from .serializers import (
     UserProfileSerializer,
     TournamentSerializer,
     TournamentResultSerializer
 )
+from .forms import signInForm
+from .models import ProfileData
+from .forms import ExampleForm
 
 
 def index(request):
@@ -37,23 +40,31 @@ def signIn(request):
     form_s = signInForm()
     return render(request, 'signin.html' , {'form': form_s})
 
+from django.http import HttpResponse
+
 def register(request):
     if request.method == 'POST':
         form = ExampleForm(request.POST)
         if form.is_valid():
             # Extraer datos del formulario
             name = form.cleaned_data.get('name')
+            nickname = form.cleaned_data.get('nickname')
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
 
             # Crear el usuario utilizando el nombre como username
-            user = User.objects.create_user(username=name, email=email, password=password)
-
-            # Crear automáticamente el perfil con alias igual a name (o modificar según convenga)
-            profile = UserProfile.objects.create(alias=name)
-            form.save()
+            user = User.objects.create_user(first_name=name, email=email, password=password, username=nickname)
             # Opcional: iniciar sesión automáticamente, enviar un mensaje, redirigir, etc.
-            return redirect ('http://localhost:8000/profile')  # redirige a la página de inicio, por ejemplo
+            return HttpResponse("""
+                <html>
+                <head>
+                    <script type="text/javascript">
+                        window.close();
+                    </script>
+                </head>
+                <body></body>
+                </html>
+            """)  # redirige a la página de inicio, por ejemplo
 
     else:
         form = ExampleForm(request.GET)
@@ -92,6 +103,94 @@ class TournamentViewSet(viewsets.ModelViewSet):
     """
     queryset = Tournament.objects.all()
     serializer_class = TournamentSerializer
+
+
+
+
+
+
+
+
+def generate_random_player_names_1vs1():
+    """
+    Genera nombres de jugadores aleatorios para 1vs1.
+    """
+    return ["1Player", "2Player"]
+
+@api_view(['POST'])
+def generate_players_names_1vs1(request):
+    """
+    Genera nombres de jugadores y crea un torneo.
+    """
+    try:
+        # Generar nombres de jugadores
+        player_names = generate_random_player_names_1vs1()
+
+        # Crear el torneo con los nombres generados
+        return create_tournament(player_names)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+def update_user_profile(request):
+    """
+    Actualiza las estadísticas de un jugador en la tabla api_userprofile.
+    Si no se proporciona un username, genera dos usuarios automáticamente.
+    """
+    username = request.data.get('username')
+    wins = request.data.get('wins', 0)
+    losses = request.data.get('losses', 0)
+
+    # Si no se proporciona un username, genera dos usuarios automáticamente
+    if not username:
+        player1, _ = UserProfile.objects.get_or_create(alias="Player1")
+        player2, _ = UserProfile.objects.get_or_create(alias="Player2")
+        return Response({
+            'status': 'success',
+            'message': 'Usuarios generados automáticamente.',
+            'players': [
+                {'username': player1.alias, 'wins': player1.wins, 'losses': player1.losses},
+                {'username': player2.alias, 'wins': player2.wins, 'losses': player2.losses},
+            ]
+        }, status=status.HTTP_201_CREATED)
+
+    # Actualizar estadísticas del usuario
+    try:
+        user_profile, created = UserProfile.objects.get_or_create(alias=username)
+        user_profile.wins += wins
+        user_profile.losses += losses
+        user_profile.save()
+
+        """ user_stats, created = TournamentStats.objects.get_or_create(username=username)
+        user_stats.wins += wins
+        user_stats.losses += losses
+        user_stats.save() """
+
+        # Mirar esto
+        """ winner_stats, _ = TournamentStats.objects.get_or_create(username=user_profile.alias)
+        winner_stats.wins = user_profile.wins
+        winner_stats.save()
+
+        loser_stats, _ = TournamentStats.objects.get_or_create(username=user_profile.alias)
+        loser_stats.losses = user_profile.losses
+        loser_stats.save() """
+
+        return Response({
+            'status': 'success',
+            'message': f'UserProfile for {username} updated successfully.',
+            'data': {
+                'username': user_profile.alias,
+                'wins': user_profile.wins,
+                'losses': user_profile.losses
+            }
+        }, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
 
 
 

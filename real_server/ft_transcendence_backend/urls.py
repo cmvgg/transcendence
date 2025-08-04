@@ -29,7 +29,6 @@ from pages import views
 
 urlpatterns += [
     path('index', views.index, name='index'),
-    path('register', views.register, name='register'),
     path('about', views.index, name='about'),
     path('tournament', views.index, name='tournament'),
 	path('tournament.js', views.index, name='tournament.js'),
