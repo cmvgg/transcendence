@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -8,19 +9,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="../../staticfiles/rest_framework/css/profile.css">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-  </head>
+</head>
 <body>
 
-
-
 <!-- Navbar -->
-
 <nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
   45deg,
   hsla(168, 85%, 52%, 0.8),
   hsla(263, 88%, 45%, 0.7) 100%
 )">
-  <div class="container-fluid" style="color: aqua; "> 
+  <div class="container-fluid" style="color: aqua;"> 
     <button
       data-mdb-collapse-init
       class="navbar-toggler"
@@ -38,12 +36,8 @@
           <a class="nav-link"  aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" target="_self" href="/playground">Play</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/register">Sign in</a>
-        </li>
-        <li class="nav-item">
+          <a class="nav-link" target="_self" href="/playground">Play</a>            return HttpResponse("""
+
           <a class="nav-link" href="/select">Select</a>
         </li>
         <li class="nav-item">
@@ -55,13 +49,15 @@
 </nav>
 <!-- Navbar --> 
 
-    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-    <div class="container bootstrap snippets bootdey">
-    
-    
-    
-        <p style="height: 50px;"></p>
+<div class="container bootstrap snippets bootdey">
+    <p style="height: 50px;"></p>
 
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error!</h4>
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
 
     <div class="row">
       <div class="profile-nav col-md-3">
@@ -70,83 +66,82 @@
                   <a href="#">
                       <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">
                   </a>
-                  <h1>Camila Smith</h1>
-                  <p>deydey@theEmail.com</p>
+                  {% if top_player %}
+                  <h1>{{ top_player.alias }}</h1>
+                  <p>Top Player - {{ top_player.wins }} victorias</p>
+                  {% else %}
+                  <h1>Jugador</h1>
+                  <p>Sin datos disponibles</p>
+                  {% endif %}
               </div>
     
               <ul class="nav nav-pills nav-stacked">
                   <li class="active"><a href="#"> <i class="fa fa-edit"></i> Edit profile</a></li>
-                 
               </ul>
           </div>
       </div>
+      
       <div class="profile-info col-md-9">
-          
           <div class="panel">
-             
               <div class="panel-body bio-graph-info">
-                
                   <div class="row">
-                        <div class="bio-row">
-                            <h1 style="color:white;font-size:50px;">Your player info</h1>
-                        </div>
+					<div class="bio-row">
+						<h1 style="color:white;font-size:50px;">Tu Información</h1>
+					  </div>
+					  <div class="bio-row">
+						<p><strong>Name:</strong> {{ user.first_name }}</p>
+					  </div>
+					  <div class="bio-row">
+						<p><strong>Nickname:</strong> {{ user.username }}</p>
+					  </div>
+					  <div class="bio-row">
+						<p><strong>Email:</strong> {{ user.email }}</p>
+					  </div>
                       <div class="bio-row">
-                          <p>First Name: Camila</p>
+                          <p>Victorias: {{ user.wins }}</p>
                       </div>
                       <div class="bio-row">
-                          <p>Nick Name: Cameleon</p>
+                          <p>Derrotas: {{ user.losses }}</p>
                       </div>
                       <div class="bio-row">
-                          <p>Campus: Urduliz</p>
+                          <p>Win Rate: {{ user.win_rate|floatformat:2 }}%</p>
                       </div>
-                        <div class="bio-row">
-                          <p>Favourite game: Tron</p>
-                      </div>
-                      <div class="bio-row">
-                          <p>Email: camila@flatlab.com</p>
-                      </div>
-                      
                   </div>
               </div>
           </div>
+          
           <div>
               <div class="row" style="background-color: black;">
-                <h1 style="color: red; font-family: Sixtyfour Convergence, sans-serif;font-size:50px">Your statistics</h1>
+                <h1 style="color: red; font-family: Sixtyfour Convergence, sans-serif;font-size:50px">Estadísticas Generales</h1>
                   <div class="col-md-6">
-                      
-                          <div class="panel">
-                              <div class="bio-chart">
-                                  <h4 >35</h4>
-                                  <h4>&nbsp</h4>
-                                  <h4>Wins</h4>
-                              </div>
-                          </div>
-                      
-                  </div>
-                  <div class="col-md-6">
-                    <div class="panel">
-                        <div class="bio-chart">
-                            <h4 >7</h4>
+                      <div class="panel">
+                          <div class="bio-chart">
+                              <h4>{{ stats.total_wins }}</h4>
+                              <h4>&nbsp</h4>
+                              <h4>Total Victorias</h4>
+                          </div>Error!
+						  Error al cargar datos: column api_userprofile.user_id does not exist LINE 1: SELECT "api_userprofile"."id", "api_userprofile"."user_id", ... ^
+                            <h4>{{ stats.total_losses }}</h4>
                             <h4>&nbsp</h4>
-                            <h4>Tournaments</h4>
+                            <h4>Total Derrotas</h4>
                         </div>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="panel">
                         <div class="bio-chart">
-                            <h4 >4</h4>
+                            <h4>{{ stats.total_perfiles }}</h4>
                             <h4>&nbsp</h4>
-                            <h4>Tigs</h4>
+                            <h4>Jugadores</h4>
                         </div>
                     </div>
                   </div>
                   <div class="col-md-6">
                     <div class="panel">
                         <div class="bio-chart">
-                            <h4 >8</h4>
+                            <h4>{{ stats.total_games }}</h4>
                             <h4>&nbsp</h4>
-                            <h4>games</h4>
+                            <h4>Total Partidas</h4>
                         </div>
                     </div>
                   </div>
@@ -154,17 +149,87 @@
           </div>
       </div>
     </div>
-    </div>
 
-  
-  
+    <!-- Sección de Lista de Jugadores -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="panel">
+                <div class="panel-body">
+                    <h2 style="color: white; text-align: center; margin-bottom: 30px;">🏆 Ranking de Jugadores</h2>
+                    
+                    {% if perfiles %}
+                    <div class="table-responsive">
+                        <table class="table table-dark table-striped table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Alias</th>
+                                    <th scope="col">Victorias</th>
+                                    <th scope="col">Derrotas</th>
+                                    <th scope="col">Total Partidas</th>
+                                    <th scope="col">Win Rate</th>
+                                    <th scope="col">Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for perfil in perfiles %}
+                                <tr {% if forloop.first %}class="table-success"{% elif forloop.counter == 2 %}class="table-warning"{% elif forloop.counter == 3 %}class="table-info"{% endif %}>
+                                    <th scope="row">
+                                        {% if forloop.first %}🥇
+                                        {% elif forloop.counter == 2 %}🥈
+                                        {% elif forloop.counter == 3 %}🥉
+                                        {% else %}{{ forloop.counter }}
+                                        {% endif %}
+                                    </th>
+                                    <td><strong>{{ perfil.alias }}</strong></td>
+                                    <td><span class="badge bg-success">{{ perfil.wins }}</span></td>
+                                    <td><span class="badge bg-danger">{{ perfil.losses }}</span></td>
+                                    <td>{{ perfil.total_games }}</td>
+                                    <td>
+                                        {% if perfil.total_games > 0 %}
+                                            {% widthratio perfil.win_rate 1 100 %}%
+                                        {% else %}
+                                            0%
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {% if perfil.total_games == 0 %}
+                                            <span class="badge bg-secondary">🆕 Nuevo</span>
+                                        {% elif perfil.win_rate >= 0.7 %}
+                                            <span class="badge bg-success">🔥 Experto</span>
+                                        {% elif perfil.win_rate >= 0.5 %}
+                                            <span class="badge bg-warning">⚡ Bueno</span>
+                                        {% else %}
+                                            <span class="badge bg-info">💪 Aprendiendo</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-info text-center" role="alert">
+                        <h4 class="alert-heading">Sin datos</h4>
+                        <p>No hay jugadores registrados en la base de datos.</p>
+                        <hr>
+                        <p class="mb-0">¡Sé el primero en registrarte!</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Contenedor para datos dinámicos (mantengo el JavaScript original) -->
+<div id="contenedor-datos"></div>
+
 <h1>Example data</h1>
-    
 
 <script>
   async function obtenerPerfilUsuario() {
       try {
-          // Endpoint corregido para UserProfile
           const respuesta = await fetch('/get_players/', {
               method: 'GET',
               headers: {
@@ -179,7 +244,6 @@
           
           const datos = await respuesta.json();
           console.log('UserProfile Data:', datos);
-          
           return datos;
           
       } catch (error) {
@@ -188,33 +252,6 @@
       }
   }
 
-  // Función para obtener un perfil específico por ID
-  async function obtenerPerfilPorId(userId) {
-      try {
-          const respuesta = await fetch(`http://127.0.0.1:8000/api/userprofile/${userId}/`, {
-              method: 'GET',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'X-CSRFToken': getCookie('csrftoken')
-              }
-          });
-          
-          if (!respuesta.ok) {
-              throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
-          }
-          
-          const datos = await respuesta.json();
-          console.log('UserProfile específico:', datos);
-          
-          return datos;
-          
-      } catch (error) {
-          console.error('Error al obtener perfil específico:', error);
-          throw error;
-      }
-  }
-
-  // Función para calcular estadísticas adicionales
   function calcularEstadisticas(perfil) {
       const totalPartidas = perfil.wins + perfil.losses;
       const winRate = totalPartidas > 0 ? (perfil.wins / totalPartidas * 100).toFixed(1) : 0;
@@ -228,7 +265,6 @@
       };
   }
 
-  // Función para obtener el token CSRF
   function getCookie(name) {
       let cookieValue = null;
       if (document.cookie && document.cookie !== '') {
@@ -244,7 +280,6 @@
       return cookieValue;
   }
 
-  // Función principal para cargar y mostrar el perfil
   async function cargarPerfilUsuario(userId = null) {
       const contenedor = document.getElementById('contenedor-datos');
       
@@ -253,7 +288,6 @@
           return;
       }
 
-      // Mostrar loading
       contenedor.innerHTML = `
           <div class="loading-container" style="text-align: center; padding: 20px;">
               <p>🔄 Cargando perfil de usuario...</p>
@@ -261,27 +295,15 @@
       `;
 
       try {
-          let datos;
-          
-          // Obtener datos según si se especifica un ID o no
-          if (userId) {
-              datos = await obtenerPerfilPorId(userId);
-          } else {
-              // Si no se especifica ID, obtener el perfil actual o lista
-              datos = await obtenerPerfilUsuario();
-          }
-          
-          // Si es una lista, tomar el primer elemento
+          let datos = await obtenerPerfilUsuario();
           const perfil = Array.isArray(datos) ? datos[0] : datos;
           
           if (!perfil) {
               throw new Error('No se encontraron datos del perfil');
           }
           
-          // Calcular estadísticas
           const stats = calcularEstadisticas(perfil);
           
-          // Mostrar datos del perfil
           contenedor.innerHTML = `
               <div class="user-profile-card" style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                   <div class="profile-header" style="text-align: center; margin-bottom: 20px;">
@@ -404,7 +426,7 @@
                           👤 Ver mi perfil
                       </button>
                   </div>
-              </div>
+              </div>elect
           `;
           
           contenedor.innerHTML = rankingHtml;
