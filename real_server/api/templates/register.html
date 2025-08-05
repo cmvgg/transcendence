@@ -85,7 +85,16 @@
         <h5 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)" data-i18n="retrogamer">Sign in and become a retrogamer</h5>
         {% block content %}
         <form id="registerForm" method="post" > <!-- onsubmit="return closeWindow()" -->
-            {% csrf_token %}
+			{% csrf_token %}
+            <style>
+              .asteriskField {display: none; }
+              .invalid-feedback,
+              .help-block,
+              .errorlist,
+              .field-error {
+                  display: none !important;
+              }
+            </style>
             {{ form.as_p }}
             <button type="submit" class="btn btn-primary" data-bs-toggle="popover" data-i18n="button.submit">Submit</button>
         </form>

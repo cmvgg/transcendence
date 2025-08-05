@@ -139,15 +139,15 @@ class TournamentViewSet(viewsets.ModelViewSet):
     serializer_class = TournamentSerializer
 
 def home_view(request):
-    user = User.objects.first()
+    user = User.objects.last()
 
     victorias = 3 
     derrotas = 5
 
     context = {
         'user': user,
-        'victorias': victorias,
-        'derrotas': derrotas,
+        'wins': victorias,
+        'losses': derrotas,
     }
 
     return render(request, 'profile.html', context)
