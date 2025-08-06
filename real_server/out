@@ -1,0 +1,19 @@
+db:5432 - accepting connections
+
+0 static files copied to '/app/staticfiles', 171 unmodified.
+Operations to perform:
+  Apply all migrations: admin, api, auth, contenttypes, sessions
+Running migrations:
+  No migrations to apply.
+  Your models in app(s): 'api' have changes that are not yet reflected in a migration, and so won't be applied.
+  Run 'manage.py makemigrations' to make new migrations, and then re-run 'manage.py migrate' to apply them.
+Performing system checks...
+
+System check identified no issues (0 silenced).
+August 05, 2025 - 19:20:10
+Django version 5.1.7, using settings 'ft_transcendence_backend.settings'
+Starting development server at http://0.0.0.0:8000/
+Quit the server with CONTROL-C.
+
+Performing system checks...
+

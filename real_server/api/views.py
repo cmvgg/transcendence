@@ -14,7 +14,8 @@ from django.views.decorators.http import require_http_methods
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
-import json
+import json, random
+from .models import UserProfile, Tournament, TournamentStats
 
 # Importar modelos y serializers
 from .models import User, Tournament, Match
@@ -30,6 +31,9 @@ def index(request):
 
 def playground(request):
     return render(request, 'playground.html')
+
+def playground2(request):
+    return render(request, 'playground_copy.html')
 
 """@login_required
 def profile(request):
@@ -165,84 +169,194 @@ def get_players(request):
         except Tournament.DoesNotExist:
             return Response({'error': 'Tournament not found'}, status=status.HTTP_404_NOT_FOUND)
     else:
-        players = User.objects.all()
+        players = UserProfile.objects.all()
     
     serializer = UserSerializer(players, many=True)
     return Response(serializer.data)
 
+
+
+
+
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+import random
+
+def calculate_win_rate(wins, losses):
+    total = wins + losses
+    return (wins / total) * 100 if total > 0 else 0
+
+def generate_random_player_names_1vs1():
+    """Genera nombres aleatorios únicos para 1vs1."""
+    base_names = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta']
+    return random.sample(base_names, 2)
+
+def update_or_create_user_profile(username, wins=0, losses=0):
+    """Actualiza o crea un perfil de torneo para un usuario."""
+    user_profile, created = TournamentStats.objects.get_or_create(username=username)
+    user_profile.wins += wins
+    user_profile.losses += losses
+    user_profile.save()
+    return {
+        'username': user_profile.username,
+        'wins': user_profile.wins,
+        'losses': user_profile.losses,
+        'win_rate': calculate_win_rate(user_profile.wins, user_profile.losses),
+    }
+
+@api_view(['POST'])
+def generate_players_names_1vs1(request):
+    """Genera jugadores aleatorios e inicializa sus stats."""
+    try:
+        player_names = generate_random_player_names_1vs1()
+        created_players = []
+        for name in player_names:
+            data = update_or_create_user_profile(name, wins=0, losses=0)
+            created_players.append(data)
+
+        return Response({
+            'status': 'success',
+            'message': 'Jugadores generados e inicializados.',
+            'players': created_players
+        }, status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_players_for_game(request):
+    """Devuelve los primeros jugadores disponibles según el tipo de juego."""
+    game_type = request.GET.get('game_type', '1vs1')
+
+    try:
+        if game_type == '1vs1':
+            players = TournamentStats.objects.order_by('id')[:2]
+        elif game_type == '2vs2':
+            players = TournamentStats.objects.order_by('id')[:4]
+        elif game_type == '1vsIA':
+            players = TournamentStats.objects.order_by('id')[:1]
+        else:
+            return Response({'error': 'Tipo de juego no soportado'}, status=status.HTTP_400_BAD_REQUEST)
+
+        serialized_players = [{
+            'username': p.username,
+            'wins': p.wins,
+            'losses': p.losses
+        } for p in players]
+
+        return Response({'players': serialized_players}, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 @api_view(['POST'])
 def update_user_profile(request):
-    """Actualiza las estadísticas de un jugador en la tabla api_user."""
+    """Actualiza las estadísticas de un jugador."""
     username = request.data.get('username')
-    wins = request.data.get('wins', 0)
-    losses = request.data.get('losses', 0)
+    wins = int(request.data.get('wins', 0))
+    losses = int(request.data.get('losses', 0))
 
-    # Si no se proporciona un username, genera dos usuarios automáticamente
     if not username:
-        player1, _ = User.objects.get_or_create(alias="Player1")
-        player2, _ = User.objects.get_or_create(alias="Player2")
-        return Response({
-            'status': 'success',
-            'message': 'Usuarios generados automáticamente.',
-            'players': [
-                {'username': player1.alias, 'wins': player1.wins, 'losses': player1.losses},
-                {'username': player2.alias, 'wins': player2.wins, 'losses': player2.losses},
-            ]
-        }, status=status.HTTP_201_CREATED)
+        return Response({'error': 'username es requerido'}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Actualizar estadísticas del usuario
     try:
-        user_profile, created = User.objects.get_or_create(alias=username)
-        user_profile.wins += wins
-        user_profile.losses += losses
-        user_profile.save()
-
+        data = update_or_create_user_profile(username, wins, losses)
         return Response({
             'status': 'success',
-            'message': f'User for {username} updated successfully.',
-            'data': {
-                'username': user_profile.alias,
-                'wins': user_profile.wins,
-                'losses': user_profile.losses,
-                'win_rate': user_profile.win_rate(),
-            }
+            'message': f'{username} actualizado correctamente.',
+            'data': data
         }, status=status.HTTP_200_OK)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+
+
+
+
+
+
+
+
 # Resto de funciones de torneo...
-def generate_random_player_names_1vs1():
-    """Genera nombres de jugadores aleatorios para 1vs1."""
-    return ["1Player", "2Player"]
+""" def generate_random_player_names_1vs1():
+    return ["Player1", "Player2"]
+
+def update_or_create_user_profile(username, wins=0, losses=0):
+    user_profile, created = TournamentStats.objects.get_or_create(username=username)
+    user_profile.wins += wins
+    user_profile.losses += losses
+    user_profile.save()
+    return {
+        'username': user_profile.username,
+        'wins': user_profile.wins,
+        'losses': user_profile.losses,
+        'win_rate': user_profile.win_rate(),
+    }
 
 @api_view(['POST'])
 def generate_players_names_1vs1(request):
-    """Genera nombres de jugadores y crea un torneo."""
     try:
         player_names = generate_random_player_names_1vs1()
-        return create_tournament(player_names)
+        created_players = []
+        for name in player_names:
+            data = update_or_create_user_profile(name, wins=0, losses=0)
+            created_players.append(data)
+
+        return Response({
+            'status': 'success',
+            'message': 'Jugadores generados e inicializados.',
+            'players': created_players
+        }, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-def generate_random_player_names():
-    """Genera nombres de jugadores aleatorios."""
+@api_view(['POST'])
+def update_user_profile(request):
+    username = request.data.get('username')
+    wins = int(request.data.get('wins', 0))
+    losses = int(request.data.get('losses', 0))
+
+    if not username:
+        return Response({'error': 'username es requerido'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        data = update_or_create_user_profile(username, wins, losses)
+        return Response({
+            'status': 'success',
+            'message': f'{username} actualizado correctamente.',
+            'data': data
+        }, status=status.HTTP_200_OK)
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR) """
+
+
+
+
+
+
+
+
+
+""" def generate_random_player_names():
     return ["Player1", "Player2", "Player3", "Player4"]
 
 @api_view(['POST'])
 def generate_players_names(request):
-    """Genera nombres de jugadores y crea un torneo."""
     try:
+        # Generar nombres de jugadores
         player_names = generate_random_player_names()
+
+        # Crear el torneo con los nombres generados
         return create_tournament(player_names)
     except Exception as e:
         return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 def create_tournament(player_names):
-    """Crea un torneo con participantes de prueba."""
     try:
+        # Generar nombres de jugadores
         players = []
         for name in player_names:
-            player, _ = User.objects.get_or_create(alias=name)
+            player, _ = UserProfile.objects.get_or_create(alias=name)
             players.append(player)
 
         # Crear el torneo
@@ -250,10 +364,11 @@ def create_tournament(player_names):
         tournament.participants.set(players)
         tournament.save()
 
+        #"tournament_id": tournament.tournament_id,
         return Response({
             "status": "success",
             "message": f"Torneo '{tournament.name}' creado con éxito.",
-            "tournament_id": tournament.id,
+            "tournament_id": 1,
             "participants": [player.alias for player in tournament.participants.all()]
         }, status=status.HTTP_201_CREATED)
     except Exception as e:
@@ -261,12 +376,11 @@ def create_tournament(player_names):
 
 @api_view(['POST'])
 def tournament_results(request):
-    """Endpoint para procesar resultados de un torneo y actualizar estadísticas."""
     serializer = TournamentResultSerializer(data=request.data)
     if serializer.is_valid():
         tournament_id = serializer.validated_data['tournament_id']
         results = serializer.validated_data['results']
-        tournament_winner_alias = serializer.validated_data.get('winner')
+        tournament_winner_alias = serializer.validated_data.get('winner')  # Recibir el ganador del torneo
 
         try:
             tournament = Tournament.objects.get(id=tournament_id)
@@ -286,9 +400,9 @@ def tournament_results(request):
 
             if winner_alias and loser_alias and winner_alias != "BYE" and loser_alias != "BYE":
                 try:
-                    winner = User.objects.get(alias=winner_alias)
-                    loser = User.objects.get(alias=loser_alias)
-                except User.DoesNotExist:
+                    winner = UserProfile.objects.get(alias=winner_alias)
+                    loser = UserProfile.objects.get(alias=loser_alias)
+                except UserProfile.DoesNotExist:
                     print(f"Alias no encontrado: winner={winner_alias}, loser={loser_alias}")
                     continue
 
@@ -298,41 +412,60 @@ def tournament_results(request):
                 winner.save()
                 loser.save()
 
+                # Actualizar TournamentStats para el ganador y el perdedor
+                winner_stats, _ = TournamentStats.objects.get_or_create(username=winner.alias)
+                winner_stats.wins = winner.wins
+                winner_stats.save()
+                loser_stats, _ = TournamentStats.objects.get_or_create(username=loser.alias)
+                loser_stats.losses = loser.losses
+                loser_stats.save()
+
         # Actualizar el ganador del torneo
+        # No se actualiza el ganador del torneo (tournament_winner_alias no debe estar correctamente asignado)
         if tournament_winner_alias:
             try:
-                tournament_winner = User.objects.get(alias=tournament_winner_alias)
+                tournament_winner = UserProfile.objects.get(alias=tournament_winner_alias)
                 tournament.winner = tournament_winner
                 tournament.status = 'finished'
                 tournament.save()
-            except User.DoesNotExist:
+
+                # Incrementar el contador de torneos ganados en TournamentStats
+                winner_stats, _ = TournamentStats.objects.get_or_create(username=tournament_winner.alias)
+                winner_stats.tournaments_won += 1  # Incrementar el campo tournaments_won
+                winner_stats.save()
+            except UserProfile.DoesNotExist:
                 return Response({'error': f'Winner alias "{tournament_winner_alias}" not found.'}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response({
             'status': 'success',
             'tournament_id': tournament_id,
-            'message': f'Resultados procesados para torneo "{tournament.name}". Ganador: {tournament_winner_alias}'
+            'message': f'Resultados procesados para torneo \"{tournament.name}\". Ganador: {tournament_winner_alias}'
         })
 
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST) """
 
 
-@api_view(['GET'])
+
+
+
+
+
+""" @api_view(['GET'])
 def get_players(request):
     tournament_id = request.GET.get('tournament_id')
-    
+
     if tournament_id:
-        #players = User.objects.filter(tournaments__id=Tournament.id)  # Nota: field correcto
+        #players = UserProfile.objects.filter(tournaments__id=Tournament.id)  # Nota: field correcto
         try:
             tournament = Tournament.objects.get(id=tournament_id)
             players = tournament.participants.all()
         except Tournament.DoesNotExist:
             return Response({'error': 'Tournament not found'}, status=status.HTTP_404_NOT_FOUND)
     else:
-        players = User.objects.all()
-    
+        players = UserProfile.objects.all()
+
     serializer = UserSerializer(players, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data) """
 class RegisterUserForm(UserCreationForm):
     email = forms.EmailField(max_length=254, help_text='Required. Enter a valid email address.')
 

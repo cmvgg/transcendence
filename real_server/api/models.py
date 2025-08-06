@@ -51,35 +51,6 @@ class TournamentStats(models.Model):
         verbose_name_plural = "Tournament Stats"
         ordering = ['-wins', 'username']
 
-class UserProfile(models.Model):
-    user_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
-    # user = models.OneToOneField(User, on_delete=models.CASCADE)  # Descomenta si quieres usar relación
-    alias = models.CharField(max_length=50, unique=True)
-    wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return self.alias  # Cambiado para que funcione correctamente
-    
-    def win_rate(self):
-        """Calcula el porcentaje de victorias"""
-        total_games = self.wins + self.losses
-        if total_games == 0:
-            return 0.0
-        return self.wins / total_games
-    
-    def total_games(self):
-        """Retorna el total de partidas jugadas"""
-        return self.wins + self.losses
-    
-    class Meta:
-        ordering = ['-wins', 'alias']  # Ordenar por victorias descendente, luego por alias
-        verbose_name = 'Perfil de Usuario'
-        verbose_name_plural = 'Perfiles de Usuario'
-
 class Tournament(models.Model):
     # Campo para el ID del torneo
     # tournament_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
@@ -112,6 +83,35 @@ class Tournament(models.Model):
 
     class Meta:
         ordering = ['-start_date']
+
+class UserProfile(models.Model):
+    user_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
+    # user = models.OneToOneField(User, on_delete=models.CASCADE)  # Descomenta si quieres usar relación
+    alias = models.CharField(max_length=50, unique=True)
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.alias  # Cambiado para que funcione correctamente
+    
+    def win_rate(self):
+        """Calcula el porcentaje de victorias"""
+        total_games = self.wins + self.losses
+        if total_games == 0:
+            return 0.0
+        return self.wins / total_games
+    
+    def total_games(self):
+        """Retorna el total de partidas jugadas"""
+        return self.wins + self.losses
+    
+    class Meta:
+        ordering = ['-wins', 'alias']  # Ordenar por victorias descendente, luego por alias
+        verbose_name = 'Perfil de Usuario'
+        verbose_name_plural = 'Perfiles de Usuario'
 
 """ #Nueva clase para almacenar estadísticas de torneos por usuario
 # Esta clase almacena estadísticas de torneos por usuario, como victorias, derrotas y

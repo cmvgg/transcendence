@@ -115,17 +115,24 @@
       <canvas class=" border border-5 border-white " id="gameCanvas"  style=" margin-top: 10% ; width:90%; height: 90%; background-color:black; border-radius: 20px;">
         </canvas>	
     </div>
-    <script>
-      window.addEventListener("keydown", function(e) {
-        const keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
-        const isTyping = ["INPUT", "TEXTAREA"].includes(document.activeElement.tagName);
-  
-        if (keys.includes(e.key) && !isTyping) {
-          e.preventDefault();
-        }
-      }, { passive: false });
-    </script>
-    <script src="{% static '1vs1.js' %}"></script>
+	<div class="difficulty-selector">
+		<select id="difficultySelect">
+			<option value="easy">Fácil</option>
+			<option value="medium" selected>Normal</option>
+			<option value="hard">Difícil</option>
+		</select>
+	</div>
+	<script>
+		window.addEventListener("keydown", function(e) {
+			const keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+			const isTyping = ["INPUT", "TEXTAREA"].includes(document.activeElement.tagName);
+
+			if (keys.includes(e.key) && !isTyping) {
+				e.preventDefault();
+			}
+		}, { passive: false });
+	</script>
+    <script src="{% static '1vsIA.js' %}"></script>
     <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
       <img src="../../staticfiles/avatar2.jpg" alt="player two avatar" width="200" height="200">
       <br><br>
@@ -139,18 +146,7 @@
       </div>
     </div>
   </div>
-  <style>
-    #log {
-            background: #667D6A;
-            padding: 10px;
-            height: 300px; width: 500px;
-            overflow-y: scroll;
-            font-family: monospace;
-            margin-top: 10px;
-            margin: 10px auto;
-        }
-    </style>
-  <div id="log"></div>
+
   <div class="row" style="justify-content: center; ">
     <div class="col"></div>
     <div class="col-2 border-5 border-white" style="background: linear-gradient(
