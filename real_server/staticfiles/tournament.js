@@ -263,30 +263,17 @@ const tournament = new Tournament(players); */
  * 5. Conexión con API *
 ***********************/
 
-//const tournament_id = document.getElementById('tournamentId').value;
-let tournament_id = 0;
+const tournament_id = document.getElementById('tournamentId').value;
+//let tournament_id = 0;
 let tournament = null;
-(async () => {
-	try {
-		if (tournament_id <= 0) {
-			log("Error: Invalid tournament ID. Please provide a valid tournament ID.");
-			return;
-		}
-		const response = await fetch('get_players/?tournament_id=' + tournament_id);
-		if (!response.ok) {
-			throw new Error(`HTTP error! status: ${response.status}`);
-		}
-		const data = await response.json();
-		if (data && data.tournament_id) {
-			tournament_id = data.tournament_id;
-			log(`Tournament ID: ${tournament_id}\n`);
-		} else {
-			log("Error: Tournament ID not found in the response.");
-		}
-	} catch (error) {
-		log(`Error fetching tournament data: ${error.message}`);
-	}
-})();
+/* (async () => {
+	const response = await fetch('get_players/');
+	const data = await response.json();
+	tournament_id = data.tournament_id;
+	log(`Tournament ID: ${tournament_id}\n`);
+})(); */
+
+
 
 document.addEventListener("DOMContentLoaded", async () => {
 	const players = await fetchPlayers();
@@ -367,17 +354,24 @@ async function submitTournamentResults() {
     const allMatches = tournament.match.flat();
     const results = [];
 
-	allMatches.forEach(match => {
-		if (match.winner && match.winner !== "BYE" && match.player1 && match.player2) {
-			const loser = match.winner === match.player1 ? match.player2 : match.player1;
-			if (loser && loser !== "BYE") {
-				results.push({
-					winner: match.winner,
-					loser: loser
-				});
-			}
-		}
-	});
+    allMatches.forEach(match => {
+        if (match.winner && match.winner !== "BYE" && match.player1 && match.player2) {
+            const loser = match.winner === match.player1 ? match.player2 : match.player1;
+            if (loser && loser !== "BYE") {
+                results.push({
+                    winner: match.winner,
+                    loser: loser
+                });
+            }
+        }
+    });
+
+    const tournamentWinner = tournament.match[tournament.match.length - 1][0].winner; // Último ganador
+	log("Ganador del torneo (frontend): ", tournamentWinner);
+	if (!tournamentWinner) {
+		console.error("No se pudo determinar el ganador del torneo.");
+	}
+
     try {
         const response = await fetch('tournament-results/', {
             method: 'POST',
@@ -386,17 +380,18 @@ async function submitTournamentResults() {
                 'X-CSRFToken': getCookie('csrftoken'),
             },
             body: JSON.stringify({
-				tournament_id: tournament_id,
-                name: `Torneo de Pong ${new Date().toLocaleDateString()}`,
-                results: results
+                tournament_id: tournament_id,
+                results: results,
+                winner: tournamentWinner  // Enviar el ganador del torneo
             })
         });
-		if (response.ok) {
-			const responseData = await response.json();
-			log("¡Torneo guardado correctamente!");
-			log("Respuesta del servidor:", responseData);
+
+        if (response.ok) {
+            const responseData = await response.json();
+            log("¡Torneo guardado correctamente!");
+            log("Respuesta del servidor:", responseData);
         } else {
-			const errorData = await response.text();
+            const errorData = await response.text();
             log(`Error al guardar el torneo: ${JSON.stringify(errorData)}`);
         }
     } catch (error) {
@@ -481,11 +476,7 @@ function endMatch() {
 		log(`El campeón es: ${winner}`);
 		submitTournamentResults();
 	} else {
-		setTimeout(resetGameForNextMatch, 2000);
-		/* log("Preparando el siguiente partido...");
-        setTimeout(() => {
-            resetGameForNextMatch();
-        }, 2000); */
+		resetGameForNextMatch();
 	}
 }
 

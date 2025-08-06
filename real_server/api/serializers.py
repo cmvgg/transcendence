@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import UserProfile, Tournament
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserProfile
         fields = ['id', 'alias', 'wins', 'losses']
@@ -22,12 +22,5 @@ class TournamentResultSerializer(serializers.Serializer):
             child=serializers.CharField()
         )
     )
-    """ def validate_results(self, value):
-        for match in value:
-            winner = match.get('winner')
-            loser = match.get('loser')
-            if winner and winner != "BYE" and not UserProfile.objects.filter(alias=winner).exists():
-                raise serializers.ValidationError(f"Winner alias '{winner}' does not exist.")
-            if loser and loser != "BYE" and not UserProfile.objects.filter(alias=loser).exists():
-                raise serializers.ValidationError(f"Loser alias '{loser}' does not exist.")
-        return value """
+    winner = serializers.CharField()  # Asegúrate de que este campo esté definido
+

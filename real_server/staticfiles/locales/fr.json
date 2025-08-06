@@ -1,0 +1,81 @@
+{
+	"__comentario1": "playground.html",
+	"nav": {
+		"home": "Accueil",
+		"play": "Jouer",
+		"signin": "Se connecter",
+		"signup": "S'inscrire",
+		"select": "Sélectionner",
+		"about": "À propos de nous"
+	},
+
+	"1up": "1UP",
+	"player1_name": "[Nom du joueur 1]",
+	"2up": "2UP",
+	"player2_name": "[Nom du joueur 2]",
+
+	"button": {
+		"start": "Démarrer",
+		"pause": "Pause",
+		"close": "Fermer",
+		"save": "Enregistrer les modifications",
+		"submit": "Soumettre",
+		"one_player": "Un joueur",
+		"two_player": "Deux joueurs",
+		"duel": "Duel",
+		"tournament": "Tournoi"
+	},
+	
+	"score": "Meilleur score: [joueur inconnu]",
+
+
+	"__comentario2": "about.html",
+	"team": {
+		"title": "Équipe Retropong",
+		"members": {
+			"cesar": {
+				"position": "Survivant de Backcend et de Monitoring.",
+				"description": "Dompteur de Dockers. Aussi connu sous le nom de briseur de code."
+			},
+			"izaro": {
+				"position": "Jeux IA et algorithme Paddle.",
+				"description": "Code pour du chocolat. Ne riez pas, elle peut vous poignarder."
+			},
+			"jeffrey": {
+				"position": "Chef de projet et Scrum master. Testeur QA.",
+				"description": "Chef d'équipe, toujours souriant. Ne se plaint jamais."
+			},
+			"basabe": {
+				"position": "Passionné de Frontend et de Pixel.",
+				"description": "Le dernier Mohican, la légende raconte qu'il a créé la première piscine."
+			}
+		}
+	},
+
+
+	"__comentario3": "index.html",
+	"hero": {
+		"title": "Alors tu te prends pour un maître du pong?",
+		"description": "Donnez tout contre une IA, un autre joueur ou inscrivez-vous à un tournoi",
+		"project": "Projet Retropong, l'expérience arcade à l'ancienne revisitée.<br>Les joueurs rétro sont meilleurs!",
+		"gaming": "Les jeux des années 80, parce que les pixels, c'est cool !<br>On adore les arcades et les cassettes de musique, à l'ancienne.",
+		"register": "Osez vous inscrire"
+	},
+	"modal": {
+		"title": "Titre de la fenêtre modale",
+		"desc": "Texte à envoyer à la fenêtre modale"
+	},
+
+
+	"__comentario4": "register.html",
+	"form": "Formulaire de connexion",
+	"retrogamer": "Connectez-vous et devenez un rétrogamer",
+	
+
+	"__comentario5": "select.html",
+	"select": "Sélectionner",
+	"choice": "Sélectionner le jeu souhaité",
+
+	
+	"__comentario6": "tournament.html"
+}
