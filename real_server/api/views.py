@@ -16,6 +16,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 import json
 from django.contrib import messages
+from django.contrib.auth import authenticate, login
 
 # Importar modelos y serializers
 from .models import User, Tournament, Match, TournamentStats, ProfileData
@@ -87,7 +88,33 @@ from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import check_password
 
-def signIn(request):
+def signIn(request): #login
+    if request.method == 'POST':
+        form = signInForm(request.POST)
+        if form.is_valid():
+            nickname = form.cleaned_data.get('nickname')
+            passw = form.cleaned_data.get('password')
+            user = authenticate(request, username=nickname, password=passw)
+            if user is not None:
+                login(request, user)
+                return HttpResponse("""
+                <html>
+                <head>
+                    <script type="text/javascript">
+                                window.opener.location.href = "/profile"
+                            </script>
+                    <script type="text/javascript">
+                        window.close();
+                    </script>
+                </head>
+                <body></body>
+                </html>
+            """)
+    else:
+        form = signInForm()
+    return render(request, 'signin.html', {'form': form})
+
+def OldsignIn(request):
     global loged_user, loged_stats
     if request.method == 'POST':
         form = signInForm(request.POST)
@@ -103,6 +130,7 @@ def signIn(request):
                 if check_password(passw, usuario.password):
                     loged_user = usuario
                     loged_stats = stats
+                    login(request, usuario)
                     # pass es valido
                     #return render(request, 'profile.html',{'loged_user':loged_user, 'loged_stats':loged_stats})
                     return HttpResponse("""
