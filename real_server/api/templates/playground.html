@@ -81,6 +81,11 @@
         <li class="nav-item">
           <a class="nav-link" href="/about" data-i18n="nav.about">About</a>
         </li>
+        {% if loged_user.id > 0 %}
+        <li class="nav-item">
+          <a class="nav-link" href="/profile" data-i18n="nav.home">Profile</a>
+        </li>
+        {% endif%}
       </ul>
     </div>
     <select id="language-selector">
@@ -107,7 +112,8 @@
         hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
         height: 200px">
         <h1 style="font-family: 'Press Start 2P', system-ui; color:white; padding-top: 10px;" data-i18n="1up">1UP</h1>
-        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player1_name">[player 1 name]</h5>
+        <h1 style="font-family: 'Press Start 2P', system-ui; color:white" >{{loged_user.username}}</h1>
+        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" >{{ loged_user.id }}</h5>
       </div>
     </div>
 

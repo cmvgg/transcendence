@@ -33,7 +33,8 @@ class TournamentStats(models.Model):
     tournaments_won = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.username} - {self.wins}W/{self.losses}L"
+        #return f"{self.username} - {self.wins}W/{self.losses}L"
+        return self.username
     
     def win_rate(self):
         """Calcula el porcentaje de victorias"""

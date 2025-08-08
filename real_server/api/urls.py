@@ -16,10 +16,11 @@ urlpatterns = [
     #path('profile', views.profile, name='profile'),
     path('signin', views.signIn, name='signin'),
     path('register', views.register, name='register'),
+    path('editprofile', views.editprofile, name='editprofile'),
 	path('tournament', views.tournament, name='tournament'),
     # API endpoints 1vs1
     path('update_user_profile/', views.update_user_profile, name='update_user_profile'),
-	path('home', views.home_view, name='home'),
+	path('profile', views.profile_view, name='profile'),
     path('generate_players_names_1vs1/', views.generate_players_names_1vs1, name='generate_players_names_1vs1'),
     path('user-profiles/', views.UserList.as_view()),
 	#path('tournamet', views.TournamentViewSet.as_view()),

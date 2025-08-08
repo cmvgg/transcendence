@@ -34,8 +34,8 @@ class ExampleForm(forms.Form):
         self.helper.form_action = 'submit_survey'
         self.helper.add_input(Submit('submit', 'Submit'))
 
-#obtener la informacion de un usuario para mostrar su profile
-class getProfile(models.Model):
+#obtener la informacion de un usuario para editar su profile
+class editProfile(models.Model):
     name = forms.CharField(label='Name')
     nickname = forms.CharField(label='Nickname')
     email = forms.EmailField(label='Email')

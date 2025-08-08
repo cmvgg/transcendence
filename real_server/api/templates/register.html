@@ -28,15 +28,15 @@
     font-size: 40px;
   }
 </style>
-
+<body style="background-image: url('https://i.pinimg.com/474x/76/d4/84/76d484a3538b24a114e941dbe586e1a5.jpg');background-repeat: no-repeat; background-size: cover; background-position: center bottom;">
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
   45deg,
   hsla(168, 85%, 52%, 0.8),
   hsla(263, 88%, 45%, 0.7) 100%
 )">
-  <div class="container-fluid" style="color: aqua; "> 
-    <button 
+  <div class="container-fluid" style="color: aqua; ">
+    <button
       data-mdb-collapse-init
       class="navbar-toggler"
       type="button"
@@ -76,35 +76,38 @@
 </nav>
 <!-- Navbar -->
 
-<div style="background-color: black ;color: whitesmoke; height: 350px; font-family: Pixelify Sans, sans-serif;  border-radius: 10px;" class="col-3 shadow-lm text-center border-5 border-white">
-  <br><br>
-  <div class="row  ">
-    <div class="col"></div>
-    <div style="background-color: black ;color: whitesmoke; height: 350px; font-family: Pixelify Sans, sans-serif; background-image: url('../../staticfiles/oie_transparent.png'); background-repeat: no-repeat; background-position: center; background-size: cover; border-radius: 10px;" class="col-3 shadow-lm text-center border-5 border-white">
-      <div class="container py-3">
-        <h5 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)" data-i18n="retrogamer">Sign in and become a retrogamer</h5>
-        {% block content %}
-        <form id="registerForm" method="post" > <!-- onsubmit="return closeWindow()" -->
-			{% csrf_token %}
-            <style>
-              .asteriskField {display: none; }
-              .invalid-feedback,
-              .help-block,
-              .errorlist,
-              .field-error {
-                  display: none !important;
-              }
-            </style>
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary" data-bs-toggle="popover" data-i18n="button.submit">Submit</button>
-        </form>
-        {% endblock %}
-      </div>
+<div class="row" style="height: 50px;"></div>
+<div class="row  ">
+  <div class="col"></div>
+  <div style="background-color: black ;color: whitesmoke; height: auto; font-family: Pixelify Sans, sans-serif; background-image: url('../../staticfiles/oie_transparent.png'); background-repeat: no-repeat; background-position: center; background-size: cover; border-radius: 10px;" class="col-3 shadow-lm text-center border-5 border-white">
+    
+    <div class="container py-3">
+      <h5 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)">Register as retrogamer</h5>
+      {% block content %}
+      <form id="registerForm" method="post" >
+          {% csrf_token %}
+          {{ form.as_p }}
+          <style>
+            .asteriskField {display: none; }
+            .invalid-feedback,
+            .help-block,
+            .errorlist,
+            .field-error {
+                display: none !important;
+            }
+          </style>
+          <button type="submit" class="btn btn-primary" data-bs-toggle="popover">Submit</button>
+      </form>
+      
+      {% endblock %}
     </div>
-    <div class="col"></div>
+      
   </div>
-  <br><br><br><br>
-  <div class="row" style="height: 150px;">
+  <div class="col"></div>
+</div>
+
+<br><br><br><br>
+<div class="row" style="height: 150px;">
     
   <script>
     function closeWindow() {
