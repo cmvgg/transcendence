@@ -5,12 +5,443 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Profile</title>
-    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="../../staticfiles/rest_framework/css/profile.css">
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet"  href="../../staticfiles/rest_framework/css/profile.css">
 </head>
-<body>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Honk&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P:wght@400&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sixtyfour+Convergence&display=swap');
+
+  @font-face {
+    font-family: 'Press Start 2P';
+    font-style: normal;
+    font-display: swap;
+    font-weight: 400;
+    src: url(@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff2) format('woff2'), url(@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff) format('woff');
+    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+  }
+
+
+body {
+    color: #797979;
+    background: #f1f2f7;
+    background-image: url('https://static1.makeuseofimages.com/wordpress/wp-content/uploads/2021/04/nintendo-controllers-as-pixels.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    font-family: 'Open Sans', sans-serif;
+    
+    padding: 0px !important;
+    margin: 0px !important;
+    font-size: 13px;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-font-smoothing: antialiased;
+}
+
+.profile-nav, .profile-info{
+    margin-top:30px;   
+}
+
+.profile-nav .user-heading {
+    background: #fbc02d;
+    color: #fff;
+    border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    padding: 30px;
+    text-align: center;
+}
+
+.profile-nav .user-heading.round a  {
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    border: 10px solid rgba(255,255,255,0.3);
+    display: inline-block;
+}
+
+.profile-nav .user-heading a img {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+}
+
+.profile-nav .user-heading h1 {
+    font-size: 22px;
+    font-weight: 300;
+    margin-bottom: 5px;
+}
+
+.profile-nav .user-heading p {
+    font-size: 12px;
+}
+
+.profile-nav ul {
+    margin-top: 1px;
+}
+
+.profile-nav ul > li {
+    border-bottom: 1px solid #ebeae6;
+    margin-top: 0;
+    line-height: 30px;
+}
+
+.profile-nav ul > li:last-child {
+    border-bottom: none;
+}
+
+.profile-nav ul > li > a {
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    color: #89817f;
+    border-left: 5px solid #fff;
+}
+
+.profile-nav ul > li > a:hover, .profile-nav ul > li > a:focus, .profile-nav ul li.active  a {
+    background: #f8f7f5 !important;
+    border-left: 5px solid #fbc02d;
+    color: #89817f !important;
+}
+
+.profile-nav ul > li:last-child > a:last-child {
+    border-radius: 0 0 4px 4px;
+    -webkit-border-radius: 0 0 4px 4px;
+}
+
+.profile-nav ul > li > a > i{
+    font-size: 16px;
+    padding-right: 10px;
+    color: #bcb3aa;
+}
+
+.r-activity {
+    margin: 6px 0 0;
+    font-size: 12px;
+}
+
+
+.p-text-area, .p-text-area:focus {
+    border: none;
+    font-weight: 300;
+    box-shadow: none;
+    color: #c3c3c3;
+    font-size: 16px;
+}
+
+.profile-info .panel-footer {
+    background-color:#f8f7f590 ;
+    border-top: 1px solid #e7ebee;
+}
+
+.profile-info .panel-footer ul li a {
+    color: #7a7a7a;
+}
+
+.bio-graph-heading {
+    background: #fbc02d;
+    color: #fff;
+    font-family: 'Press Start 2P', system-ui;
+    padding: 40px 110px;
+    border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    font-size: 16px;
+    font-weight: 300;
+}
+
+.bio-graph-info {
+    color: #89817e;
+}
+
+.bio-graph-info h1 {
+    font-size: 22px;
+    font-weight: 300;
+    font-family: 'Press Start 2P', system-ui;
+    margin: 0 0 20px;
+}
+
+.bio-row {
+    width: 50%;
+    float: left;
+    margin-bottom: 10px;
+    padding:0 15px;
+    color: white;
+    background-color: #b984dc;
+    font-size: 25px;
+    font-family: 'Press Start 2P', system-ui;
+}
+
+.bio-row p span {
+    width: 100px;
+    display: inline-block;
+}
+
+.bio-chart, .bio-desk {
+    float: left;
+}
+
+.bio-chart {
+    width: 40%;
+    background-color: black;
+    display: flex;
+    flex-direction: row;
+    font-family: "Sixtyfour Convergence", sans-serif;
+}
+
+.bio-desk {
+    width: 60%;
+    background-color: #8dd7d6;
+    display: flex;
+    flex-direction: row;
+    font-family: "Sixtyfour Convergence", sans-serif;
+}
+
+.bio-chart h4 {
+    font-size: 35px;
+    font-weight:400;
+    font-weight: bold;
+    color: #e26b7f;
+}
+
+.bio-desk h4.terques {
+    color: #4CC5CD;
+}
+
+.bio-desk h4.red {
+    color: #e26b7f;
+}
+
+.bio-desk h4.green {
+    color: #97be4b;
+}
+
+.bio-desk h4.purple {
+    color: #caa3da;
+}
+
+.file-pos {
+    margin: 6px 0 10px 0;
+}
+
+.profile-activity h5 {
+    font-weight: 300;
+    margin-top: 0;
+    color: #c3c3c3;
+}
+
+.summary-head {
+    background: #ee7272;
+    color: #fff;
+    text-align: center;
+    border-bottom: 1px solid #ee7272;
+}
+
+.summary-head h4 {
+    font-weight: 300;
+    text-transform: uppercase;
+    margin-bottom: 5px;
+}
+
+.summary-head p {
+    color: rgba(255,255,255,0.6);
+}
+
+ul.summary-list {
+    display: inline-block;
+    padding-left:0 ;
+    width: 100%;
+    margin-bottom: 0;
+}
+
+ul.summary-list > li {
+    display: inline-block;
+    width: 19.5%;
+    text-align: center;
+}
+
+ul.summary-list > li > a > i {
+    display:block;
+    font-size: 18px;
+    padding-bottom: 5px;
+}
+
+ul.summary-list > li > a {
+    padding: 10px 0;
+    display: inline-block;
+    color: #818181;
+}
+
+ul.summary-list > li  {
+    border-right: 1px solid #eaeaea;
+}
+
+ul.summary-list > li:last-child  {
+    border-right: none;
+}
+
+.activity {
+    width: 100%;
+    float: left;
+    margin-bottom: 10px;
+}
+
+.activity.alt {
+    width: 100%;
+    float: right;
+    margin-bottom: 10px;
+}
+
+.activity span {
+    float: left;
+}
+
+.activity.alt span {
+    float: right;
+}
+.activity span, .activity.alt span {
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+    background: #eee;
+    text-align: center;
+    color: #fff;
+    font-size: 16px;
+}
+
+.activity.terques span {
+    background: #8dd7d6;
+}
+
+.activity.terques h4 {
+    color: #8dd7d6;
+}
+.activity.purple span {
+    background: #b984dc;
+}
+
+.activity.purple h4 {
+    color: #b984dc;
+}
+.activity.blue span {
+    background: #90b4e6;
+}
+
+.activity.blue h4 {
+    color: #90b4e6;
+}
+.activity.green span {
+    background: #aec785;
+}
+
+.activity.green h4 {
+    color: #aec785;
+}
+
+.activity h4 {
+    margin-top:0 ;
+    font-size: 16px;
+}
+
+.activity p {
+    margin-bottom: 0;
+    font-size: 13px;
+}
+
+.activity .activity-desk i, .activity.alt .activity-desk i {
+    float: left;
+    font-size: 18px;
+    margin-right: 10px;
+    color: #bebebe;
+}
+
+.activity .activity-desk {
+    margin-left: 70px;
+    position: relative;
+}
+
+.activity.alt .activity-desk {
+    margin-right: 70px;
+    position: relative;
+}
+
+.activity.alt .activity-desk .panel {
+    float: right;
+    position: relative;
+}
+
+.activity-desk .panel {
+    background: #F4F4F4 ;
+    display: inline-block;
+}
+
+
+.activity .activity-desk .arrow {
+    border-right: 8px solid #F4F4F4 !important;
+}
+.activity .activity-desk .arrow {
+    border-bottom: 8px solid transparent;
+    border-top: 8px solid transparent;
+    display: block;
+    height: 0;
+    left: -7px;
+    position: absolute;
+    top: 13px;
+    width: 0;
+}
+
+.activity-desk .arrow-alt {
+    border-left: 8px solid #F4F4F4 !important;
+}
+
+.activity-desk .arrow-alt {
+    border-bottom: 8px solid transparent;
+    border-top: 8px solid transparent;
+    display: block;
+    height: 0;
+    right: -7px;
+    position: absolute;
+    top: 13px;
+    width: 0;
+}
+
+.activity-desk .album {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+.activity-desk .album a{
+    margin-right: 10px;
+}
+
+.activity-desk .album a:last-child{
+    margin-right: 0px;
+}
+
+.footer_nav{
+    text-decoration: none;
+    font-size: 35px;
+  }
+  .footer_nav:hover{
+    text-decoration:none;
+    font-size: 40px;
+  }
+</style>
+
+<body style="color: #797979;
+background: #f1f2f7;
+background-image: url('https://static1.makeuseofimages.com/wordpress/wp-content/uploads/2021/04/nintendo-controllers-as-pixels.jpg');
+background-repeat: no-repeat;
+background-size: cover;
+font-family: 'Open Sans', sans-serif;
+
+padding: 0px !important;
+margin: 0px !important;
+font-size: 13px;
+text-rendering: optimizeLegibility;
+-webkit-font-smoothing: antialiased;
+-moz-font-smoothing: antialiased;">
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
@@ -18,6 +449,7 @@
   hsla(168, 85%, 52%, 0.8),
   hsla(263, 88%, 45%, 0.7) 100%
 )">
+  <div class="container-fluid" style="color: aqua;"> 
   <div class="container-fluid" style="color: aqua;"> 
     <button
       data-mdb-collapse-init
@@ -43,15 +475,34 @@
         <li class="nav-item">
           <a class="nav-link" href="/about">About</a>
         </li>
+        {% if user.id > 0 %}
+        <li class="nav-item">
+          <a class="nav-link" href="/profile" data-i18n="nav.home">Profile</a>
+        </li>
+        {% endif%}
       </ul>
     </div>
+    <select id="language-selector">
+      <option value="en">🇬🇧 English</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="eu">🇵🇲 Euskera</option>
+      <option value="fr">🇫🇷 Français</option>
+    </select>
   </div>
 </nav>
 <!-- Navbar --> 
 
 <div class="container bootstrap snippets bootdey">
     <p style="height: 50px;"></p>
+<div class="container bootstrap snippets bootdey">
+    <p style="height: 50px;"></p>
 
+    {% if error %}
+    <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">Error!</h4>
+        <p>{{ error }}</p>
+    </div>
+    {% endif %}
     {% if error %}
     <div class="alert alert-danger" role="alert">
         <h4 class="alert-heading">Error!</h4>
@@ -62,7 +513,7 @@
     <div class="row">
       <div class="profile-nav col-md-3">
           <div class="panel">
-              <div class="user-heading round">
+              <div class="user-heading bio-graph-heading round">
                   <a href="#">
                       <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">
                   </a>
@@ -73,386 +524,68 @@
                   <h1>Jugador</h1>
                   <p>Sin datos disponibles</p>
                   {% endif %}
+                  <h3>{{ loged_user.username }}</h3>
               </div>
     
               <ul class="nav nav-pills nav-stacked">
-                  <li class="active"><a href="#"> <i class="fa fa-edit"></i> Edit profile</a></li>
+                  <li class="active" ><a href="/editprofile"> <i class="fa fa-edit"></i>Edit profile</a></li>
               </ul>
           </div>
       </div>
-      
+
       <div class="profile-info col-md-9">
           <div class="panel">
               <div class="panel-body bio-graph-info">
-                  <div class="row">
-					<div class="bio-row">
-						<h1 style="color:white;font-size:50px;">Tu Información</h1>
-					  </div>
-					  <div class="bio-row">
-						<p><strong>Name:</strong> {{ user.first_name }}</p>
-					  </div>
-					  <div class="bio-row">
-						<p><strong>Nickname:</strong> {{ user.username }}</p>
-					  </div>
-					  <div class="bio-row">
-						<p><strong>Email:</strong> {{ user.email }}</p>
-					  </div>
-                      <div class="bio-row">
-                          <p>Victorias: {{ user.wins }}</p>
-                      </div>
-                      <div class="bio-row">
-                          <p>Derrotas: {{ user.losses }}</p>
-                      </div>
-                      <div class="bio-row">
-                          <p>Win Rate: {{ user.win_rate|floatformat:2 }}%</p>
-                      </div>
+                  <div class="row" style="width: auto;">
+                    <div class="bio-row">
+                      <h2 style="color:white;">Información</h2>
+                      <p><strong>Name:</strong> {{ loged_user.first_name }}</p>
+                      <p><strong>Email:</strong> {{ loged_user.email }}</p>
+                    </div> 
                   </div>
               </div>
           </div>
           
-          <div>
-              <div class="row" style="background-color: black;">
-                <h1 style="color: red; font-family: Sixtyfour Convergence, sans-serif;font-size:50px">Estadísticas Generales</h1>
-                  <div class="col-md-6">
+              <div class="row" style="background-color: black; width: auto;">
+                <h1 style="color: red; font-family: Sixtyfour Convergence, sans-serif;font-size:40px">Estadísticas</h1>
+                  <div class="col-md-8">
                       <div class="panel">
                           <div class="bio-chart">
-                              <h4>{{ stats.total_wins }}</h4>
-                              <h4>&nbsp</h4>
-                              <h4>Total Victorias</h4>
-                          </div>Error!
-						  Error al cargar datos: column api_userprofile.user_id does not exist LINE 1: SELECT "api_userprofile"."id", "api_userprofile"."user_id", ... ^
-                            <h4>{{ stats.total_losses }}</h4>
-                            <h4>&nbsp</h4>
-                            <h4>Total Derrotas</h4>
-                        </div>
+                            <h3>Victorias</h3>
+                              <h3>&nbsp</h3>
+                              <h3>{{ loged_stats.wins }}</h3>
+                          </div>
+                          
                     </div>
-                  </div>
-                  <div class="col-md-6">
+                </div>
+                <div class="col-md-8">
+                  <div class="panel">
+                  
+                      <div class="bio-chart">
+                        <h3>Derrotas</h3>
+                        <h3>&nbsp</h3>
+                        <h3>{{ loged_stats.losses }}</h3>
+                      </div>
+                </div>
+            </div>
+                <div class="col-md-8">
                     <div class="panel">
                         <div class="bio-chart">
-                            <h4>{{ stats.total_perfiles }}</h4>
-                            <h4>&nbsp</h4>
-                            <h4>Jugadores</h4>
+                            <h3>Torneos ganados</h3>
+                            <h3>&nbsp</h3>
+                            <h3>{{ loged_stats.tournaments_won }}</h3>
                         </div>
                     </div>
-                  </div>
-                  <div class="col-md-6">
-                    <div class="panel">
-                        <div class="bio-chart">
-                            <h4>{{ stats.total_games }}</h4>
-                            <h4>&nbsp</h4>
-                            <h4>Total Partidas</h4>
-                        </div>
-                    </div>
-                  </div>
+                </div>
               </div>
           </div>
       </div>
-    </div>
-
-    <!-- Sección de Lista de Jugadores -->
-    <div class="row mt-5">
-        <div class="col-12">
-            <div class="panel">
-                <div class="panel-body">
-                    <h2 style="color: white; text-align: center; margin-bottom: 30px;">🏆 Ranking de Jugadores</h2>
-                    
-                    {% if perfiles %}
-                    <div class="table-responsive">
-                        <table class="table table-dark table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Alias</th>
-                                    <th scope="col">Victorias</th>
-                                    <th scope="col">Derrotas</th>
-                                    <th scope="col">Total Partidas</th>
-                                    <th scope="col">Win Rate</th>
-                                    <th scope="col">Estado</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for perfil in perfiles %}
-                                <tr {% if forloop.first %}class="table-success"{% elif forloop.counter == 2 %}class="table-warning"{% elif forloop.counter == 3 %}class="table-info"{% endif %}>
-                                    <th scope="row">
-                                        {% if forloop.first %}🥇
-                                        {% elif forloop.counter == 2 %}🥈
-                                        {% elif forloop.counter == 3 %}🥉
-                                        {% else %}{{ forloop.counter }}
-                                        {% endif %}
-                                    </th>
-                                    <td><strong>{{ perfil.alias }}</strong></td>
-                                    <td><span class="badge bg-success">{{ perfil.wins }}</span></td>
-                                    <td><span class="badge bg-danger">{{ perfil.losses }}</span></td>
-                                    <td>{{ perfil.total_games }}</td>
-                                    <td>
-                                        {% if perfil.total_games > 0 %}
-                                            {% widthratio perfil.win_rate 1 100 %}%
-                                        {% else %}
-                                            0%
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {% if perfil.total_games == 0 %}
-                                            <span class="badge bg-secondary">🆕 Nuevo</span>
-                                        {% elif perfil.win_rate >= 0.7 %}
-                                            <span class="badge bg-success">🔥 Experto</span>
-                                        {% elif perfil.win_rate >= 0.5 %}
-                                            <span class="badge bg-warning">⚡ Bueno</span>
-                                        {% else %}
-                                            <span class="badge bg-info">💪 Aprendiendo</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                    {% else %}
-                    <div class="alert alert-info text-center" role="alert">
-                        <h4 class="alert-heading">Sin datos</h4>
-                        <p>No hay jugadores registrados en la base de datos.</p>
-                        <hr>
-                        <p class="mb-0">¡Sé el primero en registrarte!</p>
-                    </div>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
-<!-- Contenedor para datos dinámicos (mantengo el JavaScript original) -->
-<div id="contenedor-datos"></div>
-
-<h1>Example data</h1>
-
-<script>
-  async function obtenerPerfilUsuario() {
-      try {
-          const respuesta = await fetch('/get_players/', {
-              method: 'GET',
-              headers: {
-                  'Content-Type': 'application/json',
-                  'X-CSRFToken': getCookie('csrftoken')
-              }
-          });
-          
-          if (!respuesta.ok) {
-              throw new Error(`Error ${respuesta.status}: ${respuesta.statusText}`);
-          }
-          
-          const datos = await respuesta.json();
-          console.log('UserProfile Data:', datos);
-          return datos;
-          
-      } catch (error) {
-          console.error('Error al obtener perfil:', error);
-          throw error;
-      }
-  }
-
-  function calcularEstadisticas(perfil) {
-      const totalPartidas = perfil.wins + perfil.losses;
-      const winRate = totalPartidas > 0 ? (perfil.wins / totalPartidas * 100).toFixed(1) : 0;
-      const lossRate = totalPartidas > 0 ? (perfil.losses / totalPartidas * 100).toFixed(1) : 0;
-      
-      return {
-          totalPartidas,
-          winRate,
-          lossRate,
-          winRateDecimal: totalPartidas > 0 ? perfil.wins / totalPartidas : 0
-      };
-  }
-
-  function getCookie(name) {
-      let cookieValue = null;
-      if (document.cookie && document.cookie !== '') {
-          const cookies = document.cookie.split(';');
-          for (let i = 0; i < cookies.length; i++) {
-              const cookie = cookies[i].trim();
-              if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                  break;
-              }
-          }
-      }
-      return cookieValue;
-  }
-
-  async function cargarPerfilUsuario(userId = null) {
-      const contenedor = document.getElementById('contenedor-datos');
-      
-      if (!contenedor) {
-          console.error('Elemento contenedor no encontrado');
-          return;
-      }
-
-      contenedor.innerHTML = `
-          <div class="loading-container" style="text-align: center; padding: 20px;">
-              <p>🔄 Cargando perfil de usuario...</p>
-          </div>
-      `;
-
-      try {
-          let datos = await obtenerPerfilUsuario();
-          const perfil = Array.isArray(datos) ? datos[0] : datos;
-          
-          if (!perfil) {
-              throw new Error('No se encontraron datos del perfil');
-          }
-          
-          const stats = calcularEstadisticas(perfil);
-          
-          contenedor.innerHTML = `
-              <div class="user-profile-card" style="max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #ddd; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                  <div class="profile-header" style="text-align: center; margin-bottom: 20px;">
-                      <h2 style="color: #333; margin-bottom: 10px;">🎮 ${perfil.alias}</h2>
-                      <div class="profile-badge" style="display: inline-block; padding: 5px 15px; background: linear-gradient(45deg, #667eea, #764ba2); color: white; border-radius: 20px; font-size: 14px;">
-                          Jugador ${stats.totalPartidas > 0 ? 'Activo' : 'Nuevo'}
-                      </div>
-                  </div>
-                  
-                  <div class="stats-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 20px;">
-                      <div class="stat-card wins" style="background: linear-gradient(135deg, #4CAF50, #45a049); color: white; padding: 20px; border-radius: 10px; text-align: center;">
-                          <div style="font-size: 2em; font-weight: bold;">${perfil.wins}</div>
-                          <div style="font-size: 0.9em; opacity: 0.9;">🏆 Victorias</div>
-                      </div>
-                      
-                      <div class="stat-card losses" style="background: linear-gradient(135deg, #f44336, #d32f2f); color: white; padding: 20px; border-radius: 10px; text-align: center;">
-                          <div style="font-size: 2em; font-weight: bold;">${perfil.losses}</div>
-                          <div style="font-size: 0.9em; opacity: 0.9;">💔 Derrotas</div>
-                      </div>
-                      
-                      <div class="stat-card total" style="background: linear-gradient(135deg, #2196F3, #1976D2); color: white; padding: 20px; border-radius: 10px; text-align: center;">
-                          <div style="font-size: 2em; font-weight: bold;">${stats.totalPartidas}</div>
-                          <div style="font-size: 0.9em; opacity: 0.9;">🎯 Total</div>
-                      </div>
-                      
-                      <div class="stat-card winrate" style="background: linear-gradient(135deg, #FF9800, #F57C00); color: white; padding: 20px; border-radius: 10px; text-align: center;">
-                          <div style="font-size: 2em; font-weight: bold;">${stats.winRate}%</div>
-                          <div style="font-size: 0.9em; opacity: 0.9;">📊 Win Rate</div>
-                      </div>
-                  </div>
-                  
-                  <div class="progress-section" style="margin-bottom: 20px;">
-                      <h4 style="margin-bottom: 10px; color: #555;">📈 Rendimiento</h4>
-                      <div class="progress-bar" style="width: 100%; height: 20px; background: #f0f0f0; border-radius: 10px; overflow: hidden;">
-                          <div class="progress-fill" style="height: 100%; width: ${stats.winRate}%; background: linear-gradient(90deg, #4CAF50, #45a049); transition: width 0.5s ease; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; font-weight: bold;">
-                              ${stats.winRate > 15 ? `${stats.winRate}% Win Rate` : ''}
-                          </div>
-                      </div>
-                      <div style="display: flex; justify-content: space-between; margin-top: 5px; font-size: 12px; color: #666;">
-                          <span>0%</span>
-                          <span>50%</span>
-                          <span>100%</span>
-                      </div>
-                  </div>
-                  
-                  <div class="additional-info" style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
-                      <h4 style="margin-bottom: 10px; color: #555;">ℹ️ Información adicional</h4>
-                      <p><strong>ID:</strong> ${perfil.id || 'N/A'}</p>
-                      <p><strong>Alias único:</strong> ${perfil.alias}</p>
-                      <p><strong>Ratio W/L:</strong> ${stats.totalPartidas > 0 ? (perfil.wins / Math.max(perfil.losses, 1)).toFixed(2) : '0.00'}</p>
-                      <p><strong>Estado:</strong> ${stats.totalPartidas > 0 ? (stats.winRate >= 50 ? '🔥 En racha' : '💪 Mejorando') : '🆕 Comenzando'}</p>
-                  </div>
-                  
-                  <div class="actions" style="text-align: center; margin-top: 20px;">
-                      <button onclick="cargarPerfilUsuario(${perfil.id})" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; margin-right: 10px;">
-                          🔄 Actualizar
-                      </button>
-                      <button onclick="cargarTodosLosPerfiles()" style="padding: 10px 20px; background: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                          👥 Ver todos
-                      </button>
-                  </div>
-              </div>
-          `;
-          
-      } catch (error) {
-          contenedor.innerHTML = `
-              <div class="error-container" style="text-align: center; padding: 20px; border: 1px solid #dc3545; border-radius: 8px; background: #f8d7da; color: #721c24;">
-                  <h4>❌ Error al cargar el perfil</h4>
-                  <p>No se pudieron obtener los datos del perfil de usuario.</p>
-                  <p><small>Error: ${error.message}</small></p>
-                  <button onclick="cargarPerfilUsuario()" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; margin-top: 10px;">
-                      🔄 Reintentar
-                  </button>
-              </div>
-          `;
-      }
-  }
-
-  // Función para cargar todos los perfiles (ranking)
-  async function cargarTodosLosPerfiles() {
-      const contenedor = document.getElementById('contenedor-datos');
-      
-      try {
-          contenedor.innerHTML = '<div style="text-align: center; padding: 20px;">🔄 Cargando ranking...</div>';
-          
-          const datos = await obtenerPerfilUsuario();
-          const perfiles = Array.isArray(datos) ? datos : [datos];
-          
-          let rankingHtml = `
-              <div class="ranking-container" style="max-width: 800px; margin: 0 auto;">
-                  <h2 style="text-align: center; color: #333; margin-bottom: 20px;">🏆 Ranking de Jugadores</h2>
-                  <div class="ranking-list">
-          `;
-          
-          perfiles.forEach((perfil, index) => {
-              const stats = calcularEstadisticas(perfil);
-              const position = index + 1;
-              const medal = position === 1 ? '🥇' : position === 2 ? '🥈' : position === 3 ? '🥉' : `#${position}`;
-              
-              rankingHtml += `
-                  <div class="ranking-item" style="display: flex; align-items: center; padding: 15px; margin-bottom: 10px; border: 1px solid #ddd; border-radius: 8px; background: white; cursor: pointer;" onclick="cargarPerfilUsuario(${perfil.id})">
-                      <div class="position" style="font-size: 1.2em; font-weight: bold; margin-right: 15px; min-width: 50px;">${medal}</div>
-                      <div class="profile-info" style="flex: 1;">
-                          <h4 style="margin: 0 0 5px 0; color: #333;">${perfil.alias}</h4>
-                          <div style="font-size: 0.9em; color: #666;">
-                              ${perfil.wins}W - ${perfil.losses}L (${stats.winRate}% WR)
-                          </div>
-                      </div>
-                      <div class="stats-mini" style="text-align: right;">
-                          <div style="font-weight: bold; color: #4CAF50;">${stats.totalPartidas} partidas</div>
-                      </div>
-                  </div>
-              `;
-          });
-          
-          rankingHtml += `
-                  </div>
-                  <div style="text-align: center; margin-top: 20px;">
-                      <button onclick="cargarPerfilUsuario()" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                          👤 Ver mi perfil
-                      </button>
-                  </div>
-              </div>elect
-          `;
-          
-          contenedor.innerHTML = rankingHtml;
-          
-      } catch (error) {
-          console.error('Error al cargar ranking:', error);
-          contenedor.innerHTML = `
-              <div class="error-container" style="text-align: center; padding: 20px;">
-                  <h4 style="color: #dc3545;">❌ Error al cargar ranking</h4>
-                  <button onclick="cargarTodosLosPerfiles()" style="padding: 8px 16px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-                      🔄 Reintentar
-                  </button>
-              </div>
-          `;
-      }
-  }
-
-  // Cargar perfil cuando se carga la página
-  document.addEventListener('DOMContentLoaded', () => {
-      cargarPerfilUsuario(); // Cargar perfil del usuario actual
-  });
-</script>
-
-<h4>END data</h4>
+   
 
 
+<br><br>
     <!-- Footer -->
   <footer class="text-center text-white" style="background-image: url('https://64.media.tumblr.com/647cfeeb6827dd332b390e6ce5e2b16a/175e171edbe54538-fe/s2048x3072/97e4760df288f74b0c7f817dbc5fa000552d8118.gifv'); background-position: center center; background-repeat: no-repeat; background-size: cover;";> <!--  #cd09d4 -->
     <!-- Grid container -->

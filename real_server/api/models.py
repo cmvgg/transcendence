@@ -33,7 +33,8 @@ class TournamentStats(models.Model):
     tournaments_won = models.IntegerField(default=0)
 
     def __str__(self):
-        return f"{self.username} - {self.wins}W/{self.losses}L"
+        #return f"{self.username} - {self.wins}W/{self.losses}L"
+        return self.username
     
     def win_rate(self):
         """Calcula el porcentaje de victorias"""
@@ -59,15 +60,40 @@ class UsersInTournament(models.Model):
 
     def __str__(self):
         return f"{self.username} - {self.wins}W/{self.losses}L"
+
+    class Meta:
+        verbose_name = "Users In Tournament"
+        verbose_name_plural = "Users In Tournament"
+        ordering = ['-wins', 'username']
+        
+class UserProfile(models.Model):
+    user_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
+    # user = models.OneToOneField(User, on_delete=models.CASCADE)  # Descomenta si quieres usar relación
+    alias = models.CharField(max_length=50, unique=True)
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
+    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    def __str__(self):
+        return self.alias  # Cambiado para que funcione correctamente
+    
+    def win_rate(self):
+        """Calcula el porcentaje de victorias"""
+        total_games = self.wins + self.losses
+        if total_games == 0:
+            return 0.0
+        return self.wins / total_games
     
     def total_games(self):
         """Retorna el total de partidas jugadas"""
         return self.wins + self.losses
 
     class Meta:
-        verbose_name = "Users In Tournament"
-        verbose_name_plural = "Users In Tournament"
-        ordering = ['-wins', 'username']
+        ordering = ['-wins', 'alias']  # Ordenar por victorias descendente, luego por alias
+        verbose_name = 'Perfil de Usuario'
+        verbose_name_plural = 'Perfiles de Usuario'
 
 class Tournament(models.Model):
     # Campo para el ID del torneo
@@ -130,6 +156,23 @@ class UserProfile(models.Model):
         ordering = ['-wins', 'alias']  # Ordenar por victorias descendente, luego por alias
         verbose_name = 'Perfil de Usuario'
         verbose_name_plural = 'Perfiles de Usuario'
+
+class ProfileData(models.Model):
+    # modelo para endpoint get que consulte los datos del jugador
+    alias = models.CharField(max_length=50)
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)  # Agregué losses para consistencia
+
+    def __str__(self):
+        return f"{self.alias} - {self.wins}W"
+    
+    def win_rate(self):
+        """Calcula el porcentaje de victorias"""
+        total_games = self.wins + self.losses
+        if total_games == 0:
+            return 0.0
+        return self.wins / total_games
+
 
 class ProfileData(models.Model):
     # modelo para endpoint get que consulte los datos del jugador
