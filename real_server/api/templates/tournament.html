@@ -35,6 +35,33 @@
             margin-top: 10px;
             margin: 10px auto;
         }
+        /* Bracket visual */
+        #bracket {
+            display: flex;
+            gap: 40px;
+            justify-content: center;
+            padding: 20px;
+            align-items: center;
+        }
+        .round {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            justify-content: center;
+        }
+        .match {
+            border: 1px solid #D6BD98;
+            background-color: #40534C;
+            color: #D6BD98;
+            padding: 8px 12px;
+            border-radius: 5px;
+            min-width: 120px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .winner {
+            color: #4CAF50;
+        }
     </style>
 </head>
 <body>
@@ -46,47 +73,11 @@
     <div class="controlHome">
         <button id="goHome">Go Home</button>
     </div>
+    <h2 style="text-align: center;">Orden de Partidas (Bracket)</h2>
+    <div id="bracket"></div>
     <div id="log"></div>
 
-    <input type="hidden" id="tournamentId" value="1"> <!-- ID del torneo temporal -->
-
+    <input type="hidden" id="tournamentId" value="1">
     <script src="../static/tournament.js"></script>
-    <!-- <script>
-        // Supongamos que tenemos un tournament_id en algún lugar
-        //const tournament_id = 1; // Este valor debería ser dinámico en un caso real
-
-        // Al cargar la página, obtenemos los jugadores desde el backend
-        async function getPlayers() {
-            try {
-                const response = await fetch(`/user-profiles/`);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const players = await response.json();
-                //log(`Jugadores obtenidos: ${JSON.stringify(players)}`);
-                if (players && players.length > 0) {
-                    startTournament(players);
-                } else {
-                    log("No se han encontrado jugadores.");
-                }
-            } catch (error) {
-                log(`Error al cargar los jugadores: ${error.message}`);
-            }
-        }
-
-        // Inicia el torneo con los jugadores obtenidos desde la base de datos
-        function startTournament(players) {
-            const tournament = new Tournament(players);
-            let currentMatch = tournament.getCurrentMatch();
-            log("Inicio del torneo");
-            log("Jugadores: " + players);
-            log(`Primer partido: ${currentMatch.player1} vs ${currentMatch.player2}\n`);
-            gameLoop();
-        }
-
-        // Llamamos a la función para cargar los jugadores al cargar la página
-        //getPlayers();
-    </script> -->
 </body>
 </html>
-

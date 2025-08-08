@@ -51,6 +51,24 @@ class TournamentStats(models.Model):
         verbose_name_plural = "Tournament Stats"
         ordering = ['-wins', 'username']
 
+class UsersInTournament(models.Model):
+    username = models.CharField(max_length=100, unique=True)
+    wins = models.IntegerField(default=0)
+    losses = models.IntegerField(default=0)
+    tournaments_won = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.username} - {self.wins}W/{self.losses}L"
+    
+    def total_games(self):
+        """Retorna el total de partidas jugadas"""
+        return self.wins + self.losses
+
+    class Meta:
+        verbose_name = "Users In Tournament"
+        verbose_name_plural = "Users In Tournament"
+        ordering = ['-wins', 'username']
+
 class Tournament(models.Model):
     # Campo para el ID del torneo
     # tournament_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
@@ -112,20 +130,6 @@ class UserProfile(models.Model):
         ordering = ['-wins', 'alias']  # Ordenar por victorias descendente, luego por alias
         verbose_name = 'Perfil de Usuario'
         verbose_name_plural = 'Perfiles de Usuario'
-
-""" #Nueva clase para almacenar estadísticas de torneos por usuario
-# Esta clase almacena estadísticas de torneos por usuario, como victorias, derrotas y
-# torneos ganados. Se relaciona con el modelo UserProfile para obtener el alias del usuario.
-class UserTournamentStats(models.Model):
-    user_id = models.PositiveIntegerField()
-    username = models.CharField(max_length=100)
-    wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)
-    tournaments_won = models.IntegerField(default=0)
-
-    class Meta:
-        verbose_name = "User Tournament Stats"
-        verbose_name_plural = "User Tournament Stats" """
 
 class ProfileData(models.Model):
     # modelo para endpoint get que consulte los datos del jugador

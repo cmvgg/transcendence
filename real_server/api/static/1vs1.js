@@ -8,7 +8,7 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 const paddleWidth = 3;
-const paddleHeight = 30;
+const paddleHeight = 20; //cambiar a 30
 const borderHeight = 5;
 
 let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0, color: "white" };
@@ -49,7 +49,7 @@ async function fetchPlayersForGame(mode = "1vs1") {
         const data = await response.json();
         if (response.ok) {
             playerUsernames = data.players.map(p => p.username);
-            log("Jugadores asignados:", playerUsernames);
+            log("puta asignados:", playerUsernames);
         } else {
             log("Error obteniendo jugadores:", data.error);
         }
@@ -66,11 +66,16 @@ document.getElementById("startButton").addEventListener("click", () => {
 });
 
 document.addEventListener("keydown", (e) => {
-    if (e.key === "w") leftPaddle.dy = -5;
-    if (e.key === "s") leftPaddle.dy = 5;
-    if (e.key === "ArrowUp") rightPaddle.dy = -5;
-    if (e.key === "ArrowDown") rightPaddle.dy = 5;
-    if (e.key.toLowerCase() === "p") isPaused = !isPaused;
+    if (e.key === "w")
+        leftPaddle.dy = -5;
+    if (e.key === "s")
+        leftPaddle.dy = 5;
+    if (e.key === "ArrowUp")
+        rightPaddle.dy = -5;
+    if (e.key === "ArrowDown")
+        rightPaddle.dy = 5;
+    if (e.key.toLowerCase() === "p")
+        isPaused = !isPaused;
 });
 document.addEventListener("keyup", (e) => {
     if (["w", "s"].includes(e.key)) leftPaddle.dy = 0;
@@ -79,9 +84,12 @@ document.addEventListener("keyup", (e) => {
 
 function update() {
     if (gameOver || isPaused) return;
-
+    
     ball.x += ball.dx;
     ball.y += ball.dy;
+    
+    leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y + leftPaddle.dy));
+    rightPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, rightPaddle.y + rightPaddle.dy));
 
     if (ball.y - ball.radius < borderHeight || ball.y + ball.radius > canvas.height - borderHeight)
         ball.dy *= -1;
@@ -98,26 +106,61 @@ function update() {
         leftScore++;
         checkGameOver();
     }
-
-    leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y + leftPaddle.dy));
-    rightPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, rightPaddle.y + rightPaddle.dy));
 }
 
-function checkGameOver() {
-    if (playerUsernames.length < 2) return;
+async function checkGameOver() {
+    console.log("Verificando si el juego ha terminado...");
+    console.log(`Puntajes: Izquierdo ${leftScore}, Derecho ${rightScore}, MaxScore: ${maxScore}`);
+    console.log(`puta asignados: ${playerUsernames}`);
+
+    if (playerUsernames.length < 2) {
+        console.log("No hay suficientes jugadores.");
+        return;
+    }
 
     if (leftScore >= maxScore) {
+        log("El jugador izquierdo ha ganado.");
         gameOver = true;
         winner = playerUsernames[0];
-        updateUserProfile(playerUsernames[0], 1, 0);
-        updateUserProfile(playerUsernames[1], 0, 1);
+        console.log(`Actualizando estadísticas para ${playerUsernames[0]} y ${playerUsernames[1]}`);
+        await updateUserProfile(playerUsernames[0], 1, 0);
+        await updateUserProfile(playerUsernames[1], 0, 1);
+        console.log("Llamando a sync1vs1Stats...");
+        await sync1vs1Stats(); // Sincronizar datos para 1vs1
     } else if (rightScore >= maxScore) {
+        console.log("El jugador derecho ha ganado.");
         gameOver = true;
         winner = playerUsernames[1];
-        updateUserProfile(playerUsernames[1], 1, 0);
-        updateUserProfile(playerUsernames[0], 0, 1);
+        console.log(`Actualizando estadísticas para ${playerUsernames[1]} y ${playerUsernames[0]}`);
+        await updateUserProfile(playerUsernames[1], 1, 0);
+        await updateUserProfile(playerUsernames[0], 0, 1);
+        console.log("Llamando a sync1vs1Stats...");
+        await sync1vs1Stats(); // Sincronizar datos para 1vs1
     } else {
+        console.log("El juego continúa. Reiniciando la pelota.");
         resetBall();
+    }
+}
+
+async function sync1vs1Stats() {
+    console.log("Entrando a sync1vs1Stats...");
+    try {
+        const response = await fetch('/sync_1vs1_stats/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            log("Error al sincronizar estadísticas 1vs1:", data.error);
+        } else {
+            log("Estadísticas 1vs1 sincronizadas:", data.message);
+        }
+    } catch (error) {
+        log("Error de conexión al sincronizar estadísticas 1vs1:", error.message);
     }
 }
 

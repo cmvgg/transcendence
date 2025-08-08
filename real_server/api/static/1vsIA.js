@@ -170,22 +170,66 @@ function update() {
 	}
 }
 
-function checkGameOver() {
-	if (leftScore >= maxScore) {
-		gameOver = true;
-		winner = "¡Has ganado!";
-		updateUserProfile(playerUsername, 1, 0);
-	} else if (rightScore >= maxScore) {
-		gameOver = true;
-		winner = "La IA ha ganado...";
-		updateUserProfile(playerUsername, 0, 1);
-	}
+async function checkGameOver() {
+    if (leftScore >= maxScore) {
+        gameOver = true;
+        winner = "¡Has ganado!";
+        await updateUserProfile(playerUsername, 1, 0); // Actualizar estadísticas del jugador
+        await updateUsersInTournament(playerUsername, 1, 0); // Actualizar UsersInTournament
+        await syncTournamentStats(); // Sincronizar datos con TournamentStats
+    } else if (rightScore >= maxScore) {
+        gameOver = true;
+        winner = "La IA ha ganado...";
+        await updateUserProfile(playerUsername, 0, 1); // Actualizar estadísticas del jugador
+        await updateUsersInTournament(playerUsername, 0, 1); // Actualizar UsersInTournament
+        await syncTournamentStats(); // Sincronizar datos con TournamentStats
+    }
 
-	if (gameOver) {
-		alert(winner);
-	} else {
-		resetBall();
-	}
+    if (gameOver) {
+        alert(winner);
+    } else {
+        resetBall();
+    }
+}
+
+// Nueva función para actualizar UsersInTournament
+async function updateUsersInTournament(username, wins, losses) {
+    try {
+        const response = await fetch('/update_user_profile/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ username, wins, losses })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            console.error("Error actualizando UsersInTournament:", data);
+        } else {
+            console.log("UsersInTournament actualizado:", data);
+        }
+    } catch (error) {
+        console.error("Error al actualizar UsersInTournament:", error.message);
+    }
+}
+
+// Función para sincronizar datos con TournamentStats
+async function syncTournamentStats() {
+    try {
+        const response = await fetch('/sync_tournament_stats/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        });
+        const data = await response.json();
+        console.log(data.message || "Sincronización completada.");
+    } catch (error) {
+        console.error("Error al sincronizar estadísticas:", error.message);
+    }
 }
 
 function resetBall() {

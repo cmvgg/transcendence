@@ -38,4 +38,14 @@ class Migration(migrations.Migration):
                 ("tournaments_won", models.IntegerField(default=0)),
             ],
         ),
+        migrations.CreateModel(
+            name='UsersInTournament',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('username', models.CharField(max_length=100, unique=True)),
+                ('wins', models.IntegerField(default=0)),
+                ('losses', models.IntegerField(default=0)),
+                ('tournaments_won', models.IntegerField(default=0)),
+            ],
+        ),
     ]

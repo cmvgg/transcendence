@@ -18,13 +18,17 @@ urlpatterns = [
     path('signin', views.signIn, name='signin'),
     path('register', views.register, name='register'),
 	path('tournament', views.tournament, name='tournament'),
-    # API endpoints 1vs1
+    # API endpoints
 	#
     path('update_user_profile/', views.update_user_profile, name='update_user_profile'),
 	path('get_players_for_game/', views.get_players_for_game, name='get_players_for_game'),
     path('generate_players_names_1vs1/', views.generate_players_names_1vs1, name='generate_players_names_1vs1'),
-
-	#
+    path('get_tournament_players/', views.get_tournament_players, name='get_tournament_players'),
+    path('submit_tournament_match/', views.submit_tournament_match, name='submit_tournament_match'),
+    path('sync_tournament_stats/', views.sync_tournament_stats, name='sync_tournament_stats'),
+    path('sync_1vs1_stats/', views.sync_1vs1_stats, name='sync_1vs1_stats'),
+	path('sync_1vsIA_stats/', views.sync_1vsIA_stats, name='sync_1vsIA_stats'),
+    #
     path('home', views.home_view, name='home'),
     path('user-profiles/', views.UserList.as_view()),
 	#path('tournamet', views.TournamentViewSet.as_view()),
