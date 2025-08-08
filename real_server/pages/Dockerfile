@@ -1,4 +1,4 @@
-FROM python:3.11-slim-buster
+FROM python:3.11-slim
 
 WORKDIR /appfront
 
@@ -14,16 +14,9 @@ RUN mkdir /ft_transcendence_fronten/vol
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libpq-dev \
-    gcc \
     python3-dev \
-    nano \
-	curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY . .
 
-<<<<<<<< HEAD:real_server/pages/Dockerfile
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
-========
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8080"]
->>>>>>>> iarbaiza:real_server/ft_transcendece_frontend/Dockerfile

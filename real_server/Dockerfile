@@ -1,26 +1,20 @@
-FROM python:3.11-slim-buster
+FROM python:3.11-slim
 
 WORKDIR /app
 
 COPY requirements.txt .
 
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends postgresql-client 
+RUN apt-get install -y --no-install-recommends libpq-dev 
+RUN apt-get install -y --no-install-recommends python3-dev
+RUN rm -rf /var/lib/apt/lists/*
+
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install djangorestframework django-crispy-forms django-prometheus
-
-RUN pip install django-crispy-forms
-
-RUN pip install python-json-logger
-
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-	postgresql-client \
-    libpq-dev \
-    gcc \
-    postgresql-client \
-    python3-dev \
-    nano \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+RUN pip install --no-cache-dir djangorestframework
+RUN pip install --no-cache-dir django-prometheus
+RUN pip install --no-cache-dir django-crispy-forms
+RUN pip install --no-cache-dir python-json-logger
 
 COPY . .
 
