@@ -57,8 +57,8 @@
 	"hero": {
 		"title": "Alors tu te prends pour un maître du pong?",
 		"description": "Donnez tout contre une IA, un autre joueur ou inscrivez-vous à un tournoi",
-		"project": "Projet Retropong, l'expérience arcade à l'ancienne revisitée.<br>Les joueurs rétro sont meilleurs!",
-		"gaming": "Les jeux des années 80, parce que les pixels, c'est cool !<br>On adore les arcades et les cassettes de musique, à l'ancienne.",
+		"project": "Projet Retropong, l'expérience arcade à l'ancienne revisitée. Les joueurs rétro sont meilleurs!",
+		"gaming": "Les jeux des années 80, parce que les pixels, c'est cool ! On adore les arcades et les cassettes de musique, à l'ancienne.",
 		"register": "Osez vous inscrire"
 	},
 	"modal": {

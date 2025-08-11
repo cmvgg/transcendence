@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
 import json, random
-from .models import UserProfile, Tournament, TournamentStats
+from .models import Tournament, TournamentStats
 
 # Importar modelos y serializers
 from .models import User, Tournament, Match
@@ -46,6 +46,10 @@ def playground(request):
 
 def playground2(request):
     return render(request, 'playground_copy.html')
+
+def battleground(request):
+    global loged_user, loged_stats
+    return render(request, 'battleground.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
 
 def about(request):
     global loged_user, loged_stats
@@ -272,9 +276,8 @@ def profile_view(request):
     return render(request, 'profile.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
 
 # API ENDPOINTS ESPECÍFICOS
-@api_view(['GET'])
+""" @api_view(['GET'])
 def get_players(request):
-    """Endpoint para obtener lista de jugadores"""
     tournament_id = request.GET.get('tournament_id')
     
     if tournament_id:
@@ -287,7 +290,7 @@ def get_players(request):
         players = User.objects.all()
     
     serializer = UserSerializer(players, many=True)
-    return Response(serializer.data)
+    return Response(serializer.data) """
 
 @api_view(['POST'])
 def update_user_profile(request):

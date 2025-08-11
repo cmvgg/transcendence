@@ -4,7 +4,7 @@ const ctx = canvas.getContext("2d");
 
 let playerUsername = "";
 
-// 👇 Fetch del jugador humano
+// Fetch del jugador humano
 async function fetchPlayer() {
 	try {
 		const response = await fetch("http://localhost:8000/get_players_for_game?game_type=1vsIA");
@@ -20,7 +20,7 @@ async function fetchPlayer() {
 	}
 }
 
-// 👇 Enviar stats al backend
+// Enviar stats al backend
 async function updateUserProfile(username, wins, losses) {
 	try {
 		await fetch("http://localhost:8000/update_user_profile/", {

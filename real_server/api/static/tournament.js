@@ -148,10 +148,10 @@ document.getElementById("pauseButton").addEventListener("click", () => {
     isPaused = !isPaused;
 });
 
-document.getElementById("goHome").addEventListener("click", () => {
+/* document.getElementById("goHome").addEventListener("click", () => {
     document.getElementById("goHome").disabled = true;
     window.location.href = "../templates/index";
-});
+}); */
 
 /***********************
  * 5. Render y lógica de juego *

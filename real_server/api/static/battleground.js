@@ -3,14 +3,13 @@ const ctx = canvas.getContext("2d");
 
 const paddleLength = 30;
 const paddleThickness = 3;
-const ballRadius = 5;
 
 let ball = {
     x: canvas.width / 2,
     y: canvas.height / 2,
     dx: 4,
     dy: 3,
-    radius: ballRadius,
+    radius: 3,
     speed: 2
 };
 
@@ -152,7 +151,7 @@ function draw() {
     ctx.fillRect(topPaddle.x, 0, paddleLength, paddleThickness);
 
     ctx.fillStyle = bottomPaddle.color;
-    ctx.fillRect(bottomPaddle.x, canvas.height - paddleThickness, paddleLength, paddleThickness);
+    ctx.fillRect(bottomPaddle.x, canvas.height - paddleThickness, paddleLength, 3);
 
     // Bola
     ctx.fillStyle = "white";
@@ -162,12 +161,12 @@ function draw() {
     ctx.closePath();
 
     // Puntajes
-    ctx.fillStyle = "white";
+    /* ctx.fillStyle = "white";
     ctx.font = "10px Arial";
     ctx.fillText(`Izquierda (Azul): ${scores.left}`, 30, 20);
     ctx.fillText(`Derecha (Rojo): ${scores.right}`, canvas.width / 2 + 20, 20);
     ctx.fillText(`Arriba (Verde): ${scores.top}`, canvas.width / 2 + 20, canvas.height - 10);
-    ctx.fillText(`Abajo (Amarillo): ${scores.bottom}`, canvas.width / 2 - 100, canvas.height - 10);
+    ctx.fillText(`Abajo (Amarillo): ${scores.bottom}`, canvas.width / 2 - 100, canvas.height - 10); */
 }
 
 function gameLoop() {

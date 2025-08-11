@@ -12,14 +12,17 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('playground', views.playground, name='playground'),
 	path('playground2', views.playground2, name='playground2'),
+	path('battleground', views.battleground, name='battleground'),
+	path('tournament', views.tournament, name='tournament'),
     path('about', views.about, name='about'),
     path('select', views.select, name='select'),
     #path('profile', views.profile, name='profile'),
     path('signin', views.signIn, name='signin'),
     path('register', views.register, name='register'),
-	path('tournament', views.tournament, name='tournament'),
     path('home', views.home_view, name='home'),
     path('editprofile', views.editprofile, name='editprofile'),
+    path('home', views.home_view, name='home'),
+    path('user-profiles/', views.UserList.as_view()),
     # API endpoints
 	#
     path('update_user_profile/', views.update_user_profile, name='update_user_profile'),

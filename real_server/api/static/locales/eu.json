@@ -57,8 +57,8 @@
 	"hero": {
 		"title": "Pongeko maisua zarela uste duzu?",
 		"description": "Emaiozu zure onena IA baten aurka, beste jokalari baten aurka edo eman izena txapelketa batean\\",
-		"project": "Retropong proiektua, bizitzara ekarritako eskola zaharreko esperientzia arkaikoa. <br>Retro jokalariek hobeto egiten dute!",
-		"gaming": "80ko hamarkadako jokoak, Pixel mola delako, lagun!<br>Asko gustatzen zaizkigu arkuteriak eta musika-kaseteak, eskola zaharra.",
+		"project": "Retropong proiektua, bizitzara ekarritako eskola zaharreko esperientzia arkaikoa. Retro jokalariek hobeto egiten dute!",
+		"gaming": "80ko hamarkadako jokoak, Pixel mola delako, lagun! Asko gustatzen zaizkigu arkuteriak eta musika-kaseteak, eskola zaharra.",
 		"register": "Ausartu zaitez erregistratzera"
 	},
 	"modal": {
