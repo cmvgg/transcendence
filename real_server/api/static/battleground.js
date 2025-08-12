@@ -1,15 +1,18 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-const paddleLength = 30;
-const paddleThickness = 3;
+canvas.height = 500
+canvas.width = 500
+
+const paddleLength = 80;
+const paddleThickness = 7;
 
 let ball = {
     x: canvas.width / 2,
     y: canvas.height / 2,
     dx: 4,
     dy: 3,
-    radius: 3,
+    radius: 8,
     speed: 2
 };
 
@@ -26,7 +29,7 @@ let scores = {
 };
 
 let lastTouched = null;
-let isPaused = false;
+let isPaused = true;
 
 document.addEventListener("keydown", (e) => {
     if (e.key === "w")
@@ -151,7 +154,7 @@ function draw() {
     ctx.fillRect(topPaddle.x, 0, paddleLength, paddleThickness);
 
     ctx.fillStyle = bottomPaddle.color;
-    ctx.fillRect(bottomPaddle.x, canvas.height - paddleThickness, paddleLength, 3);
+    ctx.fillRect(bottomPaddle.x, canvas.height - paddleThickness, paddleLength, paddleThickness);
 
     // Bola
     ctx.fillStyle = "white";

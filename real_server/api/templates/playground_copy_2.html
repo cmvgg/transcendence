@@ -115,16 +115,16 @@
       <canvas class=" border border-5 border-white " id="gameCanvas"  style=" margin-top: 10% ; width:800px; height: 600px; background-color:black; border-radius: 20px;">
         </canvas>	 <!-- cambiar tamanio del canvas -->
     </div>
-	<script>
-		window.addEventListener("keydown", function(e) {
-			const keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
-			const isTyping = ["INPUT", "TEXTAREA"].includes(document.activeElement.tagName);
+    <script>
+      window.addEventListener("keydown", function(e) {
+        const keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
+        const isTyping = ["INPUT", "TEXTAREA"].includes(document.activeElement.tagName);
 
-			if (keys.includes(e.key) && !isTyping) {
-				e.preventDefault();
-			}
-		}, { passive: false });
-	</script>
+        if (keys.includes(e.key) && !isTyping) {
+          e.preventDefault();
+        }
+      }, { passive: false });
+    </script>
     <!-- <script src="tron.js"></script> -->
     <script src="{% static 'tron.js' %}"></script>
     <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
@@ -148,11 +148,9 @@
       hsla(120, 95%, 47%, 0.6),
       hsla(22, 100%, 49%, 0.8) 75%);  border-radius: 10px; padding: 15px 0px 15px 15px; justify-content: space-around;">
       <button id="startButton" class="arcade_botton border border-5  rounded-circle" style=" margin-left: 15px;" data-i18n="button.start">Start</button>
-      <script>document.getElementById("startButton").addEventListener("click", () => {isPaused = false; music.play();});
-      </script>
+      <script>document.getElementById("startButton").addEventListener("click", () => {isPaused = false; music.play();});</script>
       <button id="pauseButton" class="arcade_botton border border-5  rounded-circle" style=" margin-left: 15px;" data-i18n="button.pause">Pause</button>
-      <script>document.getElementById("pauseButton").addEventListener("click", () => {isPaused = true; ; music.pause();});
-      </script>
+      <script>document.getElementById("pauseButton").addEventListener("click", () => {isPaused = true; ; music.pause();});</script>
     </div>
     <div class="col"></div>
   </div>

@@ -132,21 +132,34 @@ let winner = "";
  * 4. Eventos y controles *
  ***********************/
 document.addEventListener("keydown", (e) => {
-    if (e.key === "w") leftPaddle.dy = -5;
-    if (e.key === "s") leftPaddle.dy = 5;
-    if (e.key === "ArrowUp") rightPaddle.dy = -5;
-    if (e.key === "ArrowDown") rightPaddle.dy = 5;
-    if (e.key.toLowerCase() === "p") isPaused = !isPaused;
+    if (e.key === "w")
+        leftPaddle.dy = -5;
+    if (e.key === "s")
+        leftPaddle.dy = 5;
+    if (e.key === "ArrowUp")
+        rightPaddle.dy = -5;
+    if (e.key === "ArrowDown")
+        rightPaddle.dy = 5;
+    if (e.key.toLowerCase() === "p")
+        isPaused = !isPaused;
 });
 
 document.addEventListener("keyup", (e) => {
-    if (e.key === "w" || e.key === "s") leftPaddle.dy = 0;
-    if (e.key === "ArrowUp" || e.key === "ArrowDown") rightPaddle.dy = 0;
+    if (e.key === "w" || e.key === "s")
+        leftPaddle.dy = 0;
+    if (e.key === "ArrowUp" || e.key === "ArrowDown")
+        rightPaddle.dy = 0;
 });
 
-document.getElementById("pauseButton").addEventListener("click", () => {
-    isPaused = !isPaused;
+/* document.getElementById("pauseButton").addEventListener("click", () => {
+    isPaused = true;
 });
+document.getElementById("startButton").addEventListener("click", () => {
+    isPaused = false;
+}); */
+
+/* document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
+document.getElementById("startButton").addEventListener("click", () => isPaused = false); */
 
 /* document.getElementById("goHome").addEventListener("click", () => {
     document.getElementById("goHome").disabled = true;

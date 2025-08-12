@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Selección de jugadores para torneo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding-top: 20px;
+        }
+        .player-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+        .player {
+            border: 1px solid #ccc;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            user-select: none;
+        }
+        .player.selected {
+            background-color: #4CAF50;
+            color: white;
+            font-weight: bold;
+        }
+        #startBtn {
+            margin-top: 20px;
+            padding: 15px 25px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #startBtn:disabled {
+            background-color: gray;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>Selecciona jugadores para el torneo</h1>
+    <p>Debe haber mínimo 4 jugadores, y el total debe ser potencia de 2 (4, 8, 16...)</p>
+
+    <div class="player-list" id="playerList"></div>
+
+    <button id="startBtn" disabled>Comenzar Torneo</button>
+
+    <script>
+        const playerListEl = document.getElementById('playerList');
+        const startBtn = document.getElementById('startBtn');
+        let selectedPlayers = [];
+
+        async function loadPlayers() {
+            const res = await fetch('/players/active/');
+            const data = await res.json();
+            renderPlayers(data.players);
+        }
+
+        function renderPlayers(players) {
+            playerListEl.innerHTML = '';
+            players.forEach(player => {
+                const div = document.createElement('div');
+                div.className = 'player';
+                div.textContent = player.username;
+                div.dataset.id = player.id;
+
+                div.addEventListener('click', () => toggleSelection(div, player.id));
+
+                playerListEl.appendChild(div);
+            });
+        }
+
+        function toggleSelection(element, playerId) {
+            if (selectedPlayers.includes(playerId)) {
+                selectedPlayers = selectedPlayers.filter(id => id !== playerId);
+                element.classList.remove('selected');
+            } else {
+                selectedPlayers.push(playerId);
+                element.classList.add('selected');
+            }
+            checkSelection();
+        }
+
+        function checkSelection() {
+            const count = selectedPlayers.length;
+            const isPowerOfTwo = count >= 4 && (count & (count - 1)) === 0;
+            startBtn.disabled = !isPowerOfTwo;
+        }
+
+        startBtn.addEventListener('click', async () => {
+            await fetch('/tournament/start/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: JSON.stringify({ player_ids: selectedPlayers })
+            });
+            window.location.href = '/torneo/';
+        });
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
+        loadPlayers();
+        setInterval(loadPlayers, 5000); // Refrescar lista cada 5 seg
+    </script>
+</body>
+</html>

@@ -95,7 +95,7 @@
 <body style="background-image: url('../../staticfiles/fullscreen.png'); background-repeat: no-repeat; background-size: cover;">
 -->
 <body style="background-image: url('https://kingdomofhart.wordpress.com/wp-content/uploads/2014/08/smashwall.jpg'); background-repeat: no-repeat; background-size: cover;">
-  <div class="row  " style=" display: flex; justify-content: center; height: 700px;">
+  <div class="row  " style=" display: flex; justify-content: center; height: 810px;">
     <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
       <img src="../../staticfiles/avatar1.jpg" alt="player one avatar" style="padding-top: 10px;"  width="200" height="200">
       <br><br>
@@ -110,7 +110,7 @@
     </div>
 
     <div style=" font-family: Tourney, sans-serif; height: 650px; display: flex; justify-content: center; background-size:contain; background-position: center top; background-repeat: no-repeat" class="col-7 shadow display: flex; flex-direction: row">
-      <canvas class=" border border-5 border-white " id="gameCanvas"  style=" margin-top: 10% ; width:600px; height: 600px; background-color:black; border-radius: 20px;"></canvas>	 <!-- cambiar tamanio del canvas -->
+      <canvas class=" border border-5 border-white " id="gameCanvas"  style=" margin-top: 10% ; width:700px; height: 700px; background-color:black; border-radius: 20px;"></canvas>	 <!-- cambiar tamanio del canvas -->
     </div>
     <script>
       window.addEventListener("keydown", function(e) {
@@ -144,15 +144,12 @@
       hsla(120, 95%, 47%, 0.6),
       hsla(22, 100%, 49%, 0.8) 75%);  border-radius: 10px; padding: 15px 0px 15px 15px; justify-content: space-around;">
       <button id="startButton" class="arcade_botton border border-5  rounded-circle" style=" margin-left: 15px;" data-i18n="button.start">Start</button>
-      <script>document.getElementById("startButton").addEventListener("click", () => {isPaused = false; music.play();});
-      </script>
+      <script>document.getElementById("startButton").addEventListener("click", () => {isPaused = false; music.play();});</script>
       <button id="pauseButton" class="arcade_botton border border-5  rounded-circle" style=" margin-left: 15px;" data-i18n="button.pause">Pause</button>
-      <script>document.getElementById("pauseButton").addEventListener("click", () => {isPaused = true; ; music.pause();});
-      </script>
+      <script>document.getElementById("pauseButton").addEventListener("click", () => {isPaused = true; ; music.pause();});</script>
     </div>
     <div class="col"></div>
   </div>
-
   <div class="col">
     <p style="background-color: black;">
     <h1 style="font-family: 'Press Start 2P', system-ui; color:white; background-color: black" class="d-flex justify-content-center" data-i18n="score">High score: [unknown player]</h1>

@@ -18,7 +18,7 @@ let player2 = {
 	trail: []
 };
 let gameOver = false;
-let isPaused = false;
+let isPaused = true;
 let winner = "";
 let playerUsernames = []; // Almacena los nombres de los jugadores obtenidos de la API
 
@@ -121,6 +121,9 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "p" || e.key === "P")
         isPaused = !isPaused;
 });
+
+document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
+document.getElementById("startButton").addEventListener("click", () => isPaused = false);
 
 function checkCollision(player) {
     // Colisión con las paredes
