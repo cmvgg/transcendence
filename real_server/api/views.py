@@ -51,6 +51,10 @@ def battleground(request):
     global loged_user, loged_stats
     return render(request, 'battleground.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
 
+def tron(request):
+    global loged_user, loged_stats
+    return render(request, 'playground_tron.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
+
 def about(request):
     global loged_user, loged_stats
     return render(request, 'about.html', {'loged_user':loged_user, 'loged_stats':loged_stats})

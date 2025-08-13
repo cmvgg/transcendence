@@ -1,21 +1,26 @@
-const canvas = document.getElementById("tronCanvas");
+window.onload = async function () {
+    /* await fetchPlayersForGame("tron"); */
+    gameLoop();
+};
+
+const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 let player1 = {
-	x: 0,
-	y: canvas.height / 2,
-	dx: 2,
-	dy: 0,
-	color: "blue",
-	trail: []
+    x: 0,
+    y: canvas.height / 2,
+    dx: 2,
+    dy: 0,
+    color: "blue",
+    trail: []
 };
 let player2 = {
-	x: canvas.width - 20,
-	y: canvas.height / 2,
-	dx: -2,
-	dy: 0,
-	color: "red",
-	trail: []
+    x: canvas.width - 20,
+    y: canvas.height / 2,
+    dx: -2,
+    dy: 0,
+    color: "red",
+    trail: []
 };
 let gameOver = false;
 let isPaused = true;
@@ -230,12 +235,3 @@ function gameLoop() {
         requestAnimationFrame(gameLoop);
     }
 }
-
-/*********************************************
- * 3. Inicializar el juego *
- *********************************************/
-
-document.addEventListener("DOMContentLoaded", async () => {
-    await fetchPlayersForGame("tron");
-    gameLoop();
-});

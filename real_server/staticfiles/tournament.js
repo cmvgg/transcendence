@@ -158,8 +158,8 @@ document.getElementById("startButton").addEventListener("click", () => {
     isPaused = false;
 }); */
 
-document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
-document.getElementById("startButton").addEventListener("click", () => isPaused = false);
+/* document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
+document.getElementById("startButton").addEventListener("click", () => isPaused = false); */
 
 /* document.getElementById("goHome").addEventListener("click", () => {
     document.getElementById("goHome").disabled = true;

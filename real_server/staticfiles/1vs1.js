@@ -65,9 +65,9 @@ document.getElementById("startButton").addEventListener("click", () => {
     isPaused = false;
 }); */
 
-document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
+/* document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
 document.getElementById("startButton").addEventListener("click", () => isPaused = false);
-
+ */
 document.addEventListener("keydown", (e) => {
     if (e.key === "w")
         leftPaddle.dy = -5;

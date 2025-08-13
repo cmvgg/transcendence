@@ -39,7 +39,7 @@
       .footer_nav:hover{
         text-decoration:dotted;
         font-size: 40px;
-      }
+      } 
     </style>
 
     <!-- Bootstrap CSS -->
@@ -69,9 +69,9 @@
         <li class="nav-item active">
           <a class="nav-link"  aria-current="page" href="/" data-i18n="nav.home">Home</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" target="_self" href="/playground" data-i18n="nav.play">Play</a>
-        </li>
+        </li> -->
         <li class="nav-item">
           <a class="nav-link" href="/register" data-i18n="nav.signin">Sign in</a>
         </li>
@@ -114,13 +114,6 @@
     <div style=" font-family: Tourney, sans-serif; height: 650px; display: flex; justify-content: center; background-size:contain; background-position: center top; background-repeat: no-repeat" class="col-7 shadow display: flex; flex-direction: row">
       <canvas class=" border border-5 border-white " id="gameCanvas"  style=" margin-top: 10% ; width:90%; height: 90%; background-color:black; border-radius: 20px;"></canvas>	
     </div>
-    <div class="difficulty-selector">
-      <select id="difficultySelect">
-        <option value="easy">Fácil</option>
-        <option value="medium" selected>Normal</option>
-        <option value="hard">Difícil</option>
-      </select>
-    </div>
     <script>
       window.addEventListener("keydown", function(e) {
         const keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
@@ -144,6 +137,14 @@
         <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player2_name">[player 2 name]</h5>
       </div>
     </div>
+  </div>
+
+  <div class="difficulty-selector d-flex justify-content-center my-3">
+    <select id="difficultySelect" class="form-select w-auto text-center">
+      <option value="easy">Fácil</option>
+      <option value="medium" selected>Normal</option>
+      <option value="hard">Difícil</option>
+    </select>
   </div>
 
   <div class="row" style="justify-content: center; ">
@@ -183,29 +184,21 @@
             <a class="nav-link" href="/index" data-i18n="nav.home">Home</a>
           </h6>
         </div>
-        <!-- Grid column -->
-        <!-- Grid column -->
-        <div class="col-md-2">
+        <!-- <div class="col-md-2">
           <h6 class="footer_nav">
             <a class="nav-link" href="/playground" data-i18n="nav.play">Play</a>
           </h6>
-        </div>
-        <!-- Grid column -->
-        <!-- Grid column -->
+        </div> -->
         <div class="col-md-2">
           <h6 class="footer_nav">
             <a class="nav-link" href="/register" data-i18n="nav.signin">Sign in</a>
           </h6>
         </div>
-        <!-- Grid column -->
-        <!-- Grid column -->
         <div class="col-md-2">
           <h6 class="footer_nav">
             <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
           </h6>
         </div>
-        <!-- Grid column -->
-        <!-- Grid column -->
         <div class="col-md-2">
           <h6 class="footer_nav">
             <a class="nav-link" href="/about" data-i18n="nav.about">About us</a>
