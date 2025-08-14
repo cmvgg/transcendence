@@ -183,18 +183,21 @@ function resetBall() {
 }
 
 function draw() {
+    ctx.fillStyle = "white";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = leftPaddle.color;
+    /* ctx.fillStyle = leftPaddle.color; */
     ctx.fillRect(0, leftPaddle.y, paddleWidth, paddleHeight);
-
-    ctx.fillStyle = rightPaddle.color;
+    /* ctx.fillStyle = rightPaddle.color; */
     ctx.fillRect(canvas.width - paddleWidth, rightPaddle.y, paddleWidth, paddleHeight);
 
-    ctx.fillStyle = "white";
     ctx.font = "20px monospace";
     ctx.fillText(leftScore, canvas.width / 3, 20);
     ctx.fillText(rightScore, (canvas.width / 4) * 2.5, 20);
+
+    if (isPaused) {
+        ctx.font = "20px Courier New";
+        ctx.fillText("PAUSED", canvas.width / 2 - 40, canvas.height / 2);
+    }
 
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);

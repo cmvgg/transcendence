@@ -105,7 +105,27 @@ await fetchPlayer(); //Espera al jugador antes de arrancar
 const paddleWidth = 3;
 const paddleHeight = 30;
 const borderHeight = 5;
-
+let angle;
+do {
+    angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+} while (Math.abs(Math.cos(angle)) > 0.99);
+let directionX = Math.random() < 0.5 ? 1 : -1;
+let directionY = Math.random() < 0.5 ? 1 : -1;
+let ball = {
+    x: canvas.width / 2,
+    y: canvas.height / 2,
+    dx: directionX * 2 * Math.cos(angle),
+    dy: directionY * 2 * Math.sin(angle),
+    radius: 3, speed: 2
+};
+let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0, color: "white" };
+let rightPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0, color: "white" };
+let leftScore = 0;
+let rightScore = 0;
+let maxScore = 5;
+let gameOver = false;
+let isPaused = true;
+let winner = "";
 const AI_CONFIG = {
     speed: 3, reactionThreshold: 10, difficultyLevel: 'medium',
     difficulties: {
@@ -114,48 +134,22 @@ const AI_CONFIG = {
         hard: {/*  speedMultiplier: 0.7,  */reactionThreshold: 10 }
     }
 };
-
 const DIFFICULTY_SETTINGS = {
     easy:    { initialSpeed: 1.5, maxSpeed: 4, growth: 1.002 },
     medium:  { initialSpeed: 2.0, maxSpeed: 6, growth: 1.003 },
     hard:    { initialSpeed: 2.5, maxSpeed: 8, growth: 1.004 }
 };
-
 let currentSettings = DIFFICULTY_SETTINGS[AI_CONFIG.difficultyLevel];
-
-let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0, color: "white" };
-let rightPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0, color: "white" };
-
-let angle;
-do {
-    angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
-} while (Math.abs(Math.cos(angle)) > 0.99);
-
-let directionX = Math.random() < 0.5 ? 1 : -1;
-let directionY = Math.random() < 0.5 ? 1 : -1;
-
-let ball = {
-    x: canvas.width / 2,
-    y: canvas.height / 2,
-    dx: directionX * 2 * Math.cos(angle),
-    dy: directionY * 2 * Math.sin(angle),
-    radius: 3, speed: 2
-};
-
-let leftScore = 0;
-let rightScore = 0;
-let maxScore = 5;
-let gameOver = false;
-let isPaused = true;
-let winner = "";
 
 const difficultySelect = document.getElementById('difficultySelect');
 AI_CONFIG.difficultyLevel = difficultySelect.value;
 
 document.addEventListener("keydown", (e) => {
     if (!isPaused) {
-        if (e.key === "w") leftPaddle.dy = -5;
-        if (e.key === "s") leftPaddle.dy = 5;
+        if (e.key === "w")
+            leftPaddle.dy = -5;
+        if (e.key === "s")
+            leftPaddle.dy = 5;
     }
 });
 document.addEventListener("keyup", (e) => {
@@ -282,7 +276,7 @@ function draw() {
 
         if (isPaused) {
             ctx.font = "20px Courier New";
-            ctx.fillText("PAUSADO", canvas.width / 2 - 50, canvas.height / 2);
+            ctx.fillText("PAUSED", canvas.width / 2 - 40, canvas.height / 2);
         }
 
         ctx.beginPath();

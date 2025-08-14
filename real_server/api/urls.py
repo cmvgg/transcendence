@@ -17,6 +17,8 @@ urlpatterns = [
     path('tron', views.tron, name='tron'),
     path('about', views.about, name='about'),
     path('select', views.select, name='select'),
+    #
+    path('tmp', views.tmp, name='tmp'),
     #path('profile', views.profile, name='profile'),
     path('signin', views.signIn, name='signin'),
     path('register', views.register, name='register'),

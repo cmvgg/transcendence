@@ -1,4 +1,8 @@
 window.onload = async function () {
+    /* await fetchPlayersForGame("tron"); */
+    gameLoop();
+};
+
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -123,8 +127,8 @@ document.addEventListener("keydown", (e) => {
         isPaused = !isPaused;
 });
 
-document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
-document.getElementById("startButton").addEventListener("click", () => isPaused = false);
+/* document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
+document.getElementById("startButton").addEventListener("click", () => isPaused = false); */
 
 function checkCollision(player) {
     // Colisión con las paredes
@@ -231,6 +235,3 @@ function gameLoop() {
         requestAnimationFrame(gameLoop);
     }
 }
-
-gameLoop();
-};

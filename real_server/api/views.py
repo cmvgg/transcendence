@@ -64,6 +64,14 @@ def select(request):
     return render(request, 'select.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
 
 
+def tmp(request):
+    global loged_user, loged_stats
+    return render(request, 'TMP_waitlist.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
+
+
+
+
+
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import check_password

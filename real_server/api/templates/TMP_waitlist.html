@@ -1,127 +1,243 @@
+{% load static %}
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Selección de jugadores para torneo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="select">Select</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding-top: 20px;
-        }
-        .player-list {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px;
-        }
-        .player {
-            border: 1px solid #ccc;
-            padding: 10px 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            user-select: none;
-        }
-        .player.selected {
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-        }
-        #startBtn {
-            margin-top: 20px;
-            padding: 15px 25px;
-            font-size: 18px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        #startBtn:disabled {
-            background-color: gray;
-            cursor: not-allowed;
-        }
+      @import url('https://fonts.googleapis.com/css2?family=Honk&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P:wght@400&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
     </style>
+    </style>
+    <link rel="shortcut icon" type="image/ico" href="/static/images/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="../../staticfiles/rest_framework/css/team.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 </head>
+
+<style>
+  .arcade_botton{
+    position: relative;
+    border-style: double;
+    height: 115px;
+    width: 140px;
+    background-color: rgba(174, 13, 13, 0.966);
+    border: 5px solid rgba(252, 252, 252, 0.771);
+    box-shadow: 0 4px white;
+    color: aqua;
+    font-family: 'Press Start 2P', system-ui;
+    transition: all 0.1s ease;
+  }
+  .arcade_botton:active{
+    top: 5px;
+    box-shadow: 0 2px #666;
+    color: rgb(255, 255, 255);
+    border: 5px solid white;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin:0;
+    padding:0;
+    font-family: 'Pixelify Sans', sans-serif;
+    color: aqua;
+  }
+  .videobg {
+    height: 80vh;
+    overflow: hidden;
+    position: relative;
+  }
+  video {
+    position: absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    object-fit:cover;
+  }
+  .footer_nav{
+    text-decoration: none;
+    font-size: 35px;
+  }
+  .footer_nav:hover{
+    text-decoration:dotted;
+    font-size: 40px;
+  }
+  .usuarios-box {
+    background: rgba(0,0,0,0.7);
+    padding: 30px 50px;
+    border: 3px solid aqua;
+    border-radius: 15px;
+    text-align: center;
+    min-width: 250px;
+    margin: 20px auto;
+    font-family: 'Press Start 2P', system-ui;
+    font-size: 18px;
+  }
+  .usuarios-box p { margin: 8px 0; }
+  .arcade_botton {
+    position: relative;
+    border-style: double;
+    height: 115px;
+    width: 140px;
+    background-color: rgba(174, 13, 13, 0.966);
+    border: 5px solid rgba(252, 252, 252, 0.771);
+    box-shadow: 0 4px white;
+    color: aqua;
+    font-family: 'Press Start 2P', system-ui;
+    transition: all 0.1s ease;
+    cursor: pointer;
+  }
+  .arcade_botton:active {
+    top: 5px;
+    box-shadow: 0 2px #666;
+    color: white;
+    border: 5px solid white;
+  }
+  .arcade_botton:disabled {
+    background-color: #666;
+    cursor: not-allowed;
+  }
+</style>
+
 <body>
-    <h1>Selecciona jugadores para el torneo</h1>
-    <p>Debe haber mínimo 4 jugadores, y el total debe ser potencia de 2 (4, 8, 16...)</p>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
+    45deg,
+    hsla(168, 85%, 52%, 0.5),
+    hsla(263, 88%, 45%, 0.5) 100%
+  )">
+    <div class="container-fluid" style="color: aqua; "> 
+      <button
+        data-mdb-collapse-init
+        class="navbar-toggler"
+        type="button"
+        data-mdb-target="#navbarExample01"
+        aria-controls="navbarExample01"
+        aria-expanded="false"
+        aria-label="Toggle navigation"
+      >
+        <i class="fas fa-bars" style="color: aqua;"></i>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarExample01">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="font-family: Pixelify Sans, sans-serif;">
+          <li class="nav-item active">
+            <a class="nav-link"  aria-current="page" href="/" data-i18n="nav.home">Home</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" target="_self" href="/playground" data-i18n="nav.play">Play</a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" href="/register" data-i18n="nav.signin">Sign in</a>
+          </li>
+          <!-- <li class="nav-item">
+            <a class="nav-link" href="#" data-i18n="nav.select">Tournament</a>
+          </li> -->
+          <li class="nav-item">
+            <a class="nav-link" href="/about" data-i18n="nav.about">About</a>
+          </li>
+        </ul>
+      </div>
+      <select id="language-selector">
+        <option value="en">🇬🇧 English</option>
+        <option value="es">🇪🇸 Español</option>
+        <option value="eu">🇵🇲 Euskera</option>
+        <option value="fr">🇫🇷 Français</option>
+      </select>
+    </div>
+  </nav>
+  <!-- Navbar -->
 
-    <div class="player-list" id="playerList"></div>
+  <div class="videobg">
+    <video autoplay loop muted>
+      <source src="https://www.shutterstock.com/shutterstock/videos/3467987197/preview/stock-footage--k-abstract-pixel-animation-multicolored-digital-background-geometric-of-square-pattern-moving-with.webm" type="video/webm">
+    </video>
+    <h1 style="text-align:center; font-family:Tourney, sans-serif; color:aqua; margin-top:2vw;">Select Tournament Players</h1>
+    <!-- Bloque central de usuarios -->
+    <div class="usuarios-box">
+        {% for usuario in usuarios %}
+            <p>{{ usuario.nombre }}</p>
+        {% empty %}
+            <p>No hay jugadores disponibles</p>
+        {% endfor %}
+    </div>
+    <!-- Botón Jugar -->
+    <div class="btn-container">
+      <button id="btnJugar" class="arcade_botton" disabled>Jugar</button>
+    </div>
+  </div>
 
-    <button id="startBtn" disabled>Comenzar Torneo</button>
+  <script>
+  </script>
 
-    <script>
-        const playerListEl = document.getElementById('playerList');
-        const startBtn = document.getElementById('startBtn');
-        let selectedPlayers = [];
+  <!-- Footer -->
+  <footer class="text-center text-white" style="margin-top: -50px ;background-image: url('https://cdn.dribbble.com/userupload/28311765/file/original-b3d1b68257e6c14b3eca96fc95f0649c.gif');background-repeat: no-repeat; background-size: cover ;background-position: center center;";> <!--  #cd09d4 -->
+    <!-- Grid container -->
+    <div class="container">
+      <!-- Section: Links -->
+      <section class="mt-5" style="height: 50px;">
+        <!-- Grid row-->
+        <div class="row text-center d-flex justify-content-center pt-3" style="font-family: Honk, system-ui;">
+          <!-- Grid column -->
+          <div class="col-md-2">
+            <h6 class="footer_nav">
+              <a class="nav-link" href="/index" data-i18n="nav.home">Home</a>
+            </h6>
+          </div>
+          <!-- <div class="col-md-2">
+            <h6 class="footer_nav">
+              <a class="nav-link" href="/playground" data-i18n="nav.play">Play</a>
+            </h6>
+          </div> -->
+          <div class="col-md-2">
+            <h6 class="footer_nav">
+              <a class="nav-link" href="/register" data-i18n="nav.signin">Sign in</a>
+            </h6>
+          </div>
+          <div class="col-md-2">
+            <h6 class="footer_nav">
+              <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
+            </h6>
+          </div>
+          <div class="col-md-2">
+            <h6 class="footer_nav">
+              <a class="nav-link" href="/about" data-i18n="nav.about">About us</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+        </div>
+        <!-- Grid row-->
+      </section>
+      <!-- Section: Links -->
 
-        async function loadPlayers() {
-            const res = await fetch('/players/active/');
-            const data = await res.json();
-            renderPlayers(data.players);
-        }
+      <hr class="my-2" />
 
-        function renderPlayers(players) {
-            playerListEl.innerHTML = '';
-            players.forEach(player => {
-                const div = document.createElement('div');
-                div.className = 'player';
-                div.textContent = player.username;
-                div.dataset.id = player.id;
+      <!-- Section: Text -->
+      <section class="mb-5">
+        <div class="row d-flex justify-content-center pt-3">
+          <div class="col-lg-10">
+            <p style="font-family: Honk, system-ui; font-size: 30px;">
+              Lorem ipsum transcendeces sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
+              commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
+            </p>
+          </div>
+        </div>
+      </section>
+      <!-- Section: Text -->
 
-                div.addEventListener('click', () => toggleSelection(div, player.id));
+    </div>
+    <!-- Grid container -->
 
-                playerListEl.appendChild(div);
-            });
-        }
-
-        function toggleSelection(element, playerId) {
-            if (selectedPlayers.includes(playerId)) {
-                selectedPlayers = selectedPlayers.filter(id => id !== playerId);
-                element.classList.remove('selected');
-            } else {
-                selectedPlayers.push(playerId);
-                element.classList.add('selected');
-            }
-            checkSelection();
-        }
-
-        function checkSelection() {
-            const count = selectedPlayers.length;
-            const isPowerOfTwo = count >= 4 && (count & (count - 1)) === 0;
-            startBtn.disabled = !isPowerOfTwo;
-        }
-
-        startBtn.addEventListener('click', async () => {
-            await fetch('/tournament/start/', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': getCookie('csrftoken')
-                },
-                body: JSON.stringify({ player_ids: selectedPlayers })
-            });
-            window.location.href = '/torneo/';
-        });
-
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
-        }
-
-        loadPlayers();
-        setInterval(loadPlayers, 5000); // Refrescar lista cada 5 seg
-    </script>
+    <!-- Copyright -->
+    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+      © 2025 Copyright:
+      <a class="text-white" href="https://mdbootstrap.com/">Retropong</a>
+    </div>
+    <!-- Copyright -->
+  </footer>
+  <!-- Footer -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+  <script src="{% static 'i18n.js' %}"></script>
 </body>
 </html>

@@ -103,9 +103,9 @@ function log(...args) {
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-const paddleWidth = 10;
-const paddleHeight = 100;
-const borderHeight = 10;
+const paddleWidth = 3;
+const paddleHeight = 30;
+const borderHeight = 5;
 let angle;
 do {
     angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
@@ -115,9 +115,9 @@ let directionY = Math.random() < 0.5 ? 1 : -1;
 let ball = {
     x: canvas.width / 2,
     y: canvas.height / 2,
-    dx: (directionX * 4 * Math.cos(angle)),
-    dy: (directionY * 4 * Math.sin(angle)),
-    radius: 7, speed: 6
+    dx: (directionX * 2 * Math.cos(angle)),
+    dy: (directionY * 2 * Math.sin(angle)),
+    radius: 3, speed: 2
 };
 let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0 };
 let rightPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0 };
@@ -125,12 +125,9 @@ let leftScore = 0;
 let rightScore = 0;
 let maxScore = 5;
 let gameOver = false;
-let isPaused = false;
+let isPaused = true;
 let winner = "";
 
-/***********************
- * 4. Eventos y controles *
- ***********************/
 document.addEventListener("keydown", (e) => {
     if (e.key === "w")
         leftPaddle.dy = -5;
@@ -151,32 +148,22 @@ document.addEventListener("keyup", (e) => {
         rightPaddle.dy = 0;
 });
 
-/* document.getElementById("pauseButton").addEventListener("click", () => {
-    isPaused = true;
-});
-document.getElementById("startButton").addEventListener("click", () => {
-    isPaused = false;
-}); */
-
-/* document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
-document.getElementById("startButton").addEventListener("click", () => isPaused = false); */
-
-/* document.getElementById("goHome").addEventListener("click", () => {
-    document.getElementById("goHome").disabled = true;
-    window.location.href = "../templates/index";
-}); */
-
-/***********************
- * 5. Render y lógica de juego *
- ***********************/
 function update() {
     if (gameOver || isPaused) return;
 
-    leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y + leftPaddle.dy));
-    rightPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, rightPaddle.y + rightPaddle.dy));
+    // Aumentar velocidad gradualmente
+    const speedIncrease = 0.003; // Ajusta para mayor o menor aceleración
+    ball.speed += speedIncrease;
+    // Recalcular la dirección manteniendo el ángulo
+    const angle = Math.atan2(ball.dy, ball.dx);
+    ball.dx = Math.cos(angle) * ball.speed;
+    ball.dy = Math.sin(angle) * ball.speed;
 
     ball.x += ball.dx;
     ball.y += ball.dy;
+
+    leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y + leftPaddle.dy));
+    rightPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, rightPaddle.y + rightPaddle.dy));
 
     if (ball.y - ball.radius < borderHeight || ball.y + ball.radius > canvas.height - borderHeight) {
         ball.dy *= -1;
@@ -215,15 +202,26 @@ function checkGameOver() {
 function resetBall() {
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
-    ball.dx = (Math.random() > 0.5 ? 4 : -4) * 1000;
-    ball.dy = (Math.random() > 0.5 ? 4 : -4) * 1000;
+    ball.radius = 3;
+    ball.speed = 2; // velocidad inicial cada vez
+
+    let angle;
+    do {
+        angle = (Math.random() * Math.PI / 2) - Math.PI / 4;
+    } while (Math.abs(Math.cos(angle)) > 0.99);
+
+    let directionX = Math.random() < 0.5 ? 1 : -1;
+    let directionY = Math.random() < 0.5 ? 1 : -1;
+
+    ball.dx = directionX * ball.speed * Math.cos(angle);
+    ball.dy = directionY * ball.speed * Math.sin(angle);
 }
 
 function resetGameForNextMatch() {
     leftScore = 0;
     rightScore = 0;
     gameOver = false;
-    isPaused = false;
+    isPaused = true;
     leftPaddle.y = (canvas.height - paddleHeight) / 2;
     rightPaddle.y = (canvas.height - paddleHeight) / 2;
     resetBall();
@@ -245,13 +243,13 @@ function draw() {
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.font = "60px Courier New";
-    ctx.fillText(leftScore, canvas.width / 3, 60);
-    ctx.fillText(rightScore, (canvas.width / 4) * 2.5, 60);
+    ctx.font = "20px Courier New";
+    ctx.fillText(leftScore, canvas.width / 3, 20);
+    ctx.fillText(rightScore, (canvas.width / 4) * 2.5, 20);
 
     if (isPaused) {
-        ctx.font = "30px Courier New";
-        ctx.fillText("PAUSED", canvas.width / 2 - 60, canvas.height / 2);
+        ctx.font = "20px Courier New";
+        ctx.fillText("PAUSED", canvas.width / 2 - 40, canvas.height / 2);
     }
 }
 
