@@ -212,13 +212,12 @@
       <div class="container py-3">
         <h5 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)">Sign in</h5>
         {% block content %}
-        <form id="form_block" method="post" onsubmit="return closeWindow()">
-            {% csrf_token %}
-            {{ form.as_p }}
-            
-            <button type="submit" class="btn btn-primary" data-bs-toggle="popover">Submit</button>
-        </form>
-        
+          <form id="form_block" method="post" onsubmit="return closeWindow()">
+              {% csrf_token %}
+              {{ form.as_p }}
+              
+              <button type="submit" class="btn btn-primary" data-bs-toggle="popover">Submit</button>
+          </form>
         {% endblock %}
       </div>
         

@@ -24,7 +24,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 
 # Importar modelos y serializers
-from .models import User, Tournament, Match, TournamentStats, ProfileData
+from .models import User, Tournament, Match, TournamentStats, ProfileData, UsersInTournament
 from .serializers import (
     UserSerializer,
     TournamentSerializer,
@@ -42,7 +42,8 @@ def index(request):
 
 def playground(request):
     global loged_user, loged_stats
-    return render(request, 'playground.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
+    top = TournamentStats.objects.order_by('wins').first()
+    return render(request, 'playground.html', {'loged_user':loged_user, 'loged_stats':loged_stats, 'high_score': top})
 
 def playground2(request):
     return render(request, 'playground_copy.html')
@@ -66,7 +67,8 @@ def select(request):
 
 def tmp(request):
     global loged_user, loged_stats
-    return render(request, 'TMP_waitlist.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
+    usuarios = UsersInTournament.objects.all()  # Obtén todos los usuarios
+    return render(request, 'TMP_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
 
 
 

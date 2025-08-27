@@ -15,24 +15,6 @@
 </head>
 
 <style>
-  .arcade_botton{
-    position: relative;
-    border-style: double;
-    height: 115px;
-    width: 140px;
-    background-color: rgba(174, 13, 13, 0.966);
-    border: 5px solid rgba(252, 252, 252, 0.771);
-    box-shadow: 0 4px white;
-    color: aqua;
-    font-family: 'Press Start 2P', system-ui;
-    transition: all 0.1s ease;
-  }
-  .arcade_botton:active{
-    top: 5px;
-    box-shadow: 0 2px #666;
-    color: rgb(255, 255, 255);
-    border: 5px solid white;
-  }
   * {
     box-sizing: border-box;
   }
@@ -70,10 +52,15 @@
     border: 3px solid aqua;
     border-radius: 15px;
     text-align: center;
-    min-width: 250px;
+    width: 40%;
     margin: 20px auto;
     font-family: 'Press Start 2P', system-ui;
     font-size: 18px;
+  }
+  .btn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
   }
   .usuarios-box p { margin: 8px 0; }
   .arcade_botton {
@@ -83,6 +70,7 @@
     width: 140px;
     background-color: rgba(174, 13, 13, 0.966);
     border: 5px solid rgba(252, 252, 252, 0.771);
+    border-radius: 15px;
     box-shadow: 0 4px white;
     color: aqua;
     font-family: 'Press Start 2P', system-ui;
@@ -156,11 +144,16 @@
     <h1 style="text-align:center; font-family:Tourney, sans-serif; color:aqua; margin-top:2vw;">Select Tournament Players</h1>
     <!-- Bloque central de usuarios -->
     <div class="usuarios-box">
-        {% for usuario in usuarios %}
-            <p>{{ usuario.nombre }}</p>
-        {% empty %}
-            <p>No hay jugadores disponibles</p>
-        {% endfor %}
+        <form id="playersForm">
+            {% for usuario in usuarios %}
+                <div>
+                    <input type="checkbox" id="player_{{ usuario.id }}" name="players" value="{{ usuario.username }}">
+                    <label for="player_{{ usuario.id }}">{{ usuario.username }}</label>
+                </div>
+            {% empty %}
+                <p>No hay jugadores disponibles</p>
+            {% endfor %}
+        </form>
     </div>
     <!-- Botón Jugar -->
     <div class="btn-container">
@@ -169,6 +162,13 @@
   </div>
 
   <script>
+    const form = document.getElementById('playersForm');
+    const playButton = document.getElementById('btnJugar');
+
+    form.addEventListener('change', () => {
+        const selectedPlayers = form.querySelectorAll('input[name="players"]:checked');
+        playButton.disabled = selectedPlayers.length === 0;
+    });
   </script>
 
   <!-- Footer -->

@@ -9,15 +9,15 @@ const ctx = canvas.getContext("2d");
 let player1 = {
     x: 0,
     y: canvas.height / 2,
-    dx: 2,
+    dx: 1,
     dy: 0,
     color: "blue",
     trail: []
 };
 let player2 = {
-    x: canvas.width - 20,
+    x: canvas.width - 5,
     y: canvas.height / 2,
-    dx: -2,
+    dx: -1,
     dy: 0,
     color: "red",
     trail: []
@@ -93,42 +93,39 @@ function getCookie(name) {
 document.addEventListener("keydown", (e) => {
     if (e.key === "w" && player1.dy === 0) {
         player1.dx = 0;
-        player1.dy = -2;
+        player1.dy = -1;
     }
     if (e.key === "a" && player1.dx === 0) {
-        player1.dx = -2;
+        player1.dx = -1;
         player1.dy = 0;
     }
     if (e.key === "d" && player1.dx === 0) {
-        player1.dx = 2;
+        player1.dx = 1;
         player1.dy = 0;
     }
     if (e.key === "s" && player1.dy === 0) {
         player1.dx = 0;
-        player1.dy = 2;
+        player1.dy = 1;
     }
     if (e.key === "ArrowUp" && player2.dy === 0) {
         player2.dx = 0;
-        player2.dy = -2;
+        player2.dy = -1;
     }
     if (e.key === "ArrowLeft" && player2.dx === 0) {
-        player2.dx = -2;
+        player2.dx = -1;
         player2.dy = 0;
     }
     if (e.key === "ArrowRight" && player2.dx === 0) {
-        player2.dx = 2;
+        player2.dx = 1;
         player2.dy = 0;
     }
     if (e.key === "ArrowDown" && player2.dy === 0) {
         player2.dx = 0;
-        player2.dy = 2;
+        player2.dy = 1;
     }
     if (e.key === "p" || e.key === "P")
         isPaused = !isPaused;
 });
-
-/* document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
-document.getElementById("startButton").addEventListener("click", () => isPaused = false); */
 
 function checkCollision(player) {
     // Colisión con las paredes
@@ -195,23 +192,25 @@ function update() {
 }
 
 function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    if (!gameOver) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 
     // Dibujar trayectorias
     for (let i = 1; i < player1.trail.length; i++) {
         ctx.strokeStyle = player1.color;
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(player1.trail[i - 1].x + 1.5, player1.trail[i - 1].y + 1.5);
-        ctx.lineTo(player1.trail[i].x + 1.5, player1.trail[i].y + 1.5);
+        ctx.moveTo(player1.trail[i - 1].x + 1, player1.trail[i - 1].y + 1);
+        ctx.lineTo(player1.trail[i].x + 1, player1.trail[i].y + 1);
         ctx.stroke();
     }
     for (let i = 1; i < player2.trail.length; i++) {
         ctx.strokeStyle = player2.color;
         ctx.lineWidth = 2;
         ctx.beginPath();
-        ctx.moveTo(player2.trail[i - 1].x + 1.5, player2.trail[i - 1].y + 1.5);
-        ctx.lineTo(player2.trail[i].x + 1.5, player2.trail[i].y + 1.5);
+        ctx.moveTo(player2.trail[i - 1].x + 1, player2.trail[i - 1].y + 1);
+        ctx.lineTo(player2.trail[i].x + 1, player2.trail[i].y + 1);
         ctx.stroke();
     }
 
@@ -229,9 +228,9 @@ function draw() {
 }
 
 function gameLoop() {
+    update();
+    draw();
     if (!gameOver) {
-        update();
-        draw();
         requestAnimationFrame(gameLoop);
     }
 }
