@@ -23,11 +23,11 @@
 		"one_player": "One Player",
 		"two_player": "Two Players",
 		"battleground": "Battle ground",
-		"tournament": "Tour nament"
+		"tournament": "Tour nament",
+		"back_to_select": "Back to Select"
 	},
 	
-	"score": "High score: [unknown player]",
-
+	"score": "High score: ",
 
 	"__comentario2": "about.html",
 	"team": {
@@ -77,5 +77,11 @@
 	"choice": "Select game choice",
 
 	
-	"__comentario6": "tournament.html"
+	"__comentario6": "tournament.html",
+
+	"__comentario7": "error.html",
+	"error": {
+        "title": "Error",
+        "no_players": "Not enough players to play in the playground."
+    }
 }

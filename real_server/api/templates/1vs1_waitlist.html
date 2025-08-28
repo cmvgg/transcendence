@@ -15,30 +15,14 @@
 </head>
 
 <style>
-  .arcade_botton{
-    position: relative;
-    border-style: double;
-    height: 115px;
-    width: 140px;
-    background-color: rgba(174, 13, 13, 0.966);
-    border: 5px solid rgba(252, 252, 252, 0.771);
-    box-shadow: 0 4px white;
-    color: aqua;
-    font-family: 'Press Start 2P', system-ui;
-    transition: all 0.1s ease;
-  }
-  .arcade_botton:active{
-    top: 5px;
-    box-shadow: 0 2px #666;
-    color: rgb(255, 255, 255);
-    border: 5px solid white;
-  }
   * {
     box-sizing: border-box;
   }
   body {
-    margin: 0;
-    padding: 0;
+    margin:0;
+    padding:0;
+    font-family: 'Pixelify Sans', sans-serif;
+    color: aqua;
   }
   .videobg {
     height: 80vh;
@@ -47,12 +31,12 @@
   }
   video {
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
-    object-fit: cover;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    object-fit:cover;
   }
   .footer_nav{
     text-decoration: none;
@@ -61,6 +45,47 @@
   .footer_nav:hover{
     text-decoration:dotted;
     font-size: 40px;
+  }
+  .usuarios-box {
+    background: rgba(0,0,0,0.7);
+    padding: 30px 50px;
+    border: 3px solid aqua;
+    border-radius: 15px;
+    text-align: center;
+    width: 40%;
+    margin: 20px auto;
+    font-family: 'Press Start 2P', system-ui;
+    font-size: 18px;
+  }
+  .btn-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .usuarios-box p { margin: 8px 0; }
+  .arcade_botton {
+    position: relative;
+    border-style: double;
+    height: 75px;
+    width: 140px;
+    background-color: rgba(174, 13, 13, 0.966);
+    border: 5px solid rgba(252, 252, 252, 0.771);
+    border-radius: 15px;
+    box-shadow: 0 4px white;
+    color: aqua;
+    font-family: 'Press Start 2P', system-ui;
+    transition: all 0.1s ease;
+    cursor: pointer;
+  }
+  .arcade_botton:active {
+    top: 5px;
+    box-shadow: 0 2px #666;
+    color: white;
+    border: 5px solid white;
+  }
+  .arcade_botton:disabled {
+    background-color: #666;
+    cursor: not-allowed;
   }
 </style>
 
@@ -112,50 +137,42 @@
   </nav>
   <!-- Navbar -->
 
-  <!-- recursos
-  https://www.shutterstock.com/shutterstock/videos/3467987197/preview/stock-footage--k-abstract-pixel-animation-multicolored-digital-background-geometric-of-square-pattern-moving-with.webm
-  https://us.123rf.com/450wm/tetsuobuseteru/tetsuobuseteru1701/tetsuobuseteru170100005/68319422-m%C3%A1quina-de-juego-de-arcade-retro-ilustraci%C3%B3n-del-vector.jpg
-  -->
-
-  <div class="videobg" >
+  <div class="videobg">
     <video autoplay loop muted>
       <source src="https://www.shutterstock.com/shutterstock/videos/3467987197/preview/stock-footage--k-abstract-pixel-animation-multicolored-digital-background-geometric-of-square-pattern-moving-with.webm" type="video/webm">
     </video>
-    <div class="row " style="height: 10vw; ">
-      <h1 style="font-size:4vw; font-family: Tourney, sans-serif; color:aqua;" class="d-flex justify-content-center " data-i18n="choice">Select game choice</h1>
+    <h1 style="text-align:center; font-family:Tourney, sans-serif; color:aqua; margin-top:2vw;">Select Tournament Players</h1>
+    <!-- Bloque central de usuarios -->
+    <div class="usuarios-box">
+      <form id="playersForm" method="POST" action="{% url 'duplicate_players' %}">
+        {% csrf_token %}
+        {% for usuario in usuarios %}
+          <div>
+            <input type="checkbox" id="player_{{ usuario.id }}" name="players[]" value="{{ usuario.username }}">
+            <label for="player_{{ usuario.id }}">{{ usuario.username }}</label>
+          </div>
+        {% empty %}
+          <p>No hay jugadores disponibles</p>
+        {% endfor %}
+        <div class="btn-container">
+          <button id="btnJugar" class="arcade_botton" type="submit" disabled>Jugar</button>
+        </div>
+      </form>
     </div>
-    <!-- <div class="row fit-content" style="display: flex; justify-content: center; gap: 100px;">
-      <div class="col-auto text-center" style="display: flex; justify-content: center; height: 250px;">
-        <button class="arcade_botton border-5 rounded-circle" onclick="window.location.href='/playground2'">One Player</button>
-      </div>
-      <div class="col-auto text-center" style="display: flex; justify-content: center; height: 250px;">
-        <button class="arcade_botton border-5 rounded-circle" onclick="window.location.href='/playground'">Two Players</button>
-      </div>
-      <div class="col-auto text-center" style="display: flex; justify-content: center; height: 250px;">
-        <button class=" arcade_botton border-5 rounded-circle" onclick="window.location.href='/battleground'" data-i18n="button.battleground">Battle ground</button>
-      </div>
-    </div> --> <!-- Cambiar otra opcion para poner los botones (mas juntos) -->
-    
-     <div class="row fit-content" style="display: flex; justify-content: space-around;">
-      <div class="col text-center" style="display: flex; justify-content: flex-start; height: 250px; max-width: 200px;">
-        <button class="arcade_botton border-5 rounded-circle" onclick="window.location.href='/playground2'">One Player</button>
-      </div>
-      <div class="col text-center" style="display: flex; justify-content: center; height: 250px; max-width: 200px;">
-        <button class="arcade_botton border-5 rounded-circle" onclick="window.location.href='/tmp1vs1'">Two Players</button>
-      </div>
-      <div class="col text-center" style="display: flex; justify-content: flex-end; height: 250px; max-width: 200px;">
-        <button class=" arcade_botton border-5 rounded-circle" onclick="window.location.href='/battleground'" data-i18n="button.battleground">Battle ground</button>
-      </div>
-    </div>
-    <div class="row fit-content" style="display: flex; justify-content: space-around; margin-bottom: 8%;">
-      <div class="col text-center" style="display: flex; justify-content: flex-end; height: 250px; max-width: 200px; font-family: Pixelify Sans, sans-serif;">
-        <button class="arcade_botton border border-5  rounded-circle" onclick="window.location.href='/tmptournament'"  data-i18n="button.tournament">Tour nament</button>
-      </div>
-      <div class="col text-center" style=" display: flex; justify-content: flex-start; height: 250px; max-width: 200px;font-family: Pixelify Sans, sans-serif;" >
-        <button class="arcade_botton border-5 rounded-circle" onclick="window.location.href='/tron'">Tron</button>
-      </div>
-    </div>      
   </div>
+  <script>
+    const form = document.getElementById('playersForm');
+    const playButton = document.getElementById('btnJugar');
+    const checkboxes = form.querySelectorAll('input[name="players[]"]');
+    // Escuchar cambios en los checkboxes
+    checkboxes.forEach((checkbox) => {
+      checkbox.addEventListener('change', () => {
+        const selectedCheckboxes = Array.from(checkboxes).filter(cb => cb.checked);
+        // Habilitar o deshabilitar el botón "Jugar"
+        playButton.disabled = selectedCheckboxes.length !== 2;
+      });
+    });
+  </script>
 
   <!-- Footer -->
   <footer class="text-center text-white" style="margin-top: -50px ;background-image: url('https://cdn.dribbble.com/userupload/28311765/file/original-b3d1b68257e6c14b3eca96fc95f0649c.gif');background-repeat: no-repeat; background-size: cover ;background-position: center center;";> <!--  #cd09d4 -->
@@ -227,4 +244,3 @@
   <script src="{% static 'i18n.js' %}"></script>
 </body>
 </html>
-

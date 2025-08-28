@@ -66,7 +66,7 @@
   .arcade_botton {
     position: relative;
     border-style: double;
-    height: 115px;
+    height: 75px;
     width: 140px;
     background-color: rgba(174, 13, 13, 0.966);
     border: 5px solid rgba(252, 252, 252, 0.771);
@@ -141,35 +141,45 @@
     <video autoplay loop muted>
       <source src="https://www.shutterstock.com/shutterstock/videos/3467987197/preview/stock-footage--k-abstract-pixel-animation-multicolored-digital-background-geometric-of-square-pattern-moving-with.webm" type="video/webm">
     </video>
-    <h1 style="text-align:center; font-family:Tourney, sans-serif; color:aqua; margin-top:2vw;">Select Tournament Players</h1>
+    <h1 style="text-align:center; font-family:Tourney, sans-serif; color:aqua; margin-top:2vw;" data-i18n="select">Select Tournament Players</h1>
     <!-- Bloque central de usuarios -->
     <div class="usuarios-box">
-        <form id="playersForm">
-            {% for usuario in usuarios %}
-                <div>
-                    <input type="checkbox" id="player_{{ usuario.id }}" name="players" value="{{ usuario.username }}">
-                    <label for="player_{{ usuario.id }}">{{ usuario.username }}</label>
-                </div>
-            {% empty %}
-                <p>No hay jugadores disponibles</p>
-            {% endfor %}
-        </form>
-    </div>
-    <!-- Botón Jugar -->
-    <div class="btn-container">
-      <button id="btnJugar" class="arcade_botton" disabled>Jugar</button>
+      <form id="playersForm" method="POST" action="{% url 'tournament' %}">
+        {% csrf_token %}
+        {% for usuario in usuarios %}
+          <div>
+            <input type="checkbox" id="player_{{ usuario.id }}" name="players[]" value="{{ usuario.username }}">
+            <label for="player_{{ usuario.id }}">{{ usuario.username }}</label>
+          </div>
+        {% empty %}
+          <p>No hay jugadores disponibles</p>
+        {% endfor %}
+        <div class="btn-container">
+          <button id="btnJugar" class="arcade_botton" type="submit" disabled>Jugar</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <script>
-    const form = document.getElementById('playersForm');
-    const playButton = document.getElementById('btnJugar');
+	<script>
+		const form = document.getElementById('playersForm');
+		const playButton = document.getElementById('btnJugar');
+		const checkboxes = form.querySelectorAll('input[name="players[]"]');
 
-    form.addEventListener('change', () => {
-        const selectedPlayers = form.querySelectorAll('input[name="players"]:checked');
-        playButton.disabled = selectedPlayers.length === 0;
-    });
-  </script>
+		// Función para verificar si el número es una potencia de 2
+		function isPowerOfTwo(n) {
+			return n > 0 && (n & (n - 1)) === 0;
+		}
+
+		// Escuchar cambios en los checkboxes
+		checkboxes.forEach((checkbox) => {
+			checkbox.addEventListener('change', () => {
+        const selectedCheckboxes = Array.from(checkboxes).filter(cb => cb.checked);
+        // Habilitar o deshabilitar el botón "Jugar"
+        playButton.disabled = !isPowerOfTwo(selectedCheckboxes.length) || selectedCheckboxes.length < 4;
+			});
+		});
+	</script>
 
   <!-- Footer -->
   <footer class="text-center text-white" style="margin-top: -50px ;background-image: url('https://cdn.dribbble.com/userupload/28311765/file/original-b3d1b68257e6c14b3eca96fc95f0649c.gif');background-repeat: no-repeat; background-size: cover ;background-position: center center;";> <!--  #cd09d4 -->

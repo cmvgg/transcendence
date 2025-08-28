@@ -18,7 +18,9 @@ urlpatterns = [
     path('about', views.about, name='about'),
     path('select', views.select, name='select'),
     #
-    path('tmp', views.tmp, name='tmp'),
+    path('tmp1vs1', views.tmp1vs1, name='tmp1vs1'),
+    path('tmptournament', views.tmptournament, name='tmptournament'),
+	path('duplicate_players/', views.duplicate_selected_players, name='duplicate_players'),
     #path('profile', views.profile, name='profile'),
     path('signin', views.signIn, name='signin'),
     path('register', views.register, name='register'),
