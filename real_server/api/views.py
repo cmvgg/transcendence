@@ -37,6 +37,7 @@ loged_user = None
 loged_stats = None
 
 from django.http import HttpResponseForbidden
+from django.shortcuts import redirect
 def index(request):
     global loged_user, loged_stats
     return render(request, 'index.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
@@ -45,44 +46,69 @@ def playground(request):
     global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
 
-    # Verificar si hay al menos 2 usuarios en UsersInTournament
     if users_in_tournament.count() < 2:
-        # Eliminar usuarios no utilizados
         users_in_tournament.delete()
-        # Renderizar una página de error con un botón para volver a "select"
         return render(request, 'error.html', {
             'message': "No hay suficientes usuarios para jugar 1vs1.",
             'redirect_url': 'select',
             'redirect_text': 'Volver'
         })
-
-    # Continuar con la lógica normal si hay suficientes usuarios
     top = TournamentStats.objects.order_by('wins').last()
     return render(request, 'playground.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'high_score': top})
 
 def playground2(request):
     global loged_user, loged_stats
 
-    # Verificar si hay al menos 2 usuarios en UsersInTournament
     if not request.user.is_authenticated or not request.user.is_active:
-        # Renderizar una página de error con un botón para volver a "select"
         return render(request, 'error.html', {
             'message': "No hay suficientes usuarios para jugar 1vsIA.",
             'redirect_url': 'select',
             'redirect_text': 'Volver'
         })
-
-    # Continuar con la lógica normal si hay suficientes usuarios
     top = TournamentStats.objects.order_by('wins').last()
     return render(request, 'playground_copy.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'high_score': top})
 
 def battleground(request):
     global loged_user, loged_stats
-    return render(request, 'battleground.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
+    users_in_tournament = UsersInTournament.objects.all()
+
+    if users_in_tournament.count() < 4:
+        users_in_tournament.delete()
+        return render(request, 'error.html', {
+            'message': "No hay suficientes usuarios para jugar battleground (mínimo 4).",
+            'redirect_url': 'select',
+            'redirect_text': 'Volver'
+        })
+    top = TournamentStats.objects.order_by('wins').last()
+    return render(request, 'battleground.html', {'loged_user':loged_user, 'loged_stats':loged_stats, 'high_score': top})
 
 def tron(request):
     global loged_user, loged_stats
-    return render(request, 'playground_tron.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
+    users_in_tournament = UsersInTournament.objects.all()
+
+    if users_in_tournament.count() < 2:
+        users_in_tournament.delete()
+        return render(request, 'error.html', {
+            'message': "No hay suficientes usuarios para jugar tron.",
+            'redirect_url': 'select',
+            'redirect_text': 'Volver'
+        })
+    top = TournamentStats.objects.order_by('wins').last()
+    return render(request, 'playground_tron.html', {'loged_user':loged_user, 'loged_stats':loged_stats, 'high_score': top})
+
+def tournament(request):
+    global loged_user, loged_stats
+    users_in_tournament = UsersInTournament.objects.all()
+
+    if users_in_tournament.count() < 4:
+        users_in_tournament.delete()
+        return render(request, 'error.html', {
+            'message': "No hay suficientes usuarios para un torneo (mínimo 4).",
+            'redirect_url': 'select',
+            'redirect_text': 'Volver'
+        })
+    top = TournamentStats.objects.order_by('wins').last()
+    return render(request, 'tournament.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'high_score': top})
 
 def about(request):
     global loged_user, loged_stats
@@ -91,43 +117,6 @@ def about(request):
 def select(request):
     global loged_user, loged_stats
     return render(request, 'select.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
-
-
-def tmp1vs1(request):
-    global loged_user, loged_stats
-    usuarios = TournamentStats.objects.all()  # Obtén todos los usuarios
-    return render(request, '1vs1_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
-
-from django.shortcuts import redirect
-@csrf_exempt
-def duplicate_selected_players(request):
-    if request.method == 'POST':
-        try:
-            # Obtener los jugadores seleccionados desde la solicitud
-            selected_players = request.POST.getlist('players[]')
-            # Verificar si se seleccionaron jugadores
-            if not selected_players or len(selected_players) < 2:
-                return JsonResponse({'error': 'Se necesitan al menos 2 jugadores para jugar.'}, status=400)
-            # Eliminar todos los usuarios existentes en UsersInTournament
-            UsersInTournament.objects.all().delete()
-            # Insertar los nuevos jugadores seleccionados
-            for username in selected_players:
-                player = TournamentStats.objects.get(username=username)
-                UsersInTournament.objects.create(
-                    id=player.id,  # Copiar el ID del jugador
-                    username=player.username,  # Copiar el username del jugador
-                    wins=0,  # Inicializar wins en 0
-                    losses=0,  # Inicializar losses en 0
-                    tournaments_won=0  # Inicializar tournaments_won en 0
-                )
-            # Redirigir a la página 'playground'
-            return redirect('playground')
-        except TournamentStats.DoesNotExist:
-            return JsonResponse({'error': 'Uno o más jugadores no existen.'}, status=404)
-        except Exception as e:
-            return JsonResponse({'error': str(e)}, status=500)
-    return JsonResponse({'error': 'Método no permitido.'}, status=405)
-
 
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
@@ -249,16 +238,107 @@ def register(request):
         form = ExampleForm(request.GET)
     return render(request, 'register.html', {'form': form})
 
+
+
+
+
+
+
+def tmp1vs1(request):
+    global loged_user, loged_stats
+    usuarios = TournamentStats.objects.all()  # Obtén todos los usuarios
+    return render(request, '1vs1_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
+
+def tmpbattleground(request):
+    global loged_user, loged_stats
+    usuarios = TournamentStats.objects.all()  # Obtén todos los usuarios
+    return render(request, 'battleground_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
+
+def tmptron(request):
+    global loged_user, loged_stats
+    usuarios = TournamentStats.objects.all()  # Obtén todos los usuarios
+    return render(request, 'tron_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
+
 def tmptournament(request):
     global loged_user, loged_stats
     usuarios = TournamentStats.objects.all()  # Obtén todos los usuarios
     return render(request, 'tournament_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
 
+@csrf_exempt
+def duplicate_1vs1(request):
+    if request.method == 'POST':
+        try:
+            selected_players = request.POST.getlist('players[]')
+            if not selected_players or len(selected_players) < 2:
+                return JsonResponse({'error': 'Se necesitan al menos 2 jugadores para jugar.'}, status=400)
+            UsersInTournament.objects.all().delete()
+            for username in selected_players:
+                player = TournamentStats.objects.get(username=username)
+                UsersInTournament.objects.create(
+                    id=player.id,
+                    username=player.username,
+                    wins=0,
+                    losses=0,
+                    tournaments_won=0 
+                )
+            return redirect('playground')
+        except TournamentStats.DoesNotExist:
+            return JsonResponse({'error': 'Uno o más jugadores no existen.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Método no permitido.'}, status=405)
+
+@csrf_exempt
+def duplicate_battleground(request):
+    if request.method == 'POST':
+        try:
+            selected_players = request.POST.getlist('players[]')
+            if not selected_players or len(selected_players) < 4:
+                return JsonResponse({'error': 'Se necesitan al menos 4 jugadores para jugar.'}, status=400)
+            UsersInTournament.objects.all().delete()
+            for username in selected_players:
+                player = TournamentStats.objects.get(username=username)
+                UsersInTournament.objects.create(
+                    id=player.id,
+                    username=player.username,
+                    wins=0,
+                    losses=0,
+                    tournaments_won=0 
+                )
+            return redirect('battleground')
+        except TournamentStats.DoesNotExist:
+            return JsonResponse({'error': 'Uno o más jugadores no existen.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Método no permitido.'}, status=405)
+
+@csrf_exempt
+def duplicate_tron(request):
+    if request.method == 'POST':
+        try:
+            selected_players = request.POST.getlist('players[]')
+            if not selected_players or len(selected_players) < 2:
+                return JsonResponse({'error': 'Se necesitan al menos 2 jugadores para jugar.'}, status=400)
+            UsersInTournament.objects.all().delete()
+            for username in selected_players:
+                player = TournamentStats.objects.get(username=username)
+                UsersInTournament.objects.create(
+                    id=player.id,
+                    username=player.username,
+                    wins=0,
+                    losses=0,
+                    tournaments_won=0 
+                )
+            return redirect('tron')
+        except TournamentStats.DoesNotExist:
+            return JsonResponse({'error': 'Uno o más jugadores no existen.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Método no permitido.'}, status=405)
+
 from math import log2
 @csrf_exempt
-def tournament(request):
-    global loged_user, loged_stats
-
+def duplicate_tournament(request):
     if request.method == 'POST':
         try:
             # Obtener los jugadores seleccionados desde la solicitud
@@ -287,10 +367,16 @@ def tournament(request):
             return JsonResponse({'error': 'Uno o más jugadores no existen.'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Método no permitido.'}, status=405)
 
-    # Continuar con la lógica normal si hay suficientes usuarios
-    top = TournamentStats.objects.order_by('wins').last()
-    return render(request, 'tournament.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'high_score': top})
+
+
+
+
+
+
+
+
 
 def editprofile(request):
     global loged_user, loged_stats
@@ -592,8 +678,8 @@ def generate_random_player_names_1vs1():
     return random.sample(base_names, 4)
 
 def create_user_profile(username, wins=0, losses=0, tournaments_won=0):
-    """Crea un nuevo perfil de usuario en UsersInTournament."""
-    user = UsersInTournament.objects.create(
+    """Crea un nuevo perfil de usuario en TournamentStats."""
+    user = TournamentStats.objects.create(
         username=username,
         wins=wins,
         losses=losses,

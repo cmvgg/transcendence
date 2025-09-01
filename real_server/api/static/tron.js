@@ -1,5 +1,5 @@
 window.onload = async function () {
-    /* await fetchPlayersForGame("tron"); */
+    await fetchPlayersForGame("tron");
     gameLoop();
 };
 

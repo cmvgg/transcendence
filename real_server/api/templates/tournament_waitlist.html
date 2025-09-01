@@ -144,7 +144,7 @@
     <h1 style="text-align:center; font-family:Tourney, sans-serif; color:aqua; margin-top:2vw;" data-i18n="select">Select Tournament Players</h1>
     <!-- Bloque central de usuarios -->
     <div class="usuarios-box">
-      <form id="playersForm" method="POST" action="{% url 'tournament' %}">
+      <form id="playersForm" method="POST" action="{% url 'duplicate_tournament' %}">
         {% csrf_token %}
         {% for usuario in usuarios %}
           <div>

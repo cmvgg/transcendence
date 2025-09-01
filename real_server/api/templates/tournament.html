@@ -214,7 +214,10 @@
   <div id="log" style="align-items: center;"></div> <!-- Cambiar estilos a los retro -->
   <div class="col">
     <p style="background-color: black;">
-    <h1 style="font-family: 'Press Start 2P', system-ui; color:white; background-color: black" class="d-flex justify-content-center" data-i18n="score">High score: [unknown player]</h1>
+    <div style="font-family: 'Press Start 2P', system-ui; color:white; background-color: black; display: flex; justify-content: center; align-items: center;">
+      <h1 data-i18n="score" style="margin-right: 10px;">High score:</h1>
+      <h1>[ {{ high_score.username }}: {{high_score.wins}} ]</h1>
+    </div>
   </div>
 </body>
 <!-- musica -->

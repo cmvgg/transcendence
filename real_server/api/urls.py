@@ -20,7 +20,12 @@ urlpatterns = [
     #
     path('tmp1vs1', views.tmp1vs1, name='tmp1vs1'),
     path('tmptournament', views.tmptournament, name='tmptournament'),
-	path('duplicate_players/', views.duplicate_selected_players, name='duplicate_players'),
+	path('tmpbattleground', views.tmpbattleground, name='tmpbattleground'),
+	path('tmptron', views.tmptron, name='tmptron'),
+	path('duplicate_1vs1/', views.duplicate_1vs1, name='duplicate_1vs1'),
+	path('duplicate_tournament/', views.duplicate_tournament, name='duplicate_tournament'),
+    path('duplicate_battleground/', views.duplicate_battleground, name='duplicate_battleground'),
+    path('duplicate_tron/', views.duplicate_tron, name='duplicate_tron'),
     #path('profile', views.profile, name='profile'),
     path('signin', views.signIn, name='signin'),
     path('register', views.register, name='register'),
