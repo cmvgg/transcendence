@@ -84,7 +84,7 @@
     <div class="container py-3">
       <h5 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)">Register as retrogamer</h5>
       {% block content %}
-      <form id="registerForm" method="post" >
+      <form id="registerForm" method="post" enctype="multipart/form-data" >
           {% csrf_token %}
           {{ form.as_p }}
           <style>

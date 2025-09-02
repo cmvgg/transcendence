@@ -505,10 +505,17 @@ text-rendering: optimizeLegibility;
       <div class="profile-nav col-md-3">
           <div class="panel">
               <div class="user-heading bio-graph-heading round">
-                  <a href="#">
-                      <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">
-                  </a>
-                  <h3>{{ loged_user.username }}</h3>
+                <img src="{{ user.profile.avatar.imagen.url }}" alt="">
+                <!--
+                    {% if user.avatar %}
+                    <img src="{{ user.avatar.imagen.url }}" alt="">
+                    {% else %}
+                        <a href="#">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">
+                        </a>
+                    {% endif %}
+                -->
+                  <h3>{{ user.username }}</h3>
               </div>
     
               <ul class="nav nav-pills nav-stacked">
@@ -523,8 +530,8 @@ text-rendering: optimizeLegibility;
                   <div class="row" style="width: auto;">
                     <div class="bio-row">
                       <h2 style="color:white;">Información</h2>
-                      <p><strong>Name:</strong> {{ loged_user.first_name }}</p>
-                      <p><strong>Email:</strong> {{ loged_user.email }}</p>
+                      <p><strong>Name:</strong> {{ user.first_name }}</p>
+                      <p><strong>Email:</strong> {{ user.email }}</p>
                     </div> 
                   </div>
               </div>

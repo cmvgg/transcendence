@@ -53,12 +53,13 @@ class TournamentStats(models.Model):
         ordering = ['-wins', 'username']
 
 class UserProfile(models.Model):
-    user_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
-    # user = models.OneToOneField(User, on_delete=models.CASCADE)  # Descomenta si quieres usar relación
+    #user_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE , primary_key=True)  # Descomenta si quieres usar relación
+    username = models.CharField(max_length=50, unique=True)
     alias = models.CharField(max_length=50, unique=True)
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
+    avatar = models.ImageField(upload_to='media/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
@@ -133,6 +134,7 @@ class ProfileData(models.Model):
     alias = models.CharField(max_length=50)
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)  # Agregué losses para consistencia
+    avatar = models.ImageField(upload_to='media/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.alias} - {self.wins}W"

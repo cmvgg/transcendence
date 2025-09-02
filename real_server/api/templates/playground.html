@@ -81,9 +81,14 @@
         <li class="nav-item">
           <a class="nav-link" href="/about" data-i18n="nav.about">About</a>
         </li>
-        {% if loged_user.id > 0 %}
+        {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="/profile" data-i18n="nav.home">Profile</a>
+          <a class="nav-link" href="/profile" >Profile</a>
+        </li>
+        {% endif%}
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="/logout" >logout</a>
         </li>
         {% endif%}
       </ul>
@@ -112,8 +117,8 @@
         hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
         height: 200px">
         <h1 style="font-family: 'Press Start 2P', system-ui; color:white; padding-top: 10px;" data-i18n="1up">1UP</h1>
-        <h1 style="font-family: 'Press Start 2P', system-ui; color:white" >{{loged_user.username}}</h1>
-        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" >{{ loged_user.id }}</h5>
+        <h1 style="font-family: 'Press Start 2P', system-ui; color:white" >{{user.username}}</h1>
+        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" >{{ user.id }}</h5>
       </div>
     </div>
 
@@ -155,8 +160,13 @@
 
   <div class="col">
     <p style="background-color: black;">
-    <h1 style="font-family: 'Press Start 2P', system-ui; color:white; background-color: black" class="d-flex justify-content-center" data-i18n="score">High score: [unknown player]</h1>
+    <h1 style="font-family: 'Press Start 2P', system-ui; color:white; background-color: black" class="d-flex justify-content-center" data-i18n="score">High score:</h1>
+    <h1 style="color:white"> {{ high.score.username }} {{ high.score.wins }}</h1>
   </div>
+  <div style="font-family: 'Press Start 2P', system-ui; color:white; background-color: black; display: flex; justify-content: center; align-items: center;">
+    <h1 data-i18n="score" style="margin-right: 10px;">High score:</h1>
+    <h1>{{ high_score.username }} : {{high_score.wins}}</h1>
+</div>
 </body>
 <!-- musica -->
 <audio id="music" src="../../staticfiles/retro-game-music.mp3" autoplay loop></audio>

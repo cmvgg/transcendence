@@ -15,6 +15,7 @@ urlpatterns = [
     path('select', views.select, name='select'),
     #path('profile', views.profile, name='profile'),
     path('signin', views.signIn, name='signin'),
+    path('logout/', views.logout_view, name='logout'),
     path('register', views.register, name='register'),
     path('editprofile', views.editprofile, name='editprofile'),
 	path('tournament', views.tournament, name='tournament'),
