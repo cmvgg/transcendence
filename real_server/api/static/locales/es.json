@@ -29,7 +29,6 @@
 	
 	"score": "Puntuaje mas alto: ",
 
-
 	"__comentario2": "about.html",
 	"team": {
 		"title": "Equipo Retropong",
@@ -84,5 +83,15 @@
 	"error": {
         "title": "Error",
         "no_players": "No hay suficientes usuarios para jugar en el playground."
-    }
+    },
+
+	"__comentario8": "waitlist.html",
+	"waitlist": {
+		"title": "Itxaron",
+		"select1": "Aukeratu 1vs1 Jokalariak",
+		"select2": "Aukeratu Battleground Jokalariak",
+		"select3": "Aukeratu Torneo Jokalariak",
+		"select4": "Aukeratu Tron Jokalariak",
+		"no_players": "Ez dago jokalaririk erabilgarririk"
+	}
 }

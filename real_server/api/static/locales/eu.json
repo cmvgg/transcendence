@@ -77,5 +77,15 @@
 	"choice": "Aukeratu jokoa",
 	
 	
-	"__comentario6": "tournament.html"
+	"__comentario6": "tournament.html",
+
+	"__comentario8": "waitlist.html",
+	"waitlist": {
+		"title": "Espera",
+		"select1": "Selecciona Judadores 1vs1",
+		"select2": "Selecciona Judadores Battleground",
+		"select3": "Selecciona Judadores Torneo",
+		"select4": "Selecciona Judadores Tron",
+		"no_players": "No hay jugadores disponibles"
+	}
 }

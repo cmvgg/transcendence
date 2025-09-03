@@ -801,9 +801,12 @@ def get_players_for_game(request):
             players = UsersInTournament.objects.order_by('id')[:4]
         elif game_type == '1vsIA':
             players = UsersInTournament.objects.order_by('id')[:1]
+        elif game_type == 'tron':
+            players = UsersInTournament.objects.order_by('id')[:2]
         else:
             return Response({'error': 'Tipo de juego no soportado'}, status=status.HTTP_400_BAD_REQUEST)
 
+        print("Jugadores obtenidos:", players)  # Agrega este log
         serialized_players = [{
             'username': p.username,
             'wins': p.wins,
@@ -865,7 +868,6 @@ def sync_1vs1_stats(request):
     except Exception as e:
         return Response({'error': f'Error al sincronizar datos: {str(e)}'}, status=500)
 
-
 @api_view(['POST'])
 def sync_1vsIA_stats(request):
     """Sincroniza los datos de UsersInTournament con TournamentStats para el modo 1vsIA."""
@@ -881,6 +883,23 @@ def sync_1vsIA_stats(request):
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
+@api_view(['POST'])
+def sync_tron_stats(request):
+    """Sincroniza los datos de UsersInTournament con TournamentStats para el modo Tron."""
+    try:
+        print("Sincronizando estadísticas de Tron...")  # Agrega este log
+        users_in_tournament = UsersInTournament.objects.all()
+        for user in users_in_tournament:
+            stats_entry, _ = TournamentStats.objects.get_or_create(username=user.username)
+            stats_entry.wins += user.wins
+            stats_entry.losses += user.losses
+            stats_entry.tournaments_won += user.tournaments_won
+            stats_entry.save()
+        users_in_tournament.delete()
+        return Response({'message': 'Datos sincronizados correctamente para Tron.'}, status=200)
+    except Exception as e:
+        print(f"Error al sincronizar datos: {str(e)}")  # Agrega este log
+        return Response({'error': f'Error al sincronizar datos: {str(e)}'}, status=500)
 
 @api_view(['POST'])
 def sync_tournament_stats(request):

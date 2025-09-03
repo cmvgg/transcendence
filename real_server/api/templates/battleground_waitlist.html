@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title data-i18n="select">Select</title>
+    <title data-i18n="waitlist.select">Select</title>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Honk&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P:wght@400&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
     </style>
@@ -141,7 +141,7 @@
     <video autoplay loop muted>
       <source src="https://www.shutterstock.com/shutterstock/videos/3467987197/preview/stock-footage--k-abstract-pixel-animation-multicolored-digital-background-geometric-of-square-pattern-moving-with.webm" type="video/webm">
     </video>
-    <h1 style="text-align:center; font-family:Tourney, sans-serif; color:aqua; margin-top:2vw;">Select Tournament Players</h1>
+    <h1 style="text-align:center; font-family:Tourney, sans-serif; color:aqua; margin-top:2vw;" data-i18n="waitlist.select2">Select Tournament Players</h1>
     <!-- Bloque central de usuarios -->
     <div class="usuarios-box">
       <form id="playersForm" method="POST" action="{% url 'duplicate_battleground' %}">
@@ -152,10 +152,10 @@
             <label for="player_{{ usuario.id }}">{{ usuario.username }}</label>
           </div>
         {% empty %}
-          <p>No hay jugadores disponibles</p>
+          <p data-i18n="waitlist.no_players">No hay jugadores disponibles</p>
         {% endfor %}
         <div class="btn-container">
-          <button id="btnJugar" class="arcade_botton" type="submit" disabled>Jugar</button>
+          <button id="btnJugar" class="arcade_botton" type="submit" disabled data-i18n="nav.play">Jugar</button>
         </div>
       </form>
     </div>

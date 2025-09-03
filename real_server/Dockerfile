@@ -1,35 +1,26 @@
-FROM python:3.11-slim-bookworm
+FROM python:3.11-slim
 
 WORKDIR /app
 
 COPY requirements.txt .
 
+RUN apt-get update
+RUN apt-get install -y --no-install-recommends postgresql-client 
+RUN apt-get install -y --no-install-recommends libpq-dev 
+RUN apt-get install -y --no-install-recommends python3-dev
+RUN rm -rf /var/lib/apt/lists/*
+
 RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install djangorestframework django-crispy-forms django-prometheus
+RUN pip install --no-cache-dir djangorestframework
+RUN pip install --no-cache-dir django-prometheus
+RUN pip install --no-cache-dir django-crispy-forms
+RUN pip install --no-cache-dir python-json-logger
 
-RUN pip install django-crispy-forms
-
-RUN pip install python-json-logger
-
-RUN pip install elasticsearch
-
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-	postgresql-client \
-    libpq-dev \
-    gcc \
-    postgresql-client \
-    postgresql-client \
-    python3-dev \
-    nano \
-    curl \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
 
 RUN python -m pip install Pillow
 RUN pip install passlib
 
+
 COPY . .
 
-CMD ["sh", "-c", "python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"]
 CMD ["sh", "-c", "python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"]

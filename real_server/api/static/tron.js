@@ -28,45 +28,41 @@ let winner = "";
 let playerUsernames = []; // Almacena los nombres de los jugadores obtenidos de la API
 
 /*********************************************
- * 1. Conexión con la API *
+ * 1. Redirigir console.log al elemento HTML *
  *********************************************/
+/* function logMessage(message) {
+    const logDiv = document.getElementById("log");
+    const p = document.createElement("p");
+    p.innerHTML = message.replace(/\n/g, "<br>");
+    logDiv.appendChild(p);
+    logDiv.scrollTop = logDiv.scrollHeight;
+}
+
+const originalConsoleLog = console.log;
+function log(...args) {
+    originalConsoleLog(...args);
+    args.forEach(arg => {
+        logMessage(typeof arg === 'object' ? JSON.stringify(arg) : arg);
+    });
+} */
+
+/**************************
+ * 2. Conexión con la API *
+ **************************/
 
 // Obtener jugadores para el modo "tron"
 async function fetchPlayersForGame(mode = "tron") {
     try {
-        const response = await fetch(`/get_players_for_game?game_type=${mode}`);
+        const response = await fetch(`/get_players_for_game/?game_type=${mode}`);
         const data = await response.json();
-        if (response.ok) {
+        if (data.players && data.players.length > 0) {
             playerUsernames = data.players.map(p => p.username);
-            log("Jugadores asignados:", playerUsernames);
+            //log("Jugadores cargados:", playerUsernames);
         } else {
-            log("Error obteniendo jugadores:", data.error);
-        }
-    } catch (err) {
-        log("Error en la conexión:", err.message);
-    }
-}
-
-// Actualizar estadísticas de los jugadores
-async function updateUserProfile(username, wins, losses) {
-    try {
-        const response = await fetch('/update_user_profile/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-            body: JSON.stringify({ username, wins, losses })
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-            log("Error:", data);
-        } else {
-            log("Stats actualizadas:", data);
+            //log("No se pudo obtener jugadores.");
         }
     } catch (error) {
-        log("Error de conexión:", error.message);
+        //log("Error obteniendo jugadores:", error);
     }
 }
 
@@ -86,9 +82,9 @@ function getCookie(name) {
     return cookieValue;
 }
 
-/*********************************************
- * 2. Lógica del juego *
- *********************************************/
+/***********************
+ * 3. Lógica del juego *
+ ***********************/
 
 document.addEventListener("keydown", (e) => {
     if (e.key === "w" && player1.dy === 0) {
@@ -123,8 +119,9 @@ document.addEventListener("keydown", (e) => {
         player2.dx = 0;
         player2.dy = 1;
     }
-    if (e.key === "p" || e.key === "P")
+    if (e.key.toLowerCase() === "p") {
         isPaused = !isPaused;
+    }
 });
 
 function checkCollision(player) {
@@ -160,15 +157,61 @@ function checkCollision(player) {
     return false;
 }
 
-function updateStatsOnGameOver() {
+async function updateStatsOnGameOver() {
     if (playerUsernames.length < 2) return;
 
     if (winner === playerUsernames[0]) {
-        updateUserProfile(playerUsernames[0], 1, 0);
-        updateUserProfile(playerUsernames[1], 0, 1);
+        await updateUserProfile(playerUsernames[0], 1, 0);
+        await updateUserProfile(playerUsernames[1], 0, 1);
     } else {
-        updateUserProfile(playerUsernames[1], 1, 0);
-        updateUserProfile(playerUsernames[0], 0, 1);
+        await updateUserProfile(playerUsernames[1], 1, 0);
+        await updateUserProfile(playerUsernames[0], 0, 1);
+    }
+
+    //log("Sincronizando estadísticas...");
+    await syncTronStats();
+}
+
+async function updateUserProfile(username, wins, losses) {
+    try {
+        const response = await fetch('/update_user_profile/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ username, wins, losses })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            //log("Error:", data);
+        } else {
+            //log("Stats actualizadas:", data);
+        }
+    } catch (error) {
+        //log("Error de conexión:", error.message);
+    }
+}
+
+async function syncTronStats() {
+    try {
+        const response = await fetch('/sync_tron_stats/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            //log("Error al sincronizar estadísticas de Tron:", data.error);
+        } else {
+            //log("Estadísticas de Tron sincronizadas:", data.message);
+        }
+    } catch (error) {
+        //log("Error de conexión al sincronizar estadísticas de Tron:", error.message);
     }
 }
 

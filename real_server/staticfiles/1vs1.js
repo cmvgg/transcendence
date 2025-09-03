@@ -26,7 +26,7 @@ let playerUsernames = [];
 /*********************************************
  * 2. Redirigir console.log al elemento HTML *
  *********************************************/
-function logMessage(message) {
+/* function logMessage(message) {
 	const logDiv = document.getElementById("log");
 	const p = document.createElement("p");
 	p.innerHTML = message.replace(/\n/g, "<br>"); // Reemplaza \n por <br>
@@ -40,7 +40,7 @@ const originalConsoleLog = console.log;
 	args.forEach(arg => {
 		logMessage(typeof arg === 'object' ? JSON.stringify(arg) : arg);
 	});
-}
+} */
 /* **** */
 
 async function fetchPlayersForGame(mode = "1vs1") {
@@ -49,12 +49,12 @@ async function fetchPlayersForGame(mode = "1vs1") {
         const data = await response.json();
         if (response.ok) {
             playerUsernames = data.players.map(p => p.username);
-            log("puta asignados:", playerUsernames);
+            //log("puta asignados:", playerUsernames);
         } else {
-            log("Error obteniendo jugadores:", data.error);
+            //log("Error obteniendo jugadores:", data.error);
         }
     } catch (err) {
-        log("Error en la conexión:", err.message);
+        //log("Error en la conexión:", err.message);
     }
 }
 
@@ -112,41 +112,28 @@ function update() {
 }
 
 async function checkGameOver() {
-    console.log("Verificando si el juego ha terminado...");
-    console.log(`Puntajes: Izquierdo ${leftScore}, Derecho ${rightScore}, MaxScore: ${maxScore}`);
-    console.log(`puta asignados: ${playerUsernames}`);
-
     if (playerUsernames.length < 2) {
-        console.log("No hay suficientes jugadores.");
         return;
     }
 
     if (leftScore >= maxScore) {
-        log("El jugador izquierdo ha ganado.");
         gameOver = true;
         winner = playerUsernames[0];
-        console.log(`Actualizando estadísticas para ${playerUsernames[0]} y ${playerUsernames[1]}`);
         await updateUserProfile(playerUsernames[0], 1, 0);
         await updateUserProfile(playerUsernames[1], 0, 1);
-        console.log("Llamando a sync1vs1Stats...");
         await sync1vs1Stats(); // Sincronizar datos para 1vs1
     } else if (rightScore >= maxScore) {
-        console.log("El jugador derecho ha ganado.");
         gameOver = true;
         winner = playerUsernames[1];
-        console.log(`Actualizando estadísticas para ${playerUsernames[1]} y ${playerUsernames[0]}`);
         await updateUserProfile(playerUsernames[1], 1, 0);
         await updateUserProfile(playerUsernames[0], 0, 1);
-        console.log("Llamando a sync1vs1Stats...");
         await sync1vs1Stats(); // Sincronizar datos para 1vs1
     } else {
-        console.log("El juego continúa. Reiniciando la pelota.");
         resetBall();
     }
 }
 
 async function sync1vs1Stats() {
-    console.log("Entrando a sync1vs1Stats...");
     try {
         const response = await fetch('/sync_1vs1_stats/', {
             method: 'POST',
@@ -158,12 +145,12 @@ async function sync1vs1Stats() {
 
         const data = await response.json();
         if (!response.ok) {
-            log("Error al sincronizar estadísticas 1vs1:", data.error);
+            //log("Error al sincronizar estadísticas 1vs1:", data.error);
         } else {
-            log("Estadísticas 1vs1 sincronizadas:", data.message);
+            //log("Estadísticas 1vs1 sincronizadas:", data.message);
         }
     } catch (error) {
-        log("Error de conexión al sincronizar estadísticas 1vs1:", error.message);
+        //log("Error de conexión al sincronizar estadísticas 1vs1:", error.message);
     }
 }
 
@@ -224,12 +211,12 @@ async function updateUserProfile(username, wins, losses) {
 
         const data = await response.json();
         if (!response.ok) {
-            log("Error:", data);
+            //log("Error:", data);
         } else {
-            log("Stats actualizadas:", data);
+            //log("Stats actualizadas:", data);
         }
     } catch (error) {
-        log("Error de conexión:", error.message);
+        //log("Error de conexión:", error.message);
     }
 }
 

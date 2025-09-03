@@ -77,5 +77,15 @@
 	"choice": "Sélectionner le jeu souhaité",
 
 	
-	"__comentario6": "tournament.html"
+	"__comentario6": "tournament.html",
+	
+	"__comentario8": "waitlist.html",
+	"waitlist": {
+		"title": "Attente",
+		"select1": "Sélectionner les Judateurs 1vs1",
+		"select2": "Sélectionnez les Judateurs Battleground",
+		"select3": "Sélectionnez les Judateurs Torneo",
+		"select4": "Sélectionnez les Judateurs Tron",
+		"no_players": "Aucun joueur disponible"
+	}
 }

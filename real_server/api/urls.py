@@ -43,6 +43,7 @@ urlpatterns = [
     path('sync_tournament_stats/', views.sync_tournament_stats, name='sync_tournament_stats'),
     path('sync_1vs1_stats/', views.sync_1vs1_stats, name='sync_1vs1_stats'),
 	path('sync_1vsIA_stats/', views.sync_1vsIA_stats, name='sync_1vsIA_stats'),
+	path('sync_tron_stats/', views.sync_tron_stats, name='sync_tron_stats'),
     #
     path('', include(router.urls)),
 	path('', include('django_prometheus.urls')),

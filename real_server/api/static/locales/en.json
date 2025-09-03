@@ -83,5 +83,15 @@
 	"error": {
         "title": "Error",
         "no_players": "Not enough players to play in the playground."
-    }
+    },
+
+	"__comentario8": "waitlist.html",
+	"waitlist": {
+		"title": "Waitlist",
+		"select1": "Select 1vs1 Players",
+		"select2": "Select Battleground Players",
+		"select3": "Select Tournament Players",
+		"select4": "Select tron Players",
+		"no_players": "No players available"
+	}
 }

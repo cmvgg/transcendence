@@ -1,8 +1,8 @@
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
-canvas.height = 500
-canvas.width = 500
+canvas.height = 500;
+canvas.width = 500;
 
 const paddleLength = 80;
 const paddleThickness = 7;
@@ -30,6 +30,113 @@ let scores = {
 
 let lastTouched = null;
 let isPaused = true;
+let gameOver = false;
+let winner = "";
+let playerUsernames = []; // Almacena los nombres de los jugadores obtenidos de la API
+
+/*********************************************
+ * 1. Redirigir console.log al elemento HTML *
+ *********************************************/
+function logMessage(message) {
+    const logDiv = document.getElementById("log");
+    const p = document.createElement("p");
+    p.innerHTML = message.replace(/\n/g, "<br>");
+    logDiv.appendChild(p);
+    logDiv.scrollTop = logDiv.scrollHeight;
+}
+
+const originalConsoleLog = console.log;
+function log(...args) {
+    originalConsoleLog(...args);
+    args.forEach(arg => {
+        logMessage(typeof arg === 'object' ? JSON.stringify(arg) : arg);
+    });
+}
+
+/**************************
+ * 2. Conexión con la API *
+ **************************/
+
+// Obtener jugadores para el modo "battleground"
+async function fetchPlayersForGame(mode = "battleground") {
+    try {
+        const response = await fetch(`/get_players_for_game/?game_type=${mode}`);
+        const data = await response.json();
+        if (data.players && data.players.length > 0) {
+            playerUsernames = data.players.map(p => p.username);
+            log("Jugadores cargados:", playerUsernames);
+        } else {
+            log("No se pudo obtener jugadores.");
+        }
+    } catch (error) {
+        log("Error obteniendo jugadores:", error);
+    }
+}
+
+// Sincronizar estadísticas al finalizar el juego
+async function syncBattlegroundStats() {
+    try {
+        const response = await fetch('/sync_tournament_stats/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            log("Error al sincronizar estadísticas de Battleground:", data.error);
+        } else {
+            log("Estadísticas de Battleground sincronizadas:", data.message);
+        }
+    } catch (error) {
+        log("Error de conexión al sincronizar estadísticas de Battleground:", error.message);
+    }
+}
+
+// Actualizar el perfil de un jugador
+async function updateUserProfile(username, wins, losses) {
+    try {
+        const response = await fetch('/update_user_profile/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify({ username, wins, losses })
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            log("Error:", data);
+        } else {
+            log("Stats actualizadas:", data);
+        }
+    } catch (error) {
+        log("Error de conexión:", error.message);
+    }
+}
+
+// Obtener el token CSRF
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+
+/***********************
+ * 3. Lógica del juego *
+ ***********************/
 
 document.addEventListener("keydown", (e) => {
     if (e.key === "w")
@@ -64,7 +171,7 @@ document.addEventListener("keyup", (e) => {
 });
 
 function update() {
-    if (isPaused) return;
+    if (isPaused || gameOver) return;
 
     // Movimiento paletas
     leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleLength, leftPaddle.y + leftPaddle.dy));
@@ -121,8 +228,37 @@ function update() {
 function score(sideMissed) {
     if (lastTouched && lastTouched !== sideMissed) {
         scores[lastTouched]++;
+        checkGameOver();
     }
     resetBall();
+}
+
+function checkGameOver() {
+    const maxScore = 1; // Cambia esto según las reglas del juego
+    for (const [player, score] of Object.entries(scores)) {
+        if (score >= maxScore) {
+            gameOver = true;
+            winner = playerUsernames[player === "left" ? 0 : player === "right" ? 1 : player === "top" ? 2 : 3];
+            updateStatsOnGameOver();
+            break;
+        }
+    }
+}
+
+async function updateStatsOnGameOver() {
+    if (playerUsernames.length < 4) return;
+
+    for (const [player, score] of Object.entries(scores)) {
+        const username = playerUsernames[player === "left" ? 0 : player === "right" ? 1 : player === "top" ? 2 : 3];
+        if (username === winner) {
+            await updateUserProfile(username, 1, 0);
+        } else {
+            await updateUserProfile(username, 0, 1);
+        }
+    }
+
+    log("Sincronizando estadísticas...");
+    await syncBattlegroundStats();
 }
 
 function resetBall() {
@@ -162,23 +298,18 @@ function draw() {
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
     ctx.fill();
     ctx.closePath();
-
-    // Puntajes
-    /* ctx.fillStyle = "white";
-    ctx.font = "10px Arial";
-    ctx.fillText(`Izquierda (Azul): ${scores.left}`, 30, 20);
-    ctx.fillText(`Derecha (Rojo): ${scores.right}`, canvas.width / 2 + 20, 20);
-    ctx.fillText(`Arriba (Verde): ${scores.top}`, canvas.width / 2 + 20, canvas.height - 10);
-    ctx.fillText(`Abajo (Amarillo): ${scores.bottom}`, canvas.width / 2 - 100, canvas.height - 10); */
 }
 
 function gameLoop() {
     update();
     draw();
-    requestAnimationFrame(gameLoop);
+    if (!gameOver) requestAnimationFrame(gameLoop);
 }
 
+// Inicializar el juego
 resetBall();
-gameLoop();
+fetchPlayersForGame("battleground").then(() => {
+    gameLoop();
+});
 
 

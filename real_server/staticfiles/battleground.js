@@ -63,6 +63,25 @@ document.addEventListener("keyup", (e) => {
         bottomPaddle.dx = 0;
 });
 
+/*********************************************
+ * 2. Redirigir console.log al elemento HTML *
+ *********************************************/
+function logMessage(message) {
+	const logDiv = document.getElementById("log");
+	const p = document.createElement("p");
+	p.innerHTML = message.replace(/\n/g, "<br>"); // Reemplaza \n por <br>
+	logDiv.appendChild(p);
+	logDiv.scrollTop = logDiv.scrollHeight;
+}
+
+const originalConsoleLog = console.log;
+	function log(...args) {
+	originalConsoleLog(...args);
+	args.forEach(arg => {
+		logMessage(typeof arg === 'object' ? JSON.stringify(arg) : arg);
+	});
+}
+
 function update() {
     if (isPaused) return;
 
