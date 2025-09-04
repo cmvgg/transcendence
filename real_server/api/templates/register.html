@@ -76,29 +76,30 @@
   </nav>
   <!-- Navbar -->
 
-  <div class="row" style="height: 50px;"></div>
-  <div class="row  ">
-    <div class="col"></div>
-    <div style="background-color: black ;color: whitesmoke; height: auto; font-family: Pixelify Sans, sans-serif; background-image: url('../../staticfiles/oie_transparent.png'); background-repeat: no-repeat; background-position: center; background-size: cover; border-radius: 10px;" class="col-3 shadow-lm text-center border-5 border-white">
-      <div class="container py-3">
-        <h5 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)">Register as retrogamer</h5>
-        {% block content %}
-        <form id="registerForm" method="post" >
-            {% csrf_token %}
-            {{ form.as_p }}
-            <style>
-              .asteriskField {display: none; }
-              .invalid-feedback,
-              .help-block,
-              .errorlist,
-              .field-error {
-                  display: none !important;
-              }
-            </style>
-            <button type="submit" class="btn btn-primary" data-bs-toggle="popover">Submit</button>
-        </form>
-        {% endblock %}
-      </div>     
+<div class="row" style="height: 50px;"></div>
+<div class="row  ">
+  <div class="col"></div>
+  <div style="background-color: black ;color: whitesmoke; height: auto; font-family: Pixelify Sans, sans-serif; background-image: url('../../staticfiles/oie_transparent.png'); background-repeat: no-repeat; background-position: center; background-size: cover; border-radius: 10px;" class="col-3 shadow-lm text-center border-5 border-white">
+    
+    <div class="container py-3">
+      <h5 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)">Register as retrogamer</h5>
+      {% block content %}
+      <form id="registerForm" method="post" enctype="multipart/form-data" >
+          {% csrf_token %}
+          {{ form.as_p }}
+          <style>
+            .asteriskField {display: none; }
+            .invalid-feedback,
+            .help-block,
+            .errorlist,
+            .field-error {
+                display: none !important;
+            }
+          </style>
+          <button type="submit" class="btn btn-primary" data-bs-toggle="popover">Submit</button>
+      </form>
+      
+      {% endblock %}
     </div>
     <div class="col"></div>
   </div>

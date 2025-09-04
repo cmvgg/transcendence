@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
@@ -24,13 +24,14 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 
 # Importar modelos y serializers
-from .models import User, Tournament, Match, TournamentStats, ProfileData, UsersInTournament
+from .models import User, Tournament, Match, TournamentStats, ProfileData, UsersInTournament, UserProfile
 from .serializers import (
     UserSerializer,
     TournamentSerializer,
     TournamentResultSerializer
 )
-from .forms import signInForm, ExampleForm
+# import the forms: sign in and register 
+from .forms import signInForm, RegisterForm
 
 #variables globales
 loged_user = None
@@ -132,7 +133,8 @@ def signIn(request): #login
             user = authenticate(request, username=nickname, password=passw)
             if user is not None:
                 login(request, user)
-                loged_user = user
+                loger_user = User.objects.get(username=nickname)
+                loged_stats = TournamentStats.objects.get(id=user.id)
                 return HttpResponse("""
                 <html>
                 <head>
@@ -150,82 +152,40 @@ def signIn(request): #login
         form = signInForm()
     return render(request, 'signin.html', {'form': form})
 
-def OldsignIn(request):
-    global loged_user, loged_stats
-    if request.method == 'POST':
-        form = signInForm(request.POST)
-        if form.is_valid():
-            nickname = form.cleaned_data.get('nickname')
-            passw = form.cleaned_data.get('password')
-            try:
-                # Intentar obtener el objeto
-                usuario = User.objects.get(username=nickname)
-                stats = TournamentStats.objects.get(id=usuario.id)
-
-                # Usuario encontrado
-                if check_password(passw, usuario.password):
-                    loged_user = usuario
-                    loged_stats = stats
-                    login(request, usuario)
-                    # pass es valido
-                    #return render(request, 'profile.html',{'loged_user':loged_user, 'loged_stats':loged_stats})
-                    return HttpResponse("""
-                         <html>
-                         <head>
-                            <script type="text/javascript">
-                                window.opener.location.href = "/profile"
-                            </script>
-                            <script type="text/javascript">
-                                window.close();
-                            </script>
-                            
-                        </head>
-                        <body></body>
-                        </html>
-                        """)
-                else:
-                    messages.error(request, '❌ Password incorrecto')
-            except ObjectDoesNotExist:
-                messages.error(request, f'El usuario {nickname} no existe')
-            return HttpResponse("""
-                <html>
-                <head>
-                    <script type="text/javascript">
-                        window.close();
-                    </script>
-                </head>
-                <body></body>
-                </html>
-            """)
-        
-    else:
-        form = signInForm()
-    return render(request, 'signin.html', {'form': form})
-
-def signIn(request):
-    form_s = signInForm()
-    return render(request, 'signin.html', {'form': form_s})
+from django.contrib.auth import logout
+def logout_view(request):
+    #username = UserLoggedIn(request)
+    user = User
+    if user != None:
+        logout(request)
+        return redirect("/")
 
 def register(request):
     if request.method == 'POST':
-        form = ExampleForm(request.POST)
+        form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
             # Extraer datos del formulario
             name = form.cleaned_data.get('name')
             nickname = form.cleaned_data.get('nickname')
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
+            avatar = form.cleaned_data.get('avatar')
 
             # Crear el usuario utilizando el nombre como username
             user = User.objects.create_user(first_name=name, email=email, password=password, username=nickname)
+            # Crear estadisticas de usuario
             user_stats = TournamentStats.objects.create(id = user.id, username=user.username, wins=0, losses=0, tournaments_won=0)
             user_stats.save()
             # Crear el perfil de usuario
-            #User.objects.create(alias=nickname, user_id=user.id)
+            user_profile = UserProfile.objects.create(user ,alias=nickname, avatar=avatar)
+            user_profile.save()
             
             return HttpResponse("""
                 <html>
                 <head>
+                    <script type="text/javascript">
+                        window.opener.location.href = "/profile"
+                    </script>
                     <script type="text/javascript">
                         window.close();
                     </script>
@@ -235,7 +195,7 @@ def register(request):
             """)
 
     else:
-        form = ExampleForm(request.GET)
+        form = RegisterForm(request.GET)
     return render(request, 'register.html', {'form': form})
 
 
@@ -383,7 +343,7 @@ def editprofile(request):
     if request.method == 'POST':
 
 
-        form = ExampleForm(request.POST)
+        form = RegisterForm(request.POST)
         if form.is_valid():
             # Extraer datos del formulario
 
@@ -392,28 +352,29 @@ def editprofile(request):
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
 
+            
             # hacer de user el usuario logeado
-            user = loged_user
+            #user = User.objects.get(username=nickname)
+            user = request.user
+            stats = TournamentStats.objects.get(id=user.id)
+            user.set_password(password)
             user.username = nickname
             user.first_name = name
             user.email = email
             # Usar set_password para guardar la contraseña de forma segura
-            user.set_password(password)
+            
             # Guardar los cambios
+            
+            
             user.save()
-            return HttpResponse("""
-                <html>
-                <head>
-                    <script type="text/javascript">
-                        window.close();
-                    </script>
-                </head>
-                <body></body>
-                </html>                                                                                                                   
-            """)
+            login(request, user)
+            log_user = authenticate(request, username=nickname, password=password)
+            stats = TournamentStats.objects.get(id=log_user.id)
+            #return render(request, 'signin.html', {'form': form})
+            return redirect("/profile", {'log_user': log_user, 'loged_stats':stats})
         
     else:
-        form = ExampleForm(request.GET)
+        form = RegisterForm(request.GET)
     return render(request, 'editprofile.html', {'form': form, 'loged_user': loged_user})
 
 """ def tournament(request):
@@ -461,16 +422,15 @@ def home_view(request):
 
 # API ENDPOINTS ESPECÍFICOS
 def profile_view(request):
-    global loged_user, loged_stats
-    #user = loged_user
-    #stats = TournamentStats.objects.get(username=user.username)
+    user = request.user #the active or loged user, the one who makes de request
+    username = user.username
+    stats = TournamentStats.objects.get(id=user.id)
 
-    #context = {
-    #    'user': user,
-    #    'statistics': stats,
-    #}
-
-    return render(request, 'profile.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
+    if request.user.is_authenticated:
+        # El usuario está logueado
+        #loged_user = request.user.username
+        stats = TournamentStats.objects.get(id=user.id)
+    return render(request, 'profile.html', {'loged_stats':stats})
 
 # API ENDPOINTS ESPECÍFICOS
 """ @api_view(['GET'])

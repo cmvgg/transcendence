@@ -28,6 +28,7 @@ urlpatterns = [
     path('duplicate_tron/', views.duplicate_tron, name='duplicate_tron'),
     #path('profile', views.profile, name='profile'),
     path('signin', views.signIn, name='signin'),
+    path('logout/', views.logout_view, name='logout'),
     path('register', views.register, name='register'),
     path('home', views.home_view, name='home'),
     path('editprofile', views.editprofile, name='editprofile'),
