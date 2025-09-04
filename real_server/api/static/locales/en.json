@@ -27,7 +27,8 @@
 		"back_to_select": "Back to Select"
 	},
 	
-	"score": "High score: ",
+	"high_score": "High score: ",
+	"score": "Score: ",
 
 	"__comentario2": "about.html",
 	"team": {

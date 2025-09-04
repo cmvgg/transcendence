@@ -16,9 +16,9 @@ let ball = {
     speed: 2
 };
 
+let topPaddle = { x: (canvas.width - paddleLength) / 2, dx: 0, color: "green" };
 let leftPaddle = { y: (canvas.height - paddleLength) / 2, dy: 0, color: "blue" };
 let rightPaddle = { y: (canvas.height - paddleLength) / 2, dy: 0, color: "red" };
-let topPaddle = { x: (canvas.width - paddleLength) / 2, dx: 0, color: "green" };
 let bottomPaddle = { x: (canvas.width - paddleLength) / 2, dx: 0, color: "yellow" };
 
 let scores = {
@@ -37,7 +37,7 @@ let playerUsernames = []; // Almacena los nombres de los jugadores obtenidos de 
 /*********************************************
  * 1. Redirigir console.log al elemento HTML *
  *********************************************/
-function logMessage(message) {
+/* function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
     p.innerHTML = message.replace(/\n/g, "<br>");
@@ -51,7 +51,7 @@ function log(...args) {
     args.forEach(arg => {
         logMessage(typeof arg === 'object' ? JSON.stringify(arg) : arg);
     });
-}
+} */
 
 /**************************
  * 2. Conexión con la API *
@@ -64,12 +64,12 @@ async function fetchPlayersForGame(mode = "battleground") {
         const data = await response.json();
         if (data.players && data.players.length > 0) {
             playerUsernames = data.players.map(p => p.username);
-            log("Jugadores cargados:", playerUsernames);
+            //log("Jugadores cargados:", playerUsernames);
         } else {
-            log("No se pudo obtener jugadores.");
+            //log("No se pudo obtener jugadores.");
         }
     } catch (error) {
-        log("Error obteniendo jugadores:", error);
+        //log("Error obteniendo jugadores:", error);
     }
 }
 
@@ -86,12 +86,12 @@ async function syncBattlegroundStats() {
 
         const data = await response.json();
         if (!response.ok) {
-            log("Error al sincronizar estadísticas de Battleground:", data.error);
+            //log("Error al sincronizar estadísticas de Battleground:", data.error);
         } else {
-            log("Estadísticas de Battleground sincronizadas:", data.message);
+            //log("Estadísticas de Battleground sincronizadas:", data.message);
         }
     } catch (error) {
-        log("Error de conexión al sincronizar estadísticas de Battleground:", error.message);
+        //log("Error de conexión al sincronizar estadísticas de Battleground:", error.message);
     }
 }
 
@@ -109,12 +109,12 @@ async function updateUserProfile(username, wins, losses) {
 
         const data = await response.json();
         if (!response.ok) {
-            log("Error:", data);
+            //log("Error:", data);
         } else {
-            log("Stats actualizadas:", data);
+            //log("Stats actualizadas:", data);
         }
     } catch (error) {
-        log("Error de conexión:", error.message);
+        //log("Error de conexión:", error.message);
     }
 }
 
@@ -139,6 +139,10 @@ function getCookie(name) {
  ***********************/
 
 document.addEventListener("keydown", (e) => {
+    if (e.key === "j")
+        topPaddle.dx = -5;
+    if (e.key === "k")
+        topPaddle.dx = 5;
     if (e.key === "w")
         leftPaddle.dy = -5;
     if (e.key === "s")
@@ -147,26 +151,22 @@ document.addEventListener("keydown", (e) => {
         rightPaddle.dy = -5;
     if (e.key === "ArrowDown")
         rightPaddle.dy = 5;
-    if (e.key === "a")
-        topPaddle.dx = -5;
-    if (e.key === "d")
-        topPaddle.dx = 5;
-    if (e.key === "j")
+    if (e.key === "5")
         bottomPaddle.dx = -5;
-    if (e.key === "l")
+    if (e.key === "6")
         bottomPaddle.dx = 5;
     if (e.key === "p" || e.key === "P")
         isPaused = !isPaused;
 });
 
 document.addEventListener("keyup", (e) => {
+    if (["j", "k"].includes(e.key))
+        topPaddle.dx = 0;
     if (["w", "s"].includes(e.key))
         leftPaddle.dy = 0;
     if (["ArrowUp", "ArrowDown"].includes(e.key))
         rightPaddle.dy = 0;
-    if (["a", "d"].includes(e.key))
-        topPaddle.dx = 0;
-    if (["j", "l"].includes(e.key))
+    if (["5", "6"].includes(e.key))
         bottomPaddle.dx = 0;
 });
 
@@ -228,13 +228,21 @@ function update() {
 function score(sideMissed) {
     if (lastTouched && lastTouched !== sideMissed) {
         scores[lastTouched]++;
+        updateScoreDisplay(); // Llama a esta función para actualizar las puntuaciones en el HTML
         checkGameOver();
     }
     resetBall();
 }
 
+function updateScoreDisplay() {
+    document.getElementById("player1-score").innerText = `Player 1: ${scores.left}`;
+    document.getElementById("player2-score").innerText = `Player 2: ${scores.right}`;
+    document.getElementById("player3-score").innerText = `Player 3: ${scores.top}`;
+    document.getElementById("player4-score").innerText = `Player 4: ${scores.bottom}`;
+}
+
 function checkGameOver() {
-    const maxScore = 1; // Cambia esto según las reglas del juego
+    const maxScore = 3; // Cambia esto según las reglas del juego
     for (const [player, score] of Object.entries(scores)) {
         if (score >= maxScore) {
             gameOver = true;
@@ -257,7 +265,7 @@ async function updateStatsOnGameOver() {
         }
     }
 
-    log("Sincronizando estadísticas...");
+    //log("Sincronizando estadísticas...");
     await syncBattlegroundStats();
 }
 

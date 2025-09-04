@@ -26,8 +26,8 @@
 		"tournament": "Tournoi"
 	},
 	
-	"score": "Meilleur score: ",
-
+	"high_score": "Meilleur score: ",
+	"score": "Score: ",
 
 	"__comentario2": "about.html",
 	"team": {

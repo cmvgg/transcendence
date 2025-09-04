@@ -108,16 +108,34 @@
   <div class="row  " style=" display: flex; justify-content: center; height: 810px;">
     <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
       <img src="../../staticfiles/avatar1.jpg" alt="player one avatar" style="padding-top: 10px;"  width="200" height="200">
-      <br><br>
+      <br>
       <div style="background: linear-gradient(
         45deg,
         hsla(168, 85%, 52%, 0.5),
         hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
-        height: 200px">
-        <h1 style="font-family: 'Press Start 2P', system-ui; color:white; padding-top: 10px;" data-i18n="1up">1UP</h1>
+        height: auto; padding: 10px 10px;">
+        <h1 style="font-family: 'Press Start 2P', system-ui; color:green; padding-top: 10px;" data-i18n="1up">1UP</h1>
+        <h1 style="font-family: 'Press Start 2P', system-ui; color:white" >{{loged_user.username}}</h1>
         <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player1_name">[player 1 name]</h5>
+        <br>
+        <h3 style="font-family: 'Press Start 2P', system-ui; color:white" id="player1-score" data-i18n="">Score: 0</h3>
+      </div>
+      <br><br>
+      <img src="../../staticfiles/avatar1.jpg" alt="player one avatar" style="padding-top: 10px;"  width="200" height="200">
+      <br>
+      <div style="background: linear-gradient(
+        45deg,
+        hsla(168, 85%, 52%, 0.5),
+        hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
+        height: auto; padding: 10px 10px;">
+        <h1 style="font-family: 'Press Start 2P', system-ui; color:blue; padding-top: 10px;" data-i18n="1up">2UP</h1>
+        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player1_name">[player 2 name]</h5>
+        <br>
+        <h3 style="font-family: 'Press Start 2P', system-ui; color:white" id="player2-score" >Score: 0</h3>
       </div>
     </div>
+
+    
 
     <div style=" font-family: Tourney, sans-serif; height: 650px; display: flex; justify-content: center; background-size:contain; background-position: center top; background-repeat: no-repeat" class="col-7 shadow display: flex; flex-direction: row">
       <canvas class=" border border-5 border-white " id="gameCanvas"  style=" margin-top: 10% ; width:700px; height: 700px; background-color:black; border-radius: 20px;"></canvas>	 <!-- cambiar tamanio del canvas -->
@@ -126,24 +144,38 @@
       window.addEventListener("keydown", function(e) {
         const keys = ["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"];
         const isTyping = ["INPUT", "TEXTAREA"].includes(document.activeElement.tagName);
-
-        if (keys.includes(e.key) && !isTyping) {
-          e.preventDefault();
-        }
+        if (keys.includes(e.key) && !isTyping) {e.preventDefault();}
       }, { passive: false });
     </script>
     <script src="{% static 'battleground.js' %}"></script>
+
     <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
       <img src="../../staticfiles/avatar2.jpg" alt="player two avatar" width="200" height="200">
-      <br><br>
+      <br>
       <div style="background: linear-gradient(
         45deg,
         hsla(168, 85%, 52%, 0.5),
         hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
-        height: 200px;">
-        <h1 style="font-family: 'Press Start 2P', system-ui; color: white;" data-i18n="2up">2UP</h1>
-        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player2_name">[player 2 name]</h5>
+        height: auto; padding: 10px 10px;">
+        <h1 style="font-family: 'Press Start 2P', system-ui; color: red;" data-i18n="2up">3UP</h1>
+        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player2_name">[player 3 name]</h5>
+        <br>
+        <h3 style="font-family: 'Press Start 2P', system-ui; color:white" id="player3-score" >Score: 0</h3>
       </div>
+      <br><br>
+      <img src="../../staticfiles/avatar2.jpg" alt="player two avatar" width="200" height="200">
+      <br>
+      <div style="background: linear-gradient(
+        45deg,
+        hsla(168, 85%, 52%, 0.5),
+        hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
+        height: auto; padding: 10px 10px;">
+        <h1 style="font-family: 'Press Start 2P', system-ui; color: yellow;" data-i18n="2up">4UP</h1>
+        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player2_name">[player 4 name]</h5>
+        <br>
+        <h3 style="font-family: 'Press Start 2P', system-ui; color:white" id="player4-score" >Score: 0</h3>
+      </div>
+    </div>
     </div>
   </div>
 
@@ -161,12 +193,12 @@
     <div class="col"></div>
   </div>
 
-  <div id="log"></div> 
+  <!-- <div id="log"></div>  -->
 
   <div class="col">
     <p style="background-color: black;">
     <div style="font-family: 'Press Start 2P', system-ui; color:white; background-color: black; display: flex; justify-content: center; align-items: center;">
-      <h1 data-i18n="score" style="margin-right: 10px;">High score:</h1>
+      <h1 data-i18n="high_score" style="margin-right: 10px;">High score:</h1>
       <h1>[ {{ high_score.username }}: {{high_score.wins}} ]</h1>
     </div>
   </div>

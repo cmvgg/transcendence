@@ -27,7 +27,8 @@
 		"back_to_select": "Volver a Select"
 	},
 	
-	"score": "Puntuaje mas alto: ",
+	"high_score": "Puntuaje mas alto: ",
+	"score": "Puntuaje: ",
 
 	"__comentario2": "about.html",
 	"team": {
