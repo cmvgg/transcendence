@@ -4,7 +4,7 @@
 		"home": "Accueil",
 		"play": "Jouer",
 		"signin": "Se connecter",
-		"signup": "S'inscrire",
+		"register": "Enregistrer",
 		"select": "Sélectionner",
 		"about": "À propos de nous"
 	},
@@ -26,8 +26,8 @@
 		"tournament": "Tournoi"
 	},
 	
-	"score": "Meilleur score: ",
-
+	"high_score": "Meilleur score: ",
+	"score": "Score: ",
 
 	"__comentario2": "about.html",
 	"team": {

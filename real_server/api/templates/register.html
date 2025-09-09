@@ -76,15 +76,14 @@
   </nav>
   <!-- Navbar -->
 
-<div class="row" style="height: 50px;"></div>
-<div class="row  ">
-  <div class="col"></div>
-  <div style="background-color: black ;color: whitesmoke; height: auto; font-family: Pixelify Sans, sans-serif; background-image: url('../../staticfiles/oie_transparent.png'); background-repeat: no-repeat; background-position: center; background-size: cover; border-radius: 10px;" class="col-3 shadow-lm text-center border-5 border-white">
-    
-    <div class="container py-3">
-      <h5 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)">Register as retrogamer</h5>
-      {% block content %}
-      <form id="registerForm" method="post" enctype="multipart/form-data" >
+  <div class="row" style="height: 50px;"></div>
+  <div class="row  ">
+    <div class="col"></div>
+    <div style="background-color: black ;color: whitesmoke; height: auto; font-family: Pixelify Sans, sans-serif; background-image: url('../../staticfiles/oie_transparent.png'); background-repeat: no-repeat; background-position: center; background-size: cover; border-radius: 10px;" class="col-3 shadow-lm text-center border-5 border-white">
+      <div class="container py-3">
+        <h5 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)">Register as retrogamer</h5>
+        {% block content %}
+        <form id="registerForm" method="post" enctype="multipart/form-data" >
           {% csrf_token %}
           {{ form.as_p }}
           <style>
@@ -97,24 +96,21 @@
             }
           </style>
           <button type="submit" class="btn btn-primary" data-bs-toggle="popover">Submit</button>
-      </form>
-      
-      {% endblock %}
+        </form>
+        {% endblock %}
+      </div>
     </div>
     <div class="col"></div>
   </div>
-
   <br><br><br><br>
   <div class="row" style="height: 150px;">
-      
     <script>
       function closeWindow() {
-      setTimeout(function() {
-          window.close();
-      }, 1000);
-      return true;
-    }
-  </script>
+        setTimeout(function() {window.close();}, 1000);
+        return true;
+      }
+    </script>
+  </div>
 
   <!-- Footer -->
   <footer class="text-center text-white" style="background-image: url('https://i.pinimg.com/originals/94/b9/c6/94b9c64e1c5d912bcfd3db9c6f988b15.gif');background-repeat: no-repeat; background-size: cover ;background-position: center center;";> <!--  #cd09d4 -->
@@ -130,14 +126,14 @@
               <a class="nav-link" href="/index" data-i18n="nav.home">Home</a>
             </h6>
           </div>
-          <!-- <div class="col-md-2">
-            <h6 class="footer_nav">
-              <a class="nav-link" href="/playground" data-i18n="nav.play">Play</a>
-            </h6>
-          </div> -->
           <div class="col-md-2">
             <h6 class="footer_nav">
-              <a class="nav-link" href="/register" data-i18n="nav.signin">Sign in</a>
+              <a class="nav-link" href="/signin" data-i18n="nav.signin">Sign in</a>
+            </h6>
+          </div>
+          <div class="col-md-2">
+            <h6 class="footer_nav">
+              <a class="nav-link" href="/register" data-i18n="nav.register">Register</a>
             </h6>
           </div>
           <div class="col-md-2">

@@ -120,7 +120,7 @@ class Tournament(models.Model):
     class Meta:
         ordering = ['-start_date']
 
-class UserProfile(models.Model):
+""" class UserProfile(models.Model):
     user_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
     # user = models.OneToOneField(User, on_delete=models.CASCADE)  # Descomenta si quieres usar relación
     alias = models.CharField(max_length=50, unique=True)
@@ -134,20 +134,18 @@ class UserProfile(models.Model):
         return self.alias  # Cambiado para que funcione correctamente
     
     def win_rate(self):
-        """Calcula el porcentaje de victorias"""
         total_games = self.wins + self.losses
         if total_games == 0:
             return 0.0
         return self.wins / total_games
     
     def total_games(self):
-        """Retorna el total de partidas jugadas"""
         return self.wins + self.losses
     
     class Meta:
         ordering = ['-wins', 'alias']  # Ordenar por victorias descendente, luego por alias
         verbose_name = 'Perfil de Usuario'
-        verbose_name_plural = 'Perfiles de Usuario'
+        verbose_name_plural = 'Perfiles de Usuario' """
 
 class ProfileData(models.Model):
     # modelo para endpoint get que consulte los datos del jugador

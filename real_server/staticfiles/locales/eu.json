@@ -4,7 +4,7 @@
 		"home": "Hasiera",
 		"play": "Jolastu",
 		"signin": "Saioa hasi",
-		"signup": "Izena eman",
+		"register": "Erregistratu",
 		"select": "Hautatu",
 		"about": "Guri buruz"
 	},
@@ -26,8 +26,8 @@
 		"tournament": "Txapelketa"
 	},
 	
-	"score": "Puntuzio altuena: ",
-
+	"high_score": "Puntuzio altuena: ",
+	"score": "Puntuzioa: ",
 
 	"__comentario2": "about.html",
 	"team": {

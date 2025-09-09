@@ -174,7 +174,7 @@ def register(request):
             # Crear el usuario utilizando el nombre como username
             user = User.objects.create_user(first_name=name, email=email, password=password, username=nickname)
             # Crear estadisticas de usuario
-            user_stats = TournamentStats.objects.create(id = user.id, username=user.username, wins=0, losses=0, tournaments_won=0)
+            user_stats = TournamentStats.objects.create(id=user.id, username=user.username, wins=0, losses=0, tournaments_won=0)
             user_stats.save()
             # Crear el perfil de usuario
             user_profile = UserProfile.objects.create(user ,alias=nickname, avatar=avatar)
@@ -191,13 +191,12 @@ def register(request):
                     </script>
                 </head>
                 <body></body>
-                </html>
+                </html>                                                                                                                   
             """)
 
     else:
         form = RegisterForm(request.GET)
     return render(request, 'register.html', {'form': form})
-
 
 
 
