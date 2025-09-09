@@ -117,7 +117,7 @@
 <body style="background-image: url('https://kingdomofhart.wordpress.com/wp-content/uploads/2014/08/smashwall.jpg'); background-repeat: no-repeat; background-size: cover;">
   <div class="row  " style=" display: flex; justify-content: center; height: 700px;">
     <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
-      <img src="../../staticfiles/avatar1.jpg" alt="player one avatar" style="padding-top: 10px;"  width="200" height="200">
+      <img src="{{ profile.avatar }}" alt="player one avatar" style="padding-top: 10px;"  width="200" height="200">
       <br><br>
       <div style="background: linear-gradient(
         45deg,
@@ -181,10 +181,6 @@
       <h1>[ {{ high_score.username }}: {{high_score.wins}} ]</h1>
     </div>
   </div>
-  <div style="font-family: 'Press Start 2P', system-ui; color:white; background-color: black; display: flex; justify-content: center; align-items: center;">
-    <h1 data-i18n="score" style="margin-right: 10px;">High score:</h1>
-    <h1>{{ high_score.username }} : {{high_score.wins}}</h1>
-</div>
 </body>
 <!-- musica -->
 <audio id="music" src="../../staticfiles/retro-game-music.mp3" autoplay loop></audio>

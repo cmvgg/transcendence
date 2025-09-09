@@ -22,6 +22,7 @@ urlpatterns = [
     path('', include('django_prometheus.urls')),
 
     # Vistas estáticas / Reactivas (pages app)
+    path('', page_views.index, name='index'),
     path('index', page_views.index, name='index'),
     path('about', page_views.index, name='about'),
     path('tournament', page_views.index, name='tournament'),

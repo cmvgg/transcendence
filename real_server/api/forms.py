@@ -50,3 +50,5 @@ class editProfile(models.Model):
         self.helper.form_method = 'get'
         self.helper.form_action = 'submit_survey'
         self.helper.add_input(Submit('submit', 'Submit'))
+
+#CLAUDE

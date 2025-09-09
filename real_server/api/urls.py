@@ -26,7 +26,7 @@ urlpatterns = [
 	path('duplicate_tournament/', views.duplicate_tournament, name='duplicate_tournament'),
     path('duplicate_battleground/', views.duplicate_battleground, name='duplicate_battleground'),
     path('duplicate_tron/', views.duplicate_tron, name='duplicate_tron'),
-    #path('profile', views.profile, name='profile'),
+    path('profile', views.profile_view, name='profile'),
     path('signin', views.signIn, name='signin'),
     path('logout/', views.logout_view, name='logout'),
     path('register', views.register, name='register'),
@@ -48,5 +48,10 @@ urlpatterns = [
     #
     path('', include(router.urls)),
 	path('', include('django_prometheus.urls')),
+    path('lista_y_selecciona_usuarios', views.lista_y_selecciona_usuarios, name='lista_y_selecciona_usuarios'),
 ]
 
+#CLAUDE
+
+
+#CLAUDE END

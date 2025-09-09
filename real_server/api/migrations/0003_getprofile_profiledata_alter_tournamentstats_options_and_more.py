@@ -45,27 +45,6 @@ class Migration(migrations.Migration):
             name='winner',
             field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, related_name='won_tournaments', to='api.userprofile'),
         ),
-        migrations.AddField(
-            model_name='userprofile',
-            name='avatar',
-            field=models.ImageField(blank=True, null=True, upload_to='avatars/'),
-        ),
-        migrations.AddField(
-            model_name='userprofile',
-            name='created_at',
-            field=models.DateTimeField(auto_now_add=True, default=django.utils.timezone.now),
-            preserve_default=False,
-        ),
-        migrations.AddField(
-            model_name='userprofile',
-            name='updated_at',
-            field=models.DateTimeField(auto_now=True),
-        ),
-        migrations.AddField(
-            model_name='userprofile',
-            name='user_id',
-            field=models.PositiveIntegerField(blank=True, null=True, unique=True),
-        ),
         migrations.CreateModel(
             name='Match',
             fields=[

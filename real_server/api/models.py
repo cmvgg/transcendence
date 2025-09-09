@@ -1,6 +1,7 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 
 """
 class Userstatistics(models.Model):
@@ -66,35 +67,39 @@ class UsersInTournament(models.Model):
         verbose_name_plural = "Users In Tournament"
         ordering = ['-wins', 'username']
         
+
+#USER
+
+from django.db import models
+from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 class UserProfile(models.Model):
-    #user_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE , primary_key=True)  # Descomenta si quieres usar relación
-    username = models.CharField(max_length=50, unique=True)
-    alias = models.CharField(max_length=50, unique=True)
-    wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)
-    avatar = models.ImageField(upload_to='media/', null=True, blank=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    avatar = models.ImageField(upload_to='media/', blank=True, null=True)
+    friends = ArrayField(
+        models.IntegerField(),
+        size=100,
+        blank=True,
+        default=list,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return self.alias  # Cambiado para que funcione correctamente
-    
-    def win_rate(self):
-        """Calcula el porcentaje de victorias"""
-        total_games = self.wins + self.losses
-        if total_games == 0:
-            return 0.0
-        return self.wins / total_games
-    
-    def total_games(self):
-        """Retorna el total de partidas jugadas"""
-        return self.wins + self.losses
-    
-    class Meta:
-        ordering = ['-wins', 'alias']  # Ordenar por victorias descendente, luego por alias
-        verbose_name = 'Perfil de Usuario'
-        verbose_name_plural = 'Perfiles de Usuario'
+        return f"{self.user.username}'s Profile"
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+        new_user = instance
+        new_user.avatar = instance.profile.avatar
+        new_user.save()
+
+ #USER END       
 
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
@@ -209,3 +214,4 @@ class Match(models.Model):
         ordering = ['-date_played']
         verbose_name = 'Match'
         verbose_name_plural = 'Matches'
+
