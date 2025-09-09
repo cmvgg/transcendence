@@ -31,5 +31,10 @@ urlpatterns = [
     path('get_players/', views.get_players, name='get_players'),
     path('', include(router.urls)),
 	path('', include('django_prometheus.urls')),
+    path('lista_y_selecciona_usuarios', views.lista_y_selecciona_usuarios, name='lista_y_selecciona_usuarios'),
 ]
 
+#CLAUDE
+
+
+#CLAUDE END

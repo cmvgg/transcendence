@@ -37,10 +37,11 @@ def index(request):
     return render(request, 'index.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
 
 def playground(request):
-    global loged_user, loged_stats
     top = TournamentStats.objects.order_by('wins').last()
-    return render(request, 'playground.html', {'loged_user':loged_user, 'loged_stats':loged_stats, 'high_score': top})
-
+    user = request.user
+    profile = UserProfile.objects.get(user = user)
+    return render(request, 'playground.html', {'loged_user':user, 'high_score': top, 'profile': profile})
+ 
 """@login_required
 def profile(request):
 	try:
@@ -138,12 +139,18 @@ def register(request):
 
             # Crear el usuario utilizando el nombre como username
             user = User.objects.create_user(first_name=name, email=email, password=password, username=nickname)
+            user.Profile.avatar = avatar
+            user.save()
             # Crear estadisticas de usuario
             user_stats = TournamentStats.objects.create(id = user.id, username=user.username, wins=0, losses=0, tournaments_won=0)
             user_stats.save()
             # Crear el perfil de usuario
-            user_profile = UserProfile.objects.create(user ,alias=nickname, avatar=avatar)
-            user_profile.save()
+            #user_profile = UserProfile.objects.create(
+            #    user = user,
+            #    avatar= avatar,
+            #)
+            #user_profile.friends.add(user.id)
+            #user_profile.save()
             
             return HttpResponse("""
                 <html>
@@ -168,38 +175,36 @@ def editprofile(request):
     if request.method == 'POST':
 
 
-        form = RegisterForm(request.POST)
+        form = RegisterForm(request.POST, request.FILES)
         if form.is_valid():
             # Extraer datos del formulario
-
             name = form.cleaned_data.get('name')
             nickname = form.cleaned_data.get('nickname')
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
+            avatar = form.cleaned_data.get('avatar')
 
-            
             # hacer de user el usuario logeado
             #user = User.objects.get(username=nickname)
             user = request.user
-            stats = TournamentStats.objects.get(id=user.id)
+            stats = TournamentStats.objects.get(user=user)
             user.set_password(password)
             user.username = nickname
             user.first_name = name
             user.email = email
-            # Usar set_password para guardar la contraseña de forma segura
+            user.UserProfile.avatar = avatar
             
             # Guardar los cambios
-            
-            
             user.save()
+            user.UserProfile.save()
             login(request, user)
             log_user = authenticate(request, username=nickname, password=password)
-            stats = TournamentStats.objects.get(id=log_user.id)
+            stats = TournamentStats.objects.get(user=log_user)
             #return render(request, 'signin.html', {'form': form})
-            return redirect("/profile", {'log_user': log_user, 'loged_stats':stats})
+            return redirect("profile.html", {'log_user': log_user, 'loged_stats':stats})
         
     else:
-        form = RegisterForm(request.GET)
+        form = RegisterForm(request.GET, request.FILES)
     return render(request, 'editprofile.html', {'form': form, 'loged_user': loged_user})
 
 def tournament(request):
@@ -233,15 +238,19 @@ class TournamentViewSet(viewsets.ModelViewSet):
 
 
 def profile_view(request):
-    user = request.user #the active or loged user, the one who makes de request
-    username = user.username
-    stats = TournamentStats.objects.get(id=user.id)
-
+    logedUser = request.user #the active or loged user, the one who makes de request
+    username = logedUser.username
+    stats = TournamentStats.objects.get(username=logedUser.username)
+    
+    
     if request.user.is_authenticated:
         # El usuario está logueado
-        #loged_user = request.user.username
-        stats = TournamentStats.objects.get(id=user.id)
-    return render(request, 'profile.html', {'loged_stats':stats})
+        logedUser = request.user
+        stats = TournamentStats.objects.get(id=logedUser.id)
+        profile = UserProfile.objects.get(user = logedUser)
+        friends_usernames = User.objects.filter(id__in=profile.friends).values_list('username', flat=True)
+    return render(request, 'profile.html', {'loged_stats':stats, 'profile': profile, 'friends_names': friends_usernames})
+    #return render(request, 'profile.html', {'loged_stats':stats, 'profile': profile})
 
 # API ENDPOINTS ESPECÍFICOS
 @api_view(['GET'])
@@ -431,5 +440,50 @@ class RegisterUserForm(UserCreationForm):
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 
+#user friends
+from django.contrib.auth import get_user_model # Importa el modelo de usuario actual
 
+User = get_user_model() # Obtiene el modelo de usuario
+
+def lista_y_selecciona_usuarios(request):
+    if request.method == 'POST':
+        # Manejar los datos del formulario si se seleccionaron usuarios
+        usuarios_seleccionados_ids = request.POST.getlist('usuarios') # Obtener IDs de los usuarios seleccionados
+        usuarios_seleccionados = User.objects.filter(id__in=usuarios_seleccionados_ids)
+
+        # guardar los usuarios seleccionados como amigos del usuario activo
+        user = request.user
+        user_profile = UserProfile.objects.get(user = user)
+        
+        user_profile.friends = usuarios_seleccionados_ids
+        for usuario in usuarios_seleccionados:
+            if usuario != user:
+                user_profile.friends.append(usuario.id)
+        user_profile.save()
+
+        # Opcional: Redirigir después del procesamiento
+        # from django.shortcuts import redirect
+        # return redirect('ruta_a_otra_pagina')
+
+        context = {'usuarios_seleccionados': usuarios_seleccionados}
+        return HttpResponse("""
+                <html>
+                <head>
+                    <script type="text/javascript">
+                                window.opener.location.href = "/profile"
+                            </script>
+                    <script type="text/javascript">
+                        window.close();
+                    </script>
+                </head>
+                <body></body>
+                </html>
+            """)
+    else:
+        # Si es un GET, muestra la lista para seleccionar
+        usuarios = User.objects.all()
+        context = {'usuarios': usuarios}
+        return render(request, 'lista_usuarios.html', context)
+
+#user friends END
 
