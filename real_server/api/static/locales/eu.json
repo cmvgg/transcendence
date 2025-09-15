@@ -9,10 +9,10 @@
 		"about": "Guri buruz"
 	},
 
-	"1up": "1UP",
 	"player1_name": "[1 jokalariaren izena]",
-	"2up": "2UP",
 	"player2_name": "[2 jokalariaren izena]",
+	"player3_name": "[3 jokalariaren izena]",
+	"player4_name": "[4 jokalariaren izena]",
 
 	"button": {
 		"start": "Hasi",

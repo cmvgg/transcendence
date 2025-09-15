@@ -1,5 +1,7 @@
 window.onload = async function () {
+    log("kepasa");
     await fetchPlayersForGame("1vs1");
+    log("otros")
     resetBall();
     gameLoop();
 };
@@ -26,35 +28,38 @@ let playerUsernames = [];
 /*********************************************
  * 2. Redirigir console.log al elemento HTML *
  *********************************************/
-/* function logMessage(message) {
-	const logDiv = document.getElementById("log");
-	const p = document.createElement("p");
-	p.innerHTML = message.replace(/\n/g, "<br>"); // Reemplaza \n por <br>
-	logDiv.appendChild(p);
-	logDiv.scrollTop = logDiv.scrollHeight;
+function logMessage(message) {
+    const logDiv = document.getElementById("log");
+    const p = document.createElement("p");
+    p.innerHTML = message.replace(/\n/g, "<br>");
+    logDiv.appendChild(p);
+    logDiv.scrollTop = logDiv.scrollHeight;
 }
 
 const originalConsoleLog = console.log;
-	function log(...args) {
-	originalConsoleLog(...args);
-	args.forEach(arg => {
-		logMessage(typeof arg === 'object' ? JSON.stringify(arg) : arg);
-	});
-} */
+function log(...args) {
+    originalConsoleLog(...args);
+    args.forEach(arg => {
+        logMessage(typeof arg === "object" ? JSON.stringify(arg) : arg);
+    });
+}
 /* **** */
 
 async function fetchPlayersForGame(mode = "1vs1") {
     try {
+        log("obteniendo jugadores");
         const response = await fetch(`/get_players_for_game?game_type=${mode}`);
+        log("response");
         const data = await response.json();
+        log("data");
         if (response.ok) {
             playerUsernames = data.players.map(p => p.username);
-            //log("puta asignados:", playerUsernames);
+            log("Jugadores asignados:", playerUsernames);
         } else {
-            //log("Error obteniendo jugadores:", data.error);
+            log("Error obteniendo jugadores:", data.error);
         }
     } catch (err) {
-        //log("Error en la conexión:", err.message);
+        log("Error en la cuxion:", err.message);
     }
 }
 
@@ -142,15 +147,16 @@ async function sync1vs1Stats() {
                 'X-CSRFToken': getCookie('csrftoken'),
             },
         });
+        log("concexion")
 
         const data = await response.json();
         if (!response.ok) {
-            //log("Error al sincronizar estadísticas 1vs1:", data.error);
+            log("Error al sincronizar estadísticas 1vs1:", data.error);
         } else {
-            //log("Estadísticas 1vs1 sincronizadas:", data.message);
+            log("Estadísticas 1vs1 sincronizadas:", data.message);
         }
     } catch (error) {
-        //log("Error de conexión al sincronizar estadísticas 1vs1:", error.message);
+        log("Error de conexión al sincronizar estadísticas 1vs1:", error.message);
     }
 }
 
@@ -211,12 +217,12 @@ async function updateUserProfile(username, wins, losses) {
 
         const data = await response.json();
         if (!response.ok) {
-            //log("Error:", data);
+            log("Error:", data);
         } else {
-            //log("Stats actualizadas:", data);
+            log("Stats actualizadas:", data);
         }
     } catch (error) {
-        //log("Error de conexión:", error.message);
+        log("Error de conexión:", error.message);
     }
 }
 

@@ -190,14 +190,12 @@ function update() {
             lastTouched = "left";
         }
     }
-
     if (ball.dx > 0 && ball.x + ball.radius >= canvas.width - paddleThickness) {
         if (ball.y > rightPaddle.y && ball.y < rightPaddle.y + paddleLength) {
             ball.dx *= -1;
             lastTouched = "right";
         }
     }
-
     // Colisión con paletas horizontales
     if (ball.dy < 0 && ball.y - ball.radius <= paddleThickness) {
         if (ball.x > topPaddle.x && ball.x < topPaddle.x + paddleLength) {
@@ -205,14 +203,12 @@ function update() {
             lastTouched = "top";
         }
     }
-
     if (ball.dy > 0 && ball.y + ball.radius >= canvas.height - paddleThickness) {
         if (ball.x > bottomPaddle.x && ball.x < bottomPaddle.x + paddleLength) {
             ball.dy *= -1;
             lastTouched = "bottom";
         }
     }
-
     // Goles
     if (ball.x - ball.radius < 0) {
         score("left");
@@ -228,7 +224,7 @@ function update() {
 function score(sideMissed) {
     if (lastTouched && lastTouched !== sideMissed) {
         scores[lastTouched]++;
-        updateScoreDisplay(); // Llama a esta función para actualizar las puntuaciones en el HTML
+        updateScoreDisplay();
         checkGameOver();
     }
     resetBall();
@@ -236,8 +232,8 @@ function score(sideMissed) {
 
 function updateScoreDisplay() {
     document.getElementById("player1-score").innerText = `Player 1: ${scores.left}`;
-    document.getElementById("player2-score").innerText = `Player 2: ${scores.right}`;
-    document.getElementById("player3-score").innerText = `Player 3: ${scores.top}`;
+    document.getElementById("player2-score").innerText = `Player 2: ${scores.top}`;
+    document.getElementById("player3-score").innerText = `Player 3: ${scores.right}`;
     document.getElementById("player4-score").innerText = `Player 4: ${scores.bottom}`;
 }
 
@@ -264,7 +260,6 @@ async function updateStatsOnGameOver() {
             await updateUserProfile(username, 0, 1);
         }
     }
-
     //log("Sincronizando estadísticas...");
     await syncBattlegroundStats();
 }
@@ -299,9 +294,14 @@ function draw() {
 
     ctx.fillStyle = bottomPaddle.color;
     ctx.fillRect(bottomPaddle.x, canvas.height - paddleThickness, paddleLength, paddleThickness);
-
+    
     // Bola
     ctx.fillStyle = "white";
+
+    if (isPaused) {
+        ctx.font = "40px Courier New";
+        ctx.fillText("PAUSED", canvas.width / 2 - 70, canvas.height / 2);
+    }
     ctx.beginPath();
     ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
     ctx.fill();
@@ -319,5 +319,4 @@ resetBall();
 fetchPlayersForGame("battleground").then(() => {
     gameLoop();
 });
-
 

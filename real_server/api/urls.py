@@ -22,6 +22,7 @@ urlpatterns = [
     path('tmptournament', views.tmptournament, name='tmptournament'),
 	path('tmpbattleground', views.tmpbattleground, name='tmpbattleground'),
 	path('tmptron', views.tmptron, name='tmptron'),
+	path('duplicate_1vsIA/', views.duplicate_1vsIA, name='duplicate_1vsIA'),
 	path('duplicate_1vs1/', views.duplicate_1vs1, name='duplicate_1vs1'),
 	path('duplicate_tournament/', views.duplicate_tournament, name='duplicate_tournament'),
     path('duplicate_battleground/', views.duplicate_battleground, name='duplicate_battleground'),
@@ -37,8 +38,7 @@ urlpatterns = [
     # API endpoints
 	#
     path('update_user_profile/', views.update_user_profile, name='update_user_profile'),
-	path('get_players_for_game/', views.get_players_for_game, name='get_players_for_game'),
-    path('generate_players_names_1vs1/', views.generate_players_names_1vs1, name='generate_players_names_1vs1'),
+    path('get_players_for_game/', views.get_players_for_game, name='get_players_for_game'),
     path('get_tournament_players/', views.get_tournament_players, name='get_tournament_players'),
     path('submit_tournament_match/', views.submit_tournament_match, name='submit_tournament_match'),
     path('sync_tournament_stats/', views.sync_tournament_stats, name='sync_tournament_stats'),
@@ -51,7 +51,3 @@ urlpatterns = [
     path('lista_y_selecciona_usuarios', views.lista_y_selecciona_usuarios, name='lista_y_selecciona_usuarios'),
 ]
 
-#CLAUDE
-
-
-#CLAUDE END

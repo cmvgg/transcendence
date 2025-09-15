@@ -148,8 +148,8 @@
         {% csrf_token %}
         {% for usuario in usuarios %}
           <div>
-            <input type="checkbox" id="player_{{ usuario.id }}" name="players[]" value="{{ usuario.username }}">
-            <label for="player_{{ usuario.id }}">{{ usuario.username }}</label>
+            <input type="checkbox" id="player_{{ usuario.id }}" name="player_ids[]" value="{{ usuario.user.id }}">
+            <label for="player_{{ usuario.id }}">{{ usuario.user.username }}</label>
           </div>
         {% empty %}
           <p data-i18n="waitlist.no_players">No hay jugadores disponibles</p>
@@ -164,18 +164,14 @@
 	<script>
 		const form = document.getElementById('playersForm');
 		const playButton = document.getElementById('btnJugar');
-		const checkboxes = form.querySelectorAll('input[name="players[]"]');
+		const checkboxes = form.querySelectorAll('input[name="player_ids[]"]');
 
-		// Función para verificar si el número es una potencia de 2
 		function isPowerOfTwo(n) {
 			return n > 0 && (n & (n - 1)) === 0;
 		}
-
-		// Escuchar cambios en los checkboxes
 		checkboxes.forEach((checkbox) => {
 			checkbox.addEventListener('change', () => {
         const selectedCheckboxes = Array.from(checkboxes).filter(cb => cb.checked);
-        // Habilitar o deshabilitar el botón "Jugar"
         playButton.disabled = !isPowerOfTwo(selectedCheckboxes.length) || selectedCheckboxes.length < 4;
 			});
 		});

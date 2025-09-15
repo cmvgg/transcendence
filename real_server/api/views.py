@@ -15,7 +15,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 from django.db.models import Q
 import json, random
-from .models import Tournament, TournamentStats
+from .models import User, Tournament, Match, ProfileData, UsersInTournament, UserProfile
 
 # Importar modelos y serializers
 from .models import User, Tournament, Match
@@ -24,7 +24,6 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login
 
 # Importar modelos y serializers
-from .models import User, Tournament, Match, TournamentStats, ProfileData, UsersInTournament, UserProfile
 from .serializers import (
     UserSerializer,
     TournamentSerializer,
@@ -53,19 +52,19 @@ def playground(request):
             'redirect_url': 'select',
             'redirect_text': 'Volver'
         })
-    top = TournamentStats.objects.order_by('wins').last()
+    top = UserProfile.objects.order_by('wins').last()
     return render(request, 'playground.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'high_score': top})
 
 def playground2(request):
     global loged_user, loged_stats
 
-    if not request.user.is_authenticated or not request.user.is_active:
+    if not request.user.is_authenticated:
         return render(request, 'error.html', {
             'message': "No hay suficientes usuarios para jugar 1vsIA.",
             'redirect_url': 'select',
             'redirect_text': 'Volver'
         })
-    top = TournamentStats.objects.order_by('wins').last()
+    top = UserProfile.objects.order_by('wins').last()
     return render(request, 'playground_copy.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'high_score': top})
 
 def battleground(request):
@@ -79,7 +78,7 @@ def battleground(request):
             'redirect_url': 'select',
             'redirect_text': 'Volver'
         })
-    top = TournamentStats.objects.order_by('wins').last()
+    top = UserProfile.objects.order_by('wins').last()
     return render(request, 'battleground.html', {'loged_user':loged_user, 'loged_stats':loged_stats, 'high_score': top})
 
 def tron(request):
@@ -93,7 +92,7 @@ def tron(request):
             'redirect_url': 'select',
             'redirect_text': 'Volver'
         })
-    top = TournamentStats.objects.order_by('wins').last()
+    top = UserProfile.objects.order_by('wins').last()
     return render(request, 'playground_tron.html', {'loged_user':loged_user, 'loged_stats':loged_stats, 'high_score': top})
 
 def tournament(request):
@@ -107,7 +106,7 @@ def tournament(request):
             'redirect_url': 'select',
             'redirect_text': 'Volver'
         })
-    top = TournamentStats.objects.order_by('wins').last()
+    top = UserProfile.objects.order_by('wins').last()
     return render(request, 'tournament.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'high_score': top})
 
 def about(request):
@@ -206,43 +205,72 @@ def register(request):
 
 def tmp1vs1(request):
     global loged_user, loged_stats
-    usuarios = TournamentStats.objects.all()  # Obtén todos los usuarios
+    usuarios = UserProfile.objects.filter(is_online=True)
     return render(request, '1vs1_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
 
 def tmpbattleground(request):
     global loged_user, loged_stats
-    usuarios = TournamentStats.objects.all()  # Obtén todos los usuarios
+    usuarios = UserProfile.objects.all()  # Obtén todos los usuarios
     return render(request, 'battleground_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
 
 def tmptron(request):
     global loged_user, loged_stats
-    usuarios = TournamentStats.objects.all()  # Obtén todos los usuarios
+    usuarios = UserProfile.objects.all()  # Obtén todos los usuarios
     return render(request, 'tron_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
 
 def tmptournament(request):
     global loged_user, loged_stats
-    usuarios = TournamentStats.objects.all()  # Obtén todos los usuarios
+    usuarios = UserProfile.objects.all()  # Obtén todos los usuarios
     return render(request, 'tournament_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
+
+@csrf_exempt
+def duplicate_1vsIA(request):
+    if request.method == 'POST':
+        try:
+            # Eliminar todos los registros existentes en UsersInTournament
+            UsersInTournament.objects.all().delete()
+
+            # Obtener el usuario logueado
+            if not request.user.is_authenticated:
+                return JsonResponse({'error': 'Usuario no autenticado.'}, status=401)
+
+            player = UserProfile.objects.get(user=request.user)
+
+            # Crear un nuevo registro en UsersInTournament
+            UsersInTournament.objects.create(
+                username=player.user.username,
+                wins=player.wins,
+                losses=player.losses,
+                tournaments_won=player.tournaments_won
+            )
+
+            # Redirigir directamente al juego
+            return JsonResponse({'redirect_url': '/playground2'}, status=200)
+        except UserProfile.DoesNotExist:
+            return JsonResponse({'error': 'El usuario logueado no tiene un perfil asociado.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'error': str(e)}, status=500)
+    return JsonResponse({'error': 'Método no permitido.'}, status=405)
 
 @csrf_exempt
 def duplicate_1vs1(request):
     if request.method == 'POST':
         try:
-            selected_players = request.POST.getlist('players[]')
-            if not selected_players or len(selected_players) < 2:
-                return JsonResponse({'error': 'Se necesitan al menos 2 jugadores para jugar.'}, status=400)
+            selected_player_ids = request.POST.getlist('player_ids[]')
+            if not selected_player_ids or len(selected_player_ids) != 2:
+                return JsonResponse({'error': 'Se necesitan exactamente 2 jugadores para 1vs1.'}, status=400)
             UsersInTournament.objects.all().delete()
-            for username in selected_players:
-                player = TournamentStats.objects.get(username=username)
+
+            for player_id in selected_player_ids:
+                player = UserProfile.objects.get(user_id=player_id)
                 UsersInTournament.objects.create(
-                    id=player.id,
-                    username=player.username,
+                    username=player.user.username,
                     wins=0,
                     losses=0,
-                    tournaments_won=0 
+                    tournaments_won=0
                 )
             return redirect('playground')
-        except TournamentStats.DoesNotExist:
+        except UserProfile.DoesNotExist:
             return JsonResponse({'error': 'Uno o más jugadores no existen.'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
@@ -252,21 +280,20 @@ def duplicate_1vs1(request):
 def duplicate_battleground(request):
     if request.method == 'POST':
         try:
-            selected_players = request.POST.getlist('players[]')
-            if not selected_players or len(selected_players) < 4:
+            selected_player_ids = request.POST.getlist('player_ids[]')
+            if not selected_player_ids or len(selected_player_ids) < 4:
                 return JsonResponse({'error': 'Se necesitan al menos 4 jugadores para jugar.'}, status=400)
             UsersInTournament.objects.all().delete()
-            for username in selected_players:
-                player = TournamentStats.objects.get(username=username)
+            for player_id in selected_player_ids:
+                player = UserProfile.objects.get(user_id=player_id)
                 UsersInTournament.objects.create(
-                    id=player.id,
-                    username=player.username,
+                    username=player.user.username,
                     wins=0,
                     losses=0,
                     tournaments_won=0 
                 )
             return redirect('battleground')
-        except TournamentStats.DoesNotExist:
+        except UserProfile.DoesNotExist:
             return JsonResponse({'error': 'Uno o más jugadores no existen.'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
@@ -276,21 +303,20 @@ def duplicate_battleground(request):
 def duplicate_tron(request):
     if request.method == 'POST':
         try:
-            selected_players = request.POST.getlist('players[]')
-            if not selected_players or len(selected_players) < 2:
+            selected_player_ids = request.POST.getlist('player_ids[]')
+            if not selected_player_ids or len(selected_player_ids) < 2:
                 return JsonResponse({'error': 'Se necesitan al menos 2 jugadores para jugar.'}, status=400)
             UsersInTournament.objects.all().delete()
-            for username in selected_players:
-                player = TournamentStats.objects.get(username=username)
+            for player_id in selected_player_ids:
+                player = UserProfile.objects.get(user_id=player_id)
                 UsersInTournament.objects.create(
-                    id=player.id,
-                    username=player.username,
+                    username=player.user.username,
                     wins=0,
                     losses=0,
                     tournaments_won=0 
                 )
             return redirect('tron')
-        except TournamentStats.DoesNotExist:
+        except UserProfile.DoesNotExist:
             return JsonResponse({'error': 'Uno o más jugadores no existen.'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
@@ -301,29 +327,22 @@ from math import log2
 def duplicate_tournament(request):
     if request.method == 'POST':
         try:
-            # Obtener los jugadores seleccionados desde la solicitud
-            selected_players = request.POST.getlist('players[]')
-            # Verificar si se seleccionaron jugadores
-            if not selected_players or len(selected_players) < 4:
+            selected_player_ids = request.POST.getlist('player_ids[]')
+            if not selected_player_ids or len(selected_player_ids) < 4:
                 return JsonResponse({'error': 'Se necesitan al menos 4 jugadores para un torneo.'}, status=400)
-            # Verificar si el número de jugadores es una potencia de 2
-            if log2(len(selected_players)) % 1 != 0:
+            if log2(len(selected_player_ids)) % 1 != 0:
                 return JsonResponse({'error': 'El número de jugadores debe ser una potencia de 2 (4, 8, 16, 32, etc.).'}, status=400)
-            # Eliminar todos los usuarios existentes en UsersInTournament
             UsersInTournament.objects.all().delete()
-            # Insertar los nuevos jugadores seleccionados
-            for username in selected_players:
-                player = TournamentStats.objects.get(username=username)
+            for player_id in selected_player_ids:
+                player = UserProfile.objects.get(user_id=player_id)
                 UsersInTournament.objects.create(
-                    id=player.id,  # Copiar el ID del jugador
-                    username=player.username,  # Copiar el username del jugador
-                    wins=0,  # Inicializar wins en 0
-                    losses=0,  # Inicializar losses en 0
-                    tournaments_won=0  # Inicializar tournaments_won en 0
+                    username=player.user.username,
+                    wins=0,
+                    losses=0,
+                    tournaments_won=0
                 )
-            # Redirigir a la página 'tournament'
             return redirect('tournament')
-        except TournamentStats.DoesNotExist:
+        except UserProfile.DoesNotExist:
             return JsonResponse({'error': 'Uno o más jugadores no existen.'}, status=404)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
@@ -346,7 +365,7 @@ def editprofile(request):
             # hacer de user el usuario logeado
             #user = User.objects.get(username=nickname)
             user = request.user
-            stats = TournamentStats.objects.get(user=user)
+            stats = UserProfile.objects.get(user=user)
             user.set_password(password)
             user.username = nickname
             user.first_name = name
@@ -358,7 +377,7 @@ def editprofile(request):
             user.UserProfile.save()
             login(request, user)
             log_user = authenticate(request, username=nickname, password=password)
-            stats = TournamentStats.objects.get(user=log_user)
+            stats = UserProfile.objects.get(user=log_user)
             #return render(request, 'signin.html', {'form': form})
             return redirect("profile.html", {'log_user': log_user, 'loged_stats':stats})
         
@@ -424,39 +443,13 @@ def profile_view(request):
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import TournamentStats, UsersInTournament
+from .models import UsersInTournament
 from rest_framework import status
 import random
 
 def calculate_win_rate(wins, losses):
     total = wins + losses
     return (wins / total) * 100 if total > 0 else 0
-
-def generate_random_player_names_1vs1():
-    """Genera nombres aleatorios únicos para 1vs1."""
-    base_names = ['Alpha', 'Beta', 'Gamma', 'Delta', 'Epsilon', 'Zeta','Eta', 'Theta', 'Iota', 'Kappa', 'Lambda', 'Mu', 'Nu', 'Xi', 'Omicron', 'Pi', 'Rho', 'Sigma', 'Tau', 'Upsilon', 'Phi', 'Chi', 'Psi', 'Omega']
-    return random.sample(base_names, 4)
-
-def create_user_profile(username, wins=0, losses=0, tournaments_won=0):
-    """Crea un nuevo perfil de usuario en TournamentStats."""
-    user = TournamentStats.objects.create(
-        username=username,
-        wins=wins,
-        losses=losses,
-        tournaments_won=tournaments_won
-    )
-    TournamentStats.objects.create(
-        username=username,
-        wins=wins,
-        losses=losses,
-        tournaments_won=tournaments_won
-    )
-    return {
-        'username': user.username,
-        'wins': user.wins,
-        'losses': user.losses,
-        'tournaments_won': user.tournaments_won,
-    }
 
 def update_user_tournament_profile(username, wins=0, losses=0, tournaments_won=0):
     """Actualiza un perfil de usuario existente en UsersInTournament."""
@@ -482,10 +475,9 @@ def get_tournament_players(request):
 
     try:
         total_players = UsersInTournament.objects.count()
-
         # Buscar la mayor potencia de 2 posible con los jugadores disponibles
         max_power = 1
-        while max_power * 2 <= total_players:
+        while (max_power * 2) <= total_players:
             max_power *= 2
 
         if max_power < 2:
@@ -522,35 +514,17 @@ def submit_tournament_match(request):
         winner_entry.save()
         loser_entry.save()
 
-        # Si el torneo ha finalizado, sincronizar con TournamentStats
+        # Si el torneo ha finalizado, sincronizar con UserProfile
         if is_final:
-            sync_users_in_tournament_to_stats()
+            sync_users_in_tournament_to_user_profile()
 
         return Response({'message': 'Partido registrado correctamente'}, status=200)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
-@api_view(['POST'])
-def generate_players_names_1vs1(request):
-    """Genera jugadores aleatorios e inicializa sus stats."""
-    try:
-        player_names = generate_random_player_names_1vs1()
-        created_players = []
-        for name in player_names:
-            data = create_user_profile(name, wins=0, losses=0)
-            created_players.append(data)
-
-        return Response({
-            'status': 'success',
-            'message': 'Jugadores generados e inicializados.',
-            'players': created_players
-        }, status=status.HTTP_201_CREATED)
-    except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
 @api_view(['GET'])
 def get_players_for_game(request):
-    """Devuelve los primeros jugadores disponibles según el tipo de juego."""
+    """Devuelve los jugadores disponibles según el tipo de juego."""
     game_type = request.GET.get('game_type', '1vs1')
 
     try:
@@ -558,23 +532,17 @@ def get_players_for_game(request):
             players = UsersInTournament.objects.order_by('id')[:2]
         elif game_type == 'battleground':
             players = UsersInTournament.objects.order_by('id')[:4]
-        elif game_type == '1vsIA':
-            players = UsersInTournament.objects.order_by('id')[:1]
         elif game_type == 'tron':
             players = UsersInTournament.objects.order_by('id')[:2]
+        elif game_type == '1vsIA':
+            players = UsersInTournament.objects.order_by('id')[:1]
         else:
-            return Response({'error': 'Tipo de juego no soportado'}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({'error': 'Tipo de juego no soportado'}, status=400)
 
-        print("Jugadores obtenidos:", players)  # Agrega este log
-        serialized_players = [{
-            'username': p.username,
-            'wins': p.wins,
-            'losses': p.losses
-        } for p in players]
-
-        return Response({'players': serialized_players}, status=status.HTTP_200_OK)
+        serialized_players = [{'username': p.username, 'wins': p.wins, 'losses': p.losses} for p in players]
+        return Response({'players': serialized_players}, status=200)
     except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'error': str(e)}, status=500)
 
 @api_view(['POST'])
 def update_user_profile(request):
@@ -582,46 +550,54 @@ def update_user_profile(request):
     username = request.data.get('username')
     wins = int(request.data.get('wins', 0))
     losses = int(request.data.get('losses', 0))
+    tournaments_won = int(request.data.get('tournaments_won', 0))
 
     if not username:
-        return Response({'error': 'username es requerido'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({'error': 'El nombre de usuario es requerido'}, status=400)
 
     try:
-        data = update_user_tournament_profile(username, wins, losses)
-        return Response({
-            'status': 'success',
-            'message': f'{username} actualizado correctamente.',
-            'data': data
-        }, status=status.HTTP_200_OK)
+        user = UsersInTournament.objects.get(username=username)
+        user.wins += wins
+        user.losses += losses
+        user.tournaments_won += tournaments_won
+        user.save()
+        return Response({'message': f'{username} actualizado correctamente.'}, status=200)
+    except UsersInTournament.DoesNotExist:
+        return Response({'error': f'El usuario {username} no existe.'}, status=404)
     except Exception as e:
-        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({'error': str(e)}, status=500)
 
-def sync_users_in_tournament_to_stats():
+
+
+
+
+
+
+def sync_users_in_tournament_to_user_profile():
     try:
         users_in_tournament = UsersInTournament.objects.all()
         for user in users_in_tournament:
-            stats_entry, _ = TournamentStats.objects.get_or_create(username=user.username)
-            stats_entry.wins += user.wins
-            stats_entry.losses += user.losses
-            stats_entry.tournaments_won += user.tournaments_won
-            stats_entry.save()
-        # Eliminar todos los usuarios de UsersInTournament después de sincronizar
+            user_profile = UserProfile.objects.get(user__username=user.username)
+            user_profile.wins += user.wins
+            user_profile.losses += user.losses
+            user_profile.tournaments_won += user.tournaments_won
+            user_profile.save()
         users_in_tournament.delete()
+    except UserProfile.DoesNotExist:
+        print("Error: No se encontró el perfil de usuario correspondiente.")
     except Exception as e:
         print(f"Error al sincronizar datos: {str(e)}")
-        raise Exception(f"Error al sincronizar datos: {str(e)}")
 
 @api_view(['POST'])
 def sync_1vs1_stats(request):
-    """Sincroniza los datos de UsersInTournament con TournamentStats para el modo 1vs1."""
+    """Sincroniza los datos de UsersInTournament con UserProfile para el modo 1vs1."""
     try:
         users_in_tournament = UsersInTournament.objects.all()
         for user in users_in_tournament:
-            stats_entry, _ = TournamentStats.objects.get_or_create(username=user.username)
-            stats_entry.wins += user.wins
-            stats_entry.losses += user.losses
-            stats_entry.tournaments_won += user.tournaments_won
-            stats_entry.save()
+            user_profile = UserProfile.objects.get(user__username=user.username)
+            user_profile.wins += user.wins
+            user_profile.losses += user.losses
+            user_profile.save()
         users_in_tournament.delete()
         return Response({'message': 'Datos sincronizados correctamente para 1vs1.'}, status=200)
     except Exception as e:
@@ -629,49 +605,47 @@ def sync_1vs1_stats(request):
 
 @api_view(['POST'])
 def sync_1vsIA_stats(request):
-    """Sincroniza los datos de UsersInTournament con TournamentStats para el modo 1vsIA."""
+    """Sincroniza los datos de UsersInTournament con UserProfile para el modo 1vsIA."""
     try:
         users_in_tournament = UsersInTournament.objects.all()
         for user in users_in_tournament:
-            stats_entry, _ = TournamentStats.objects.get_or_create(username=user.username)
-            stats_entry.wins += user.wins
-            stats_entry.losses += user.losses
-            stats_entry.save()
-        UsersInTournament.objects.all().delete()
+            user_profile = UserProfile.objects.get(user__username=user.username)
+            user_profile.wins += user.wins
+            user_profile.losses += user.losses
+            user_profile.save()
+        users_in_tournament.delete()
         return Response({'message': 'Datos sincronizados correctamente para 1vsIA.'}, status=200)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
 
 @api_view(['POST'])
 def sync_tron_stats(request):
-    """Sincroniza los datos de UsersInTournament con TournamentStats para el modo Tron."""
+    """Sincroniza los datos de UsersInTournament con UserProfile para el modo Tron."""
     try:
-        print("Sincronizando estadísticas de Tron...")  # Agrega este log
         users_in_tournament = UsersInTournament.objects.all()
         for user in users_in_tournament:
-            stats_entry, _ = TournamentStats.objects.get_or_create(username=user.username)
-            stats_entry.wins += user.wins
-            stats_entry.losses += user.losses
-            stats_entry.tournaments_won += user.tournaments_won
-            stats_entry.save()
+            user_profile = UserProfile.objects.get(user__username=user.username)
+            user_profile.wins += user.wins
+            user_profile.losses += user.losses
+            user_profile.tournaments_won += user.tournaments_won
+            user_profile.save()
         users_in_tournament.delete()
         return Response({'message': 'Datos sincronizados correctamente para Tron.'}, status=200)
     except Exception as e:
-        print(f"Error al sincronizar datos: {str(e)}")  # Agrega este log
         return Response({'error': f'Error al sincronizar datos: {str(e)}'}, status=500)
 
 @api_view(['POST'])
 def sync_tournament_stats(request):
-    """Sincroniza los datos de UsersInTournament con TournamentStats para torneo y battleground."""
+    """Sincroniza los datos de UsersInTournament con UserProfile para torneo y battleground."""
     try:
         users_in_tournament = UsersInTournament.objects.all()
         for user in users_in_tournament:
-            stats_entry, _ = TournamentStats.objects.get_or_create(username=user.username)
-            stats_entry.wins += user.wins
-            stats_entry.losses += user.losses
-            stats_entry.tournaments_won += user.tournaments_won
-            stats_entry.save()
-        UsersInTournament.objects.all().delete()
+            user_profile = UserProfile.objects.get(user__username=user.username)
+            user_profile.wins += user.wins
+            user_profile.losses += user.losses
+            user_profile.tournaments_won += user.tournaments_won
+            user_profile.save()
+        users_in_tournament.delete()
         return Response({'message': 'Datos sincronizados correctamente para torneo y battleground.'}, status=200)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
@@ -682,7 +656,7 @@ class RegisterUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
-        
+
 #user friends
 from django.contrib.auth import get_user_model # Importa el modelo de usuario actual
 

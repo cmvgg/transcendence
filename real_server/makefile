@@ -23,5 +23,6 @@ clean:
 	docker system prune -f --volumes || true;\
 	find . -name "__pycache__" -type d -exec rm -r {} +	;\
 	find . -name "*.pyc" -delete 
+	rm -rf media
 
 .PHONY: all re down clean

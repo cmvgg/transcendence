@@ -9,10 +9,10 @@
 		"about": "Acerca de nosotros"
 	},
 
-	"1up": "1UP",
 	"player1_name": "[Nombre jugador 1]",
-	"2up": "2UP",
 	"player2_name": "[Nombre jugador 2]",
+	"player3_name": "[Nombre jugador 3]",
+	"player4_name": "[Nombre jugador 4]",
 
 	"button": {
 		"start": "Iniciar",

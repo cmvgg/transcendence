@@ -1,39 +1,113 @@
 window.onload = async function () {
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+    try {
+        log("Cargando jugador...");
+        await fetchPlayer();
+        log("Jugador cargado con éxito.");
+        updateAIDifficulty();
+        resetBall();
+        gameLoop();
+    } catch (error) {
+        log("Error al iniciar el juego:", error.message);
+    }
+};
+
+/*********************************************
+ * 1. Redirigir console.log al elemento HTML *
+ *********************************************/
+function logMessage(message) {
+    const logDiv = document.getElementById("log");
+    const p = document.createElement("p");
+    p.innerHTML = message.replace(/\n/g, "<br>");
+    logDiv.appendChild(p);
+    logDiv.scrollTop = logDiv.scrollHeight;
+}
+
+const originalConsoleLog = console.log;
+function log(...args) {
+    originalConsoleLog(...args);
+    args.forEach(arg => {
+        logMessage(typeof arg === "object" ? JSON.stringify(arg) : arg);
+    });
+}
 
 /********************
  * Conexión con API *
  ********************/
 let playerUsername = "";
 
-//Fetch del jugador humano
+// Fetch del jugador humano
 async function fetchPlayer() {
     try {
-        const response = await fetch("http://localhost:8000/get_players_for_game?game_type=1vsIA");
+        const response = await fetch("/get_players_for_game?game_type=1vsIA");
         const data = await response.json();
-        if (data.players && data.players.length > 0) {
+        if (response.ok && data.players && data.players.length > 0) {
             playerUsername = data.players[0].username;
-            console.log("Jugador cargado:", playerUsername);
+            log("Jugador cargado:", playerUsername);
         } else {
-            console.error("No se pudo obtener jugador.");
+            throw new Error(data.error || "No se pudo obtener jugador.");
         }
     } catch (error) {
-        console.error("Error obteniendo jugador:", error);
+        log("Error obteniendo jugador:", error.message);
+        throw error;
     }
 }
 
-//Enviar stats al backend
+// Enviar estadísticas al backend
 async function updateUserProfile(username, wins, losses) {
     try {
-        await fetch("http://localhost:8000/update_user_profile/", {
+        const response = await fetch("/update_user_profile/", {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
-            body: JSON.stringify({username, wins, losses})
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+            },
+            body: JSON.stringify({ username, wins, losses }),
         });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error || "Error al actualizar perfil.");
+        }
+        log("Perfil actualizado:", data);
     } catch (error) {
-        console.error("Error actualizando perfil:", error);
+        log("Error actualizando perfil:", error.message);
     }
+}
+
+// Sincronizar estadísticas de 1vsIA
+async function sync1vsIAStats() {
+    try {
+        const response = await fetch("/sync_1vsIA_stats/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRFToken": getCookie("csrftoken"),
+            },
+        });
+
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error || "Error al sincronizar estadísticas.");
+        }
+        log("Estadísticas 1vsIA sincronizadas:", data.message);
+    } catch (error) {
+        log("Error al sincronizar estadísticas 1vsIA:", error.message);
+    }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let cookie of cookies) {
+            cookie = cookie.trim();
+            if (cookie.startsWith(name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
 }
 
 async function checkGameOver() {
@@ -41,14 +115,12 @@ async function checkGameOver() {
         gameOver = true;
         winner = "¡Has ganado!";
         await updateUserProfile(playerUsername, 1, 0);
-        await updateUsersInTournament(playerUsername, 1, 0);
-        await syncTournamentStats();
+        await sync1vsIAStats();
     } else if (rightScore >= maxScore) {
         gameOver = true;
         winner = "La IA ha ganado...";
         await updateUserProfile(playerUsername, 0, 1);
-        await updateUsersInTournament(playerUsername, 0, 1);
-        await syncTournamentStats();
+        await sync1vsIAStats();
     }
 
     if (gameOver) {
@@ -58,50 +130,12 @@ async function checkGameOver() {
     }
 }
 
-async function updateUsersInTournament(username, wins, losses) {
-    try {
-        const response = await fetch('/update_user_profile/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-            body: JSON.stringify({ username, wins, losses })
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-            console.error("Error actualizando UsersInTournament:", data);
-        } else {
-            console.log("UsersInTournament actualizado:", data);
-        }
-    } catch (error) {
-        console.error("Error al actualizar UsersInTournament:", error.message);
-    }
-}
-
-async function syncTournamentStats() {
-    try {
-        const response = await fetch('/sync_tournament_stats/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-        });
-        const data = await response.json();
-        console.log(data.message || "Sincronización completada.");
-    } catch (error) {
-        console.error("Error al sincronizar estadísticas:", error.message);
-    }
-}
-
-await fetchPlayer(); //Espera al jugador antes de arrancar
-
-
 /********************
  * Lógica del Juego *
  ********************/
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
 const paddleWidth = 3;
 const paddleHeight = 30;
 const borderHeight = 5;
@@ -135,9 +169,9 @@ const AI_CONFIG = {
     }
 };
 const DIFFICULTY_SETTINGS = {
-    easy:    { initialSpeed: 1.5, maxSpeed: 4, growth: 1.002 },
-    medium:  { initialSpeed: 2.0, maxSpeed: 6, growth: 1.003 },
-    hard:    { initialSpeed: 2.5, maxSpeed: 8, growth: 1.004 }
+    easy: { initialSpeed: 1.5, maxSpeed: 4, growth: 1.002 },
+    medium: { initialSpeed: 2.0, maxSpeed: 6, growth: 1.003 },
+    hard: { initialSpeed: 2.5, maxSpeed: 8, growth: 1.004 }
 };
 let currentSettings = DIFFICULTY_SETTINGS[AI_CONFIG.difficultyLevel];
 
@@ -145,32 +179,21 @@ const difficultySelect = document.getElementById('difficultySelect');
 AI_CONFIG.difficultyLevel = difficultySelect.value;
 
 document.addEventListener("keydown", (e) => {
-    if (!isPaused) {
-        if (e.key === "w")
-            leftPaddle.dy = -5;
-        if (e.key === "s")
-            leftPaddle.dy = 5;
-    }
-});
-document.addEventListener("keyup", (e) => {
-    if (e.key === "w" || e.key === "s")
-        leftPaddle.dy = 0;
-    if (e.key === "p" || e.key === "P")
+    if (e.key === "ArrowUp")
+        rightPaddle.dy = -5;
+    if (e.key === "ArrowDown")
+        rightPaddle.dy = 5;
+    if (e.key.toLowerCase() === "p")
         isPaused = !isPaused;
 });
-
-difficultySelect.addEventListener('change', (e) => {
-    AI_CONFIG.difficultyLevel = e.target.value;
-    updateAIDifficulty();
-});
-
-document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
-document.getElementById("startButton").addEventListener("click", () => isPaused = false);
+document.addEventListener("keyup", (e) => {
+    if (["ArrowUp", "ArrowDown"].includes(e.key)) rightPaddle.dy = 0;
+});;
 
 function updateAIDifficulty() {
     const difficulty = AI_CONFIG.difficulties[AI_CONFIG.difficultyLevel];
     AI_CONFIG.reactionThreshold = difficulty.reactionThreshold;
-    rightPaddle.speed = AI_CONFIG.speed/*  * difficulty.speedMultiplier */;
+    rightPaddle.speed = AI_CONFIG.speed;
 
     currentSettings = DIFFICULTY_SETTINGS[AI_CONFIG.difficultyLevel];
     resetBall();
@@ -293,7 +316,3 @@ function gameLoop() {
         requestAnimationFrame(gameLoop);
     }
 }
-
-updateAIDifficulty();
-gameLoop();
-};

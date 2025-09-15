@@ -138,7 +138,42 @@
     
      <div class="row fit-content" style="display: flex; justify-content: space-around;">
       <div class="col text-center" style="display: flex; justify-content: flex-start; height: 250px; max-width: 200px;">
-        <button class="arcade_botton border-5 rounded-circle" onclick="window.location.href='/playground2'">One Player</button>
+        <!-- <button class="arcade_botton border-5 rounded-circle" onclick="window.location.href='/playground2'">One Player</button> -->
+        <button class="arcade_botton border-5 rounded-circle" onclick="start1vsIA()">One Player</button>
+        <script>
+          async function start1vsIA() {
+            try {
+              const response = await fetch('/duplicate_1vsIA/', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken'),},
+              });
+              const data = await response.json();
+              if (response.ok) {
+                window.location.href = data.redirect_url;
+              } else {
+                console.error("Error:", data.error);
+                alert("Error: " + data.error);
+              }
+            } catch (error) {
+              console.error("Error en la conexión:", error.message);
+              alert("Error en la conexión: " + error.message);
+            }
+          }
+          function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+              const cookies = document.cookie.split(';');
+              for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith(name + '=')) {
+                  cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                  break;
+                }
+              }
+            }
+            return cookieValue;
+          }
+        </script>
       </div>
       <div class="col text-center" style="display: flex; justify-content: center; height: 250px; max-width: 200px;">
         <button class="arcade_botton border-5 rounded-circle" onclick="window.location.href='/tmp1vs1'">Two Players</button>

@@ -43,6 +43,10 @@ class Migration(migrations.Migration):
                 #('alias', models.CharField(max_length=50, unique=True, blank=True, null=True)),
                 #('wins', models.IntegerField(default=0)),
                 #('losses', models.IntegerField(default=0)),
+                ('wins', models.IntegerField(default=0)),
+                ('losses', models.IntegerField(default=0)),
+                ("tournaments_won", models.IntegerField(default=0)),
+                ("is_online", models.BooleanField(default=False)),
             ],
         ),
         migrations.CreateModel(

@@ -37,7 +37,7 @@ class Tournament {
         if (!match) return;
 
         match.winner = winner;
-        //log(`Partido finalizado: ${match.player1} vs ${match.player2} - Ganador: ${winner}`);
+        log(`Partido finalizado: ${match.player1} vs ${match.player2} - Ganador: ${winner}`);
 
         this.currentMatchIndex++;
 
@@ -51,7 +51,7 @@ class Tournament {
         const winners = this.matches[this.currentRound].map(match => match.winner).filter(winner => winner !== "BYE");
 
         if (winners.length === 1) {
-            //log(`🏆 ¡El campeón del torneo es ${winners[0]}!`);
+            log(`🏆 ¡El campeón del torneo es ${winners[0]}!`);
             return;
         }
 
@@ -69,7 +69,7 @@ class Tournament {
         this.matches.push(nextRoundMatches);
         this.currentRound++;
         this.currentMatchIndex = 0;
-        //log(`Iniciando ronda ${this.currentRound + 1}`);
+        log(`Iniciando ronda ${this.currentRound + 1}`);
     }
 
     isTournamentOver() {
@@ -81,7 +81,7 @@ class Tournament {
 /*********************************************
  * 2. Redirigir console.log al elemento HTML *
  *********************************************/
-/* function logMessage(message) {
+function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
     p.innerHTML = message.replace(/\n/g, "<br>");
@@ -95,7 +95,7 @@ function log(...args) {
     args.forEach(arg => {
         logMessage(typeof arg === "object" ? JSON.stringify(arg) : arg);
     });
-} */
+}
 
 /***********************
  * 3. Lógica del Juego *
@@ -187,12 +187,12 @@ function checkGameOver() {
     if (leftScore >= maxScore) {
         gameOver = true;
         currentMatch.winner = currentMatch.player1;
-        //`¡${currentMatch.winner} ha ganado el partido!`);
+        log(`¡${currentMatch.winner} ha ganado el partido!`);
         endMatch();
     } else if (rightScore >= maxScore) {
         gameOver = true;
         currentMatch.winner = currentMatch.player2;
-        //log(`¡${currentMatch.winner} ha ganado el partido!`);
+        log(`¡${currentMatch.winner} ha ganado el partido!`);
         endMatch();
     } else {
         resetBall();
@@ -227,10 +227,10 @@ function resetGameForNextMatch() {
     resetBall();
     currentMatch = tournament.getCurrentMatch();
     if (!currentMatch) {
-        //log("Error: No se pudo obtener el siguiente partido.");
+        log("Error: No se pudo obtener el siguiente partido.");
         return;
     }
-    //log(`\nNuevo partido: ${currentMatch.player1} vs ${currentMatch.player2}`);
+    log(`\nNuevo partido: ${currentMatch.player1} vs ${currentMatch.player2}`);
     gameLoop();
 }
 
@@ -281,16 +281,16 @@ async function endMatch() {
             body: JSON.stringify({ winner: winnerName, loser: loserName, is_final: isFinal })
         });
         const data = await response.json();
-        //log(data.message || "Resultado reportado.");
+        log(data.message || "Resultado reportado.");
     } catch (err) {
-        //log("Error al reportar el partido:", err.message);
+        log("Error al reportar el partido:", err.message);
     }
 
     tournament.setWinner(winnerName);
     if (!tournament.isTournamentOver()) {
         resetGameForNextMatch();
     } else {
-        //log(`🏆 Torneo finalizado. Campeón: ${winnerName}`);
+        log(`🏆 Torneo finalizado. Campeón: ${winnerName}`);
     }
 }
 
@@ -350,7 +350,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         const data = await response.json();
 
         if (!response.ok) {
-            //log("Error al obtener jugadores:", data.error);
+            log("Error al obtener jugadores:", data.error);
             return;
         }
 
@@ -361,12 +361,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         renderBracket(tournament.matches);
 
         if (currentMatch) {
-            //log(`Comienza el torneo. Primer partido: ${currentMatch.player1} vs ${currentMatch.player2}`);
+            log(`Comienza el torneo. Primer partido: ${currentMatch.player1} vs ${currentMatch.player2}`);
             resetGameForNextMatch();
         } else {
-            //log("Error: No hay partidos disponibles.");
+            log("Error: No hay partidos disponibles.");
         }
     } catch (err) {
-        //log("Error de red:", err.message);
+        log("Error de red:", err.message);
     }
 });

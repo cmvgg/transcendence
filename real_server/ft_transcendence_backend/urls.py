@@ -35,8 +35,7 @@ urlpatterns = [
 
     # Endpoints de API específicas
     path('update_user_profile/',          api_views.update_user_profile,      name='update_user_profile'),
-	path('get_players_for_game/',         api_views.get_players_for_game,       name='get_players_for_game'),
-    path('generate_players_names_1vs1/',  api_views.generate_players_names_1vs1, name='generate_players_names_1vs1'),
+	#path('get_players_for_game/',         api_views.get_players_for_game,       name='get_players_for_game'),
     #path('generate_players_names/',       api_views.generate_players_names,     name='generate_players_names'),
     #path('create-tournament/',            api_views.create_tournament,          name='create_tournament'),
     #path('tournament-results/',           api_views.tournament_results,         name='tournament_results'),
