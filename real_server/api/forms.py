@@ -24,7 +24,7 @@ class RegisterForm(forms.Form):
     nickname = forms.CharField(label='Nickname')
     email = forms.EmailField(label='Email')
     password = forms.CharField(max_length=20, widget=forms.PasswordInput())
-    avatar = forms.ImageField(label='avatar')
+    avatar = forms.ImageField(label='avatar', required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

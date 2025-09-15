@@ -39,13 +39,10 @@ class Migration(migrations.Migration):
                 )),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                # more info if needed
-                #('alias', models.CharField(max_length=50, unique=True, blank=True, null=True)),
-                #('wins', models.IntegerField(default=0)),
-                #('losses', models.IntegerField(default=0)),
-                ('wins', models.IntegerField(default=0)),
-                ('losses', models.IntegerField(default=0)),
-                ("tournaments_won", models.IntegerField(default=0)),
+                # more info to use instead of TournamentStats
+                ('wins', models.IntegerField(default=0, null = True)),
+                ('losses', models.IntegerField(default=0, blank=True, null=True)),
+                ("tournaments_won", models.IntegerField(default=0, blank=True, null=True)),
                 ("is_online", models.BooleanField(default=False)),
             ],
         ),
@@ -70,3 +67,4 @@ class Migration(migrations.Migration):
             ],
         ),
     ]
+ 

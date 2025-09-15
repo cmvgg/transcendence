@@ -1,6 +1,9 @@
 {% load crispy_forms_tags %}
 {% load static %}
 
+
+
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -40,11 +43,11 @@
     <div style="  color: whitesmoke; height: 350px; font-family: Pixelify Sans, sans-serif;  border-radius: 10px;" class="col-3 shadow-lm text-center border-5 border-white">
       
       <div class="container py-3">
-        <h2 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)">ADD FRIENDS</h2>
+        <h2 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)">DELETE FRIENDS</h2>
         {% block content %}
         <form method="post">
             {% csrf_token %} {# Token de seguridad para formularios de Django #}
-            <h2>Select users</h2>
+            <h2>Choose friends to delete</h2>
             <ul>
                 {% for usuario in usuarios %}
                     {% if user.id != usuario.id%}
@@ -57,7 +60,7 @@
                     {% endif %}
                 {% endfor %}
             </ul>
-            <button type="submit">Add Selected</button>
+            <button type="submit">Delete Selected</button>
         </form>
         
         {% endblock %}

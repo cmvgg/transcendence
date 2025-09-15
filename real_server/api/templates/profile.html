@@ -379,9 +379,9 @@
   45deg,
   hsla(168, 85%, 52%, 0.8),
   hsla(263, 88%, 45%, 0.7) 100%
-  )">
-    <div class="container-fluid" style="color: aqua;"> 
-      <button
+)">
+  <div class="container-fluid" style="color: aqua;"> 
+    <button
       data-mdb-collapse-init
       class="navbar-toggler"
       type="button"
@@ -389,39 +389,38 @@
       aria-controls="header_navbar"
       aria-expanded="false"
       aria-label="Toggle navigation"
-      >
-        <i class="fas fa-bars" style="color: aqua;"></i>
-      </button>
-      <div class="collapse navbar-collapse" id="header_navbar">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="font-family: Pixelify Sans, sans-serif;">
-          <li class="nav-item active">
-            <a class="nav-link"  aria-current="page" href="/">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" target="_self" href="/playground">Play</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/select">Select</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/about">About</a>
-          </li>
-          {% if user.id > 0 %}
-          <li class="nav-item">
-            <a class="nav-link" href="/profile" data-i18n="nav.home">Profile</a>
-          </li>
-          {% endif%}
-        </ul>
-      </div>
-      <select id="language-selector">
-        <option value="en">🇬🇧 English</option>
-        <option value="es">🇪🇸 Español</option>
-        <option value="eu">🇵🇲 Euskera</option>
-        <option value="fr">🇫🇷 Français</option>
-      </select>
+    >
+      <i class="fas fa-bars" style="color: aqua;"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="header_navbar">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="font-family: Pixelify Sans, sans-serif;">
+        <li class="nav-item active">
+          <a class="nav-link"  aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" target="_self" href="/playground">Play</a>
+		    <li class="nav-item">
+          <a class="nav-link" href="/select">Select</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/about">About</a>
+        </li>
+        {% if user.id > 0 %}
+        <li class="nav-item">
+          <a class="nav-link" href="/profile" data-i18n="nav.home">Profile</a>
+        </li>
+        {% endif%}
+      </ul>
     </div>
-  </nav>
-    <!-- Navbar --> 
+    <select id="language-selector">
+      <option value="en">🇬🇧 English</option>
+      <option value="es">🇪🇸 Español</option>
+      <option value="eu">🇵🇲 Euskera</option>
+      <option value="fr">🇫🇷 Français</option>
+    </select>
+  </div>
+</nav>
+<!-- Navbar --> 
 
   <div class="container bootstrap snippets bootdey">
     <p style="height: 50px;"></p>
@@ -433,48 +432,52 @@
     {% endif %}
     <div class="row">
       <div class="profile-nav col-md-3">
-        <div class="panel">
-          <div class="user-heading bio-graph-heading round">
-            <!--<img src="{{ user.profile.avatar }}" alt="avatar not found">-->
-            {% if profile.avatar %}
-              <img src="{{ profile.avatar.url }}" alt="" style="width: 200px; height: 200px; border-radius: 50%;">
-            {% else %}
-              <a href="#">
-                <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">
-              </a>
-            {% endif %}
-            <h3>{{ user.username }}</h3>
+          <div class="panel">
+              <div class="user-heading bio-graph-heading round">
+                <!--<img src="{{ user.profile.avatar }}" alt="avatar not found">-->
+                
+                    {% if profile.avatar %}
+                    <img src="{{ profile.avatar }}" alt="">
+                    {% else %}
+                        <a href="#">
+                        <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">
+                        </a>
+                    {% endif %}
+                
+                  <h3>{{ user.username }}</h3>
+              </div>
+    
+              <ul class="nav nav-pills nav-stacked">
+                  <li class="active" ><a href="/editprofile"> <i class="fa fa-edit"></i>Edit profile</a></li>
+              </ul>
           </div>
-          <ul class="nav nav-pills nav-stacked">
-            <li class="active" ><a href="/editprofile"> <i class="fa fa-edit"></i>Edit profile</a></li>
-          </ul>
-        </div>
       </div>
       <div class="profile-info col-md-9">
-        <div class="row">
-          <div class="panel-body bio-graph-info">
-            <div class="row" style="width: auto;">
-              <div class="bio-row">
-                <h2 style="color:white;">Information</h2>
-                <p><strong>Name:</strong> {{ user.first_name }}</p>
-                <p><strong>Email:</strong> {{ user.email }}</p>
-              </div> 
-            </div>
+          <div class="row">
+              <div class="panel-body bio-graph-info">
+                  <div class="row" style="width: auto;">
+                    <div class="bio-row">
+                      <h2 style="color:white;">Information</h2>
+                      <p><strong>Name:</strong> {{ user.first_name }}</p>
+                      <p><strong>Email:</strong> {{ user.email }}</p>
+                    </div> 
+                  </div>
+              </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="panel-body bio-graph-info">
-            <div class="row" style="width: auto;">
-              <div class="bio-row">
-                <h2 style="color:white;">Friends</h2>
+          
+          <div class="row">
+            <div class="panel-body bio-graph-info">
+                <div class="row" style="width: auto;">
+                  <div class="bio-row">
+                    <h2 style="color:white;">Friends</h2>
                 {% if profile.friends %}
-                  <ul>
-                  {% for friends in friends_names %}
-                    <li>{{ friends }}</li>
-                  {% endfor %}
-                  </ul>
+                    <ul>
+                    {% for friends in friends_names %}
+                        <li>{{ friends }}</li>
+                    {% endfor %}
+                    </ul>
                 {% else %}
-                  <p>Not friends yet.</p>
+                    <p>Not friends yet.</p>
                 {% endif %}
                 <a
                 data-mdb-ripple-init
@@ -485,47 +488,60 @@
                 role="button"
                 onclick="addFriends()"
                 >Add friends</a>
-              </div> 
+                  </div> 
+                </div>
             </div>
-          </div>
         </div>
-        <div class="row" style="background-color: black; width: auto;">
-          <h1 style="color: red; font-family: Sixtyfour Convergence, sans-serif;font-size:40px">Statistics</h1>
-          <div class="col-md-8">
-            <div class="panel">
-              <div class="bio-chart">
-                <h3>Victoris</h3>
-                <h3>&nbsp</h3>
-                <h3>{{ loged_stats.wins }}</h3>
+
+              <div class="row" style="background-color: black; width: auto;">
+                <h1 style="color: red; font-family: Sixtyfour Convergence, sans-serif;font-size:40px">Statistics</h1>
+                  <div class="col-md-8">
+                      <div class="panel">
+                          <div class="bio-chart">
+                            <h3>Victoris</h3>
+                              <h3>&nbsp</h3>
+                              <h3>{{ loged_stats.wins }}</h3>
+                          </div>
+                          
+                    </div>
+                </div>
+                <div class="col-md-8">
+                  <div class="panel">
+                  
+                      <div class="bio-chart">
+                        <h3>Losses</h3>
+                        <h3>&nbsp</h3>
+                        <h3>{{ loged_stats.losses }}</h3>
+                      </div>
+                </div>
+            </div>
+                <div class="col-md-8">
+                    <div class="panel">
+                        <div class="bio-chart">
+                            <h3>Won tournaments</h3>
+                            <h3>&nbsp</h3>
+                            <h3>{{ loged_stats.tournaments_won }}</h3>
+                        </div>
+                    </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <div class="col-md-8">
-            <div class="panel">
-              <div class="bio-chart">
-                <h3>Losses</h3>
-                <h3>&nbsp</h3>
-                <h3>{{ loged_stats.losses }}</h3>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-8">
-          <div class="panel">
-            <div class="bio-chart">
-              <h3>Won tournaments</h3>
-              <h3>&nbsp</h3>
-              <h3>{{ loged_stats.tournaments_won }}</h3>
-            </div>
+
+              
           </div>
         </div>
       </div>
     </div>
-  </div>
-       
-  <script>
-    function addFriends() {window.open("/lista_y_selecciona_usuarios", "width=600,height=400,left=150,top=50");}
-  </script>
+</div>
+
+            
+            
+<script>
+    function addFriends() {
+    // Abre una nueva ventana con la URL especificada, un nombre y características
+    window.open("/lista_y_selecciona_usuarios", "width=600,height=400,left=150,top=50");
+    }
+</script>
+
 
   <br><br>
   <!-- Footer -->
@@ -537,26 +553,38 @@
         <!-- Grid row-->
         <div class="row text-center d-flex justify-content-center pt-3" style="font-family: Honk, system-ui;">
           <!-- Grid column -->
-          <div class="col-md-2">
+          <div class="col-md-3">
             <h6 class="footer_nav">
               <a class="nav-link" href="/index" data-i18n="nav.home">Home</a>
             </h6>
           </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
           <div class="col-md-2">
             <h6 class="footer_nav">
-              <a class="nav-link" href="/signin" data-i18n="nav.signin">Sign in</a>
+              <a href="/playground">Play</a>
             </h6>
           </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
           <div class="col-md-2">
             <h6 class="footer_nav">
               <a class="nav-link" href="/register" data-i18n="nav.register">Register</a>
             </h6>
           </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
           <div class="col-md-2">
             <h6 class="footer_nav">
               <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
             </h6>
           </div>
+          <!-- Grid column -->
+
+          <!-- Grid column -->
           <div class="col-md-2">
             <h6 class="footer_nav">
               <a class="nav-link" href="/about" data-i18n="nav.about">About us</a>
@@ -588,7 +616,9 @@
     <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
       © 2025 Copyright:
-      <a class="text-white" href="https://mdbootstrap.com/">Retropong</a>
+      <a class="text-white" href="https://mdbootstrap.com/"
+         >Retropong</a
+        >
     </div>
   <!-- Copyright -->
   </footer>
