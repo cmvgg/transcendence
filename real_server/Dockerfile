@@ -28,6 +28,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 RUN python -m pip install Pillow
 RUN pip install passlib
+RUN pip install django-resized
 
 COPY . .
 

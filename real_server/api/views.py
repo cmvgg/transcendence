@@ -90,7 +90,6 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.hashers import check_password
 
 def signIn(request): #login
-    global loged_user, loged_stats
     if request.method == 'POST':
         form = signInForm(request.POST)
         if form.is_valid():
@@ -99,8 +98,6 @@ def signIn(request): #login
             user = authenticate(request, username=nickname, password=passw)
             if user is not None:
                 login(request, user)
-                loger_user = User.objects.get(username=nickname)
-                loged_stats = TournamentStats.objects.get(id=user.id)
                 return HttpResponse("""
                 <html>
                 <head>
@@ -139,8 +136,10 @@ def register(request):
 
             # Crear el usuario utilizando el nombre como username
             user = User.objects.create_user(first_name=name, email=email, password=password, username=nickname)
-            user.Profile.avatar = avatar
-            user.save()
+            login(request, user)
+            profile = UserProfile.objects.get(user = user)
+            profile.avatar = avatar
+            profile.save()
             # Crear estadisticas de usuario
             user_stats = TournamentStats.objects.create(id = user.id, username=user.username, wins=0, losses=0, tournaments_won=0)
             user_stats.save()
@@ -240,17 +239,15 @@ class TournamentViewSet(viewsets.ModelViewSet):
 def profile_view(request):
     logedUser = request.user #the active or loged user, the one who makes de request
     username = logedUser.username
-    stats = TournamentStats.objects.get(username=logedUser.username)
-    
-    
+    profile = UserProfile.objects.get(user = logedUser)
+
     if request.user.is_authenticated:
-        # El usuario está logueado
         logedUser = request.user
-        stats = TournamentStats.objects.get(id=logedUser.id)
         profile = UserProfile.objects.get(user = logedUser)
         friends_usernames = User.objects.filter(id__in=profile.friends).values_list('username', flat=True)
-    return render(request, 'profile.html', {'loged_stats':stats, 'profile': profile, 'friends_names': friends_usernames})
-    #return render(request, 'profile.html', {'loged_stats':stats, 'profile': profile})
+        friends_online = UserProfile.objects.filter(id__in=profile.friends).values_list('is_online', 'user')
+        cucus = User.objects.filter(id__in=profile.friends)
+    return render(request, 'profile.html', {'profile': profile, 'friends_names': friends_usernames, 'friends_online': friends_online, 'cucus': cucus})
 
 # API ENDPOINTS ESPECÍFICOS
 @api_view(['GET'])
@@ -455,7 +452,7 @@ def lista_y_selecciona_usuarios(request):
         user = request.user
         user_profile = UserProfile.objects.get(user = user)
         
-        user_profile.friends = usuarios_seleccionados_ids
+        #user_profile.friends = usuarios_seleccionados_ids
         for usuario in usuarios_seleccionados:
             if usuario != user:
                 user_profile.friends.append(usuario.id)
@@ -482,8 +479,50 @@ def lista_y_selecciona_usuarios(request):
     else:
         # Si es un GET, muestra la lista para seleccionar
         usuarios = User.objects.all()
+        user = request.user
+        user_profile = UserProfile.objects.get(user = user)
+        usuarios = User.objects.all().exclude(id__in=user_profile.friends)
         context = {'usuarios': usuarios}
         return render(request, 'lista_usuarios.html', context)
+
+
+def delete_friends(request):
+    if request.method == 'POST':
+        # form data management
+        usuarios_seleccionados_ids = request.POST.getlist('usuarios') # get IDs from selected users
+        usuarios_seleccionados = User.objects.filter(id__in=usuarios_seleccionados_ids)
+
+        # active user and its profile
+        user = request.user
+        user_profile = UserProfile.objects.get(user = user)
+        #remove selection from userprofile friends
+        for usuario in usuarios_seleccionados:
+            if usuario != user:
+                user_profile.friends.remove(usuario.id)
+        user_profile.save()
+
+        context = {'usuarios_seleccionados': usuarios_seleccionados}
+        return HttpResponse("""
+                <html>
+                <head>
+                    <script type="text/javascript">
+                                window.opener.location.href = "/profile"
+                            </script>
+                    <script type="text/javascript">
+                        window.close();
+                    </script>
+                </head>
+                <body></body>
+                </html>
+            """)
+    else:
+        # in case it is a GET, show friends list to choose
+        #usuarios = User.objects.all() #¿necesaria esta linea?
+        user = request.user
+        user_profile = UserProfile.objects.get(user = user)
+        usuarios = User.objects.filter(id__in=user_profile.friends)
+        context = {'usuarios': usuarios}
+        return render(request, 'delete_friends.html', context)
 
 #user friends END
 
