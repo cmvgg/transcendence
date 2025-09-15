@@ -80,7 +80,7 @@ from django.contrib.auth.signals import user_logged_in, user_logged_out
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
-    avatar = ResizedImageField(size=[300,300], upload_to='media/', blank=True, null=True)
+    avatar = ResizedImageField(size=[200,200], upload_to='', blank=True, null=True)
     friends = ArrayField(
         models.IntegerField(),
         size=100,
@@ -101,6 +101,9 @@ class UserProfile(models.Model):
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
+        new_user = instance
+        new_user.avatar = instance.profile.avatar
+        new_user.save()
 
 @receiver(user_logged_in)
 def got_online(sender, user, request, **kwargs):    
@@ -112,14 +115,6 @@ def got_offline(sender, user, request, **kwargs):
     user.profile.is_online = False
     user.profile.save()
 
-@receiver(user_logged_in)
-def got_online(sender, user, request, **kwargs):
-    user.profile.is_online = True
-    user.profile.save()
-@receiver(user_logged_out)
-def got_offline(sender, user, request, **kwargs):
-    user.profile.is_online = False
-    user.profile.save()
 
  #USER END       
 
@@ -179,24 +174,6 @@ class ProfileData(models.Model):
     alias = models.CharField(max_length=50)
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)  # Agregué losses para consistencia
-
-    def __str__(self):
-        return f"{self.alias} - {self.wins}W"
-    
-    def win_rate(self):
-        """Calcula el porcentaje de victorias"""
-        total_games = self.wins + self.losses
-        if total_games == 0:
-            return 0.0
-        return self.wins / total_games
-
-
-class ProfileData(models.Model):
-    # modelo para endpoint get que consulte los datos del jugador
-    alias = models.CharField(max_length=50)
-    wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)  # Agregué losses para consistencia
-    avatar = models.ImageField(upload_to='media/', null=True, blank=True)
 
     def __str__(self):
         return f"{self.alias} - {self.wins}W"

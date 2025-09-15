@@ -3,6 +3,7 @@
 from django.db import migrations, models
 from django.contrib.postgres.fields import ArrayField
 from django.conf import settings
+from django_resized import ResizedImageField
 
 
 class Migration(migrations.Migration):
@@ -30,8 +31,7 @@ class Migration(migrations.Migration):
                     to=settings.AUTH_USER_MODEL,
                     related_name='profile'
                 )),
-                ('avatar', models.ImageField(upload_to='media/', blank=True, null=True)),
-                ('friends', ArrayField(
+                ('avatar', models.ImageField(upload_to='media/', blank=True, null=True)),                ('friends', ArrayField(
                     models.IntegerField(),
                     size=100,
                     blank=True,

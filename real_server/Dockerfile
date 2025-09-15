@@ -18,6 +18,7 @@ RUN pip install  python-json-logger
 
 RUN python -m pip install Pillow
 RUN pip install passlib
+RUN pip install django-resized
 
 COPY . .
 

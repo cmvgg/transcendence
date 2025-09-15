@@ -361,23 +361,23 @@ def editprofile(request):
             avatar = form.cleaned_data.get('avatar')
 
             # hacer de user el usuario logeado
-            #user = User.objects.get(username=nickname)
-            user = request.user
+            user = User.objects.get(username=nickname)
+            #user = request.user
             stats = UserProfile.objects.get(user=user)
             user.set_password(password)
             user.username = nickname
             user.first_name = name
             user.email = email
-            user.UserProfile.avatar = avatar
+            stats.avatar = avatar
             
             # Guardar los cambios
             user.save()
-            user.UserProfile.save()
+            stats.save()
             login(request, user)
             log_user = authenticate(request, username=nickname, password=password)
-            stats = UserProfile.objects.get(user=log_user)
+            #stats = UserProfile.objects.get(user=log_user)
             #return render(request, 'signin.html', {'form': form})
-            return redirect("profile.html", {'log_user': log_user, 'loged_stats':stats})
+            return redirect("/profile", {'log_user': log_user, 'loged_stats':stats})
         
     else:
         form = RegisterForm(request.GET, request.FILES)

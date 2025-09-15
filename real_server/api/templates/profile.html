@@ -11,8 +11,9 @@
 </head>
 
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Honk&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P:wght@400&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
-  @import url('https://fonts.googleapis.com/css2?family=Sixtyfour+Convergence&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Honk&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P:wght@400&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Sixtyfour+Convergence&display=swap');
+
   @font-face {
     font-family: 'Press Start 2P';
     font-style: normal;
@@ -21,7 +22,9 @@
     src: url(@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff2) format('woff2'), url(@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff) format('woff');
     unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
   }
-  body {
+
+
+body {
     color: #797979;
     background: #f1f2f7;
     background-image: url('https://static1.makeuseofimages.com/wordpress/wp-content/uploads/2021/04/nintendo-controllers-as-pixels.jpg');
@@ -35,88 +38,107 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-font-smoothing: antialiased;
-  }
-  .profile-nav, .profile-info{
+}
+
+.profile-nav, .profile-info{
     margin-top:30px;   
-  }
-  .profile-nav .user-heading {
+}
+
+.profile-nav .user-heading {
     background: #fbc02d;
     color: #fff;
     border-radius: 4px 4px 0 0;
     -webkit-border-radius: 4px 4px 0 0;
     padding: 30px;
     text-align: center;
-  }
-  .profile-nav .user-heading.round a  {
+}
+
+.profile-nav .user-heading.round a  {
     border-radius: 50%;
     -webkit-border-radius: 50%;
     border: 10px solid rgba(255,255,255,0.3);
     display: inline-block;
-  }
-  .profile-nav .user-heading a img {
+}
+
+.profile-nav .user-heading a img {
     width: 112px;
     height: 112px;
     border-radius: 50%;
     -webkit-border-radius: 50%;
-  }
-  .profile-nav .user-heading h1 {
+}
+
+.profile-nav .user-heading h1 {
     font-size: 22px;
     font-weight: 300;
     margin-bottom: 5px;
-  }
-  .profile-nav .user-heading p {
+}
+
+.profile-nav .user-heading p {
     font-size: 12px;
-  }
-  .profile-nav ul {
+}
+
+.profile-nav ul {
     margin-top: 1px;
-  }
-  .profile-nav ul > li {
+}
+
+.profile-nav ul > li {
     border-bottom: 1px solid #ebeae6;
     margin-top: 0;
     line-height: 30px;
-  }
-  .profile-nav ul > li:last-child {
+}
+
+.profile-nav ul > li:last-child {
     border-bottom: none;
-  }
-  .profile-nav ul > li > a {
+}
+
+.profile-nav ul > li > a {
     border-radius: 0;
     -webkit-border-radius: 0;
     color: #89817f;
     border-left: 5px solid #fff;
-  }
-  .profile-nav ul > li > a:hover, .profile-nav ul > li > a:focus, .profile-nav ul li.active  a {
+}
+
+.profile-nav ul > li > a:hover, .profile-nav ul > li > a:focus, .profile-nav ul li.active  a {
     background: #f8f7f5 !important;
     border-left: 5px solid #fbc02d;
     color: #89817f !important;
-  }
-  .profile-nav ul > li:last-child > a:last-child {
+}
+
+.profile-nav ul > li:last-child > a:last-child {
     border-radius: 0 0 4px 4px;
     -webkit-border-radius: 0 0 4px 4px;
-  }
-  .profile-nav ul > li > a > i{
+}
+
+.profile-nav ul > li > a > i{
     font-size: 16px;
     padding-right: 10px;
     color: #bcb3aa;
-  }
-  .r-activity {
+}
+
+.r-activity {
     margin: 6px 0 0;
     font-size: 12px;
-  }
-  .p-text-area, .p-text-area:focus {
+}
+
+
+.p-text-area, .p-text-area:focus {
     border: none;
     font-weight: 300;
     box-shadow: none;
     color: #c3c3c3;
     font-size: 16px;
-  }
-  .profile-info .panel-footer {
+}
+
+.profile-info .panel-footer {
     background-color:#f8f7f590 ;
     border-top: 1px solid #e7ebee;
-  }
-  .profile-info .panel-footer ul li a {
+}
+
+.profile-info .panel-footer ul li a {
     color: #7a7a7a;
-  }
-  .bio-graph-heading {
+}
+
+.bio-graph-heading {
     background: #fbc02d;
     color: #fff;
     font-family: 'Press Start 2P', system-ui;
@@ -125,17 +147,20 @@
     -webkit-border-radius: 4px 4px 0 0;
     font-size: 16px;
     font-weight: 300;
-  }
-  .bio-graph-info {
+}
+
+.bio-graph-info {
     color: #89817e;
-  }
-  .bio-graph-info h1 {
+}
+
+.bio-graph-info h1 {
     font-size: 22px;
     font-weight: 300;
     font-family: 'Press Start 2P', system-ui;
     margin: 0 0 20px;
-  }
-  .bio-row {
+}
+
+.bio-row {
     width: 50%;
     float: left;
     margin-bottom: 10px;
@@ -144,112 +169,136 @@
     background-color: #b984dc;
     font-size: 25px;
     font-family: 'Press Start 2P', system-ui;
-  }
-  .bio-row p span {
+}
+
+.bio-row p span {
     width: 100px;
     display: inline-block;
-  }
-  .bio-chart, .bio-desk {
+}
+
+.bio-chart, .bio-desk {
     float: left;
-  }
-  .bio-chart {
+}
+
+.bio-chart {
     width: 40%;
     background-color: black;
     display: flex;
     flex-direction: row;
     font-family: "Sixtyfour Convergence", sans-serif;
-  }
-  .bio-desk {
+}
+
+.bio-desk {
     width: 60%;
     background-color: #8dd7d6;
     display: flex;
     flex-direction: row;
     font-family: "Sixtyfour Convergence", sans-serif;
-  }
-  .bio-chart h4 {
+}
+
+.bio-chart h4 {
     font-size: 35px;
     font-weight:400;
     font-weight: bold;
     color: #e26b7f;
-  }
-  .bio-desk h4.terques {
+}
+
+.bio-desk h4.terques {
     color: #4CC5CD;
-  }
-  .bio-desk h4.red {
+}
+
+.bio-desk h4.red {
     color: #e26b7f;
-  }
-  .bio-desk h4.green {
+}
+
+.bio-desk h4.green {
     color: #97be4b;
-  }
-  .bio-desk h4.purple {
+}
+
+.bio-desk h4.purple {
     color: #caa3da;
-  }
-  .file-pos {
+}
+
+.file-pos {
     margin: 6px 0 10px 0;
-  }
-  .profile-activity h5 {
+}
+
+.profile-activity h5 {
     font-weight: 300;
     margin-top: 0;
     color: #c3c3c3;
-  }
-  .summary-head {
+}
+
+.summary-head {
     background: #ee7272;
     color: #fff;
     text-align: center;
     border-bottom: 1px solid #ee7272;
-  }
-  .summary-head h4 {
+}
+
+.summary-head h4 {
     font-weight: 300;
     text-transform: uppercase;
     margin-bottom: 5px;
-  }
-  .summary-head p {
+}
+
+.summary-head p {
     color: rgba(255,255,255,0.6);
-  }
-  ul.summary-list {
+}
+
+ul.summary-list {
     display: inline-block;
     padding-left:0 ;
     width: 100%;
     margin-bottom: 0;
-  }
-  ul.summary-list > li {
+}
+
+ul.summary-list > li {
     display: inline-block;
     width: 19.5%;
     text-align: center;
-  }
-  ul.summary-list > li > a > i {
+}
+
+ul.summary-list > li > a > i {
     display:block;
     font-size: 18px;
     padding-bottom: 5px;
-  }
-  ul.summary-list > li > a {
+}
+
+ul.summary-list > li > a {
     padding: 10px 0;
     display: inline-block;
     color: #818181;
-  }
-  ul.summary-list > li  {
+}
+
+ul.summary-list > li  {
     border-right: 1px solid #eaeaea;
-  }
-  ul.summary-list > li:last-child  {
+}
+
+ul.summary-list > li:last-child  {
     border-right: none;
-  }
-  .activity {
+}
+
+.activity {
     width: 100%;
     float: left;
     margin-bottom: 10px;
-  }
-  .activity.alt {
+}
+
+.activity.alt {
     width: 100%;
     float: right;
     margin-bottom: 10px;
-  }
-  .activity span {
+}
+
+.activity span {
     float: left;
-  }
-  .activity.alt span {
+}
+
+.activity.alt span {
     float: right;
-  }
-  .activity span, .activity.alt span {
+}
+.activity span, .activity.alt span {
     width: 45px;
     height: 45px;
     line-height: 45px;
@@ -259,65 +308,79 @@
     text-align: center;
     color: #fff;
     font-size: 16px;
-  }
-  .activity.terques span {
+}
+
+.activity.terques span {
     background: #8dd7d6;
-  }
-  .activity.terques h4 {
+}
+
+.activity.terques h4 {
     color: #8dd7d6;
-  }
-  .activity.purple span {
+}
+.activity.purple span {
     background: #b984dc;
-  }
-  .activity.purple h4 {
+}
+
+.activity.purple h4 {
     color: #b984dc;
-  }
-  .activity.blue span {
+}
+.activity.blue span {
     background: #90b4e6;
-  }
-  .activity.blue h4 {
+}
+
+.activity.blue h4 {
     color: #90b4e6;
-  }
-  .activity.green span {
+}
+.activity.green span {
     background: #aec785;
-  }
-  .activity.green h4 {
+}
+
+.activity.green h4 {
     color: #aec785;
-  }
-  .activity h4 {
+}
+
+.activity h4 {
     margin-top:0 ;
     font-size: 16px;
-  }
-  .activity p {
+}
+
+.activity p {
     margin-bottom: 0;
     font-size: 13px;
-  }
-  .activity .activity-desk i, .activity.alt .activity-desk i {
+}
+
+.activity .activity-desk i, .activity.alt .activity-desk i {
     float: left;
     font-size: 18px;
     margin-right: 10px;
     color: #bebebe;
-  }
-  .activity .activity-desk {
+}
+
+.activity .activity-desk {
     margin-left: 70px;
     position: relative;
-  }
-  .activity.alt .activity-desk {
+}
+
+.activity.alt .activity-desk {
     margin-right: 70px;
     position: relative;
-  }
-  .activity.alt .activity-desk .panel {
+}
+
+.activity.alt .activity-desk .panel {
     float: right;
     position: relative;
-  }
-  .activity-desk .panel {
+}
+
+.activity-desk .panel {
     background: #F4F4F4 ;
     display: inline-block;
-  }
-  .activity .activity-desk .arrow {
+}
+
+
+.activity .activity-desk .arrow {
     border-right: 8px solid #F4F4F4 !important;
-  }
-  .activity .activity-desk .arrow {
+}
+.activity .activity-desk .arrow {
     border-bottom: 8px solid transparent;
     border-top: 8px solid transparent;
     display: block;
@@ -326,11 +389,13 @@
     position: absolute;
     top: 13px;
     width: 0;
-  }
-  .activity-desk .arrow-alt {
+}
+
+.activity-desk .arrow-alt {
     border-left: 8px solid #F4F4F4 !important;
-  }
-  .activity-desk .arrow-alt {
+}
+
+.activity-desk .arrow-alt {
     border-bottom: 8px solid transparent;
     border-top: 8px solid transparent;
     display: block;
@@ -339,18 +404,22 @@
     position: absolute;
     top: 13px;
     width: 0;
-  }
-  .activity-desk .album {
+}
+
+.activity-desk .album {
     display: inline-block;
     margin-top: 10px;
-  }
-  .activity-desk .album a{
+}
+
+.activity-desk .album a{
     margin-right: 10px;
-  }
-  .activity-desk .album a:last-child{
+}
+
+.activity-desk .album a:last-child{
     margin-right: 0px;
-  }
-  .footer_nav{
+}
+
+.footer_nav{
     text-decoration: none;
     font-size: 35px;
   }
@@ -361,26 +430,26 @@
 </style>
 
 <body style="color: #797979;
-  background: #f1f2f7;
-  background-image: url('https://static1.makeuseofimages.com/wordpress/wp-content/uploads/2021/04/nintendo-controllers-as-pixels.jpg');
-  background-repeat: no-repeat;
-  background-size: cover;
-  font-family: 'Open Sans', sans-serif;
+background: #f1f2f7;
+background-image: url('https://static1.makeuseofimages.com/wordpress/wp-content/uploads/2021/04/nintendo-controllers-as-pixels.jpg');
+background-repeat: no-repeat;
+background-size: cover;
+font-family: 'Open Sans', sans-serif;
 
-  padding: 0px !important;
-  margin: 0px !important;
-  font-size: 13px;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-font-smoothing: antialiased;">
+padding: 0px !important;
+margin: 0px !important;
+font-size: 13px;
+text-rendering: optimizeLegibility;
+-webkit-font-smoothing: antialiased;
+-moz-font-smoothing: antialiased;">
 
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
   45deg,
   hsla(168, 85%, 52%, 0.8),
   hsla(263, 88%, 45%, 0.7) 100%
 )">
-  <div class="container-fluid" style="color: aqua;"> 
+  <div class="container-fluid" style="color: aqua; ">   
     <button
       data-mdb-collapse-init
       class="navbar-toggler"
@@ -395,20 +464,33 @@
     <div class="collapse navbar-collapse" id="header_navbar">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="font-family: Pixelify Sans, sans-serif;">
         <li class="nav-item active">
-          <a class="nav-link"  aria-current="page" href="/">Home</a>
+          <a class="nav-link"  aria-current="page" href="/" data-i18n="nav.home">Home</a>
+        </li>
+        
+        
+        <li class="nav-item">
+          <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" target="_self" href="/playground">Play</a>
-		    <li class="nav-item">
-          <a class="nav-link" href="/select">Select</a>
+          <a class="nav-link" href="/about" data-i18n="nav.about">About</a>
         </li>
+        {% if user.is_authenticated %}
         <li class="nav-item">
-          <a class="nav-link" href="/about">About</a>
+          <a class="nav-link" href="/profile" >Profile</a>
         </li>
-        {% if user.id > 0 %}
+        {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="/profile" data-i18n="nav.home">Profile</a>
+            <a class="nav-link" href="/signin" data-i18n="nav.signin">Sign in</a>
+          </li>
+        {% endif%}
+        {% if user.is_authenticated %}
+        <li class="nav-item">
+          <a class="nav-link" href="/logout" >logout</a>
         </li>
+        {% else %}
+        <li class="nav-item">
+            <a class="nav-link" target="_self" href="/register" data-i18n="nav.play">Register</a>
+          </li>
         {% endif%}
       </ul>
     </div>
@@ -422,129 +504,120 @@
 </nav>
 <!-- Navbar --> 
 
-  <div class="container bootstrap snippets bootdey">
+<div class="container bootstrap snippets bootdey">
     <p style="height: 50px;"></p>
+
     {% if error %}
     <div class="alert alert-danger" role="alert">
-      <h4 class="alert-heading">Error!</h4>
-      <p>{{ error }}</p>
+        <h4 class="alert-heading">Error!</h4>
+        <p>{{ error }}</p>
     </div>
     {% endif %}
+
     <div class="row">
       <div class="profile-nav col-md-3">
           <div class="panel">
               <div class="user-heading bio-graph-heading round">
                 <!--<img src="{{ user.profile.avatar }}" alt="avatar not found">-->
-                
-                    {% if profile.avatar %}
-                    <img src="{{ profile.avatar }}" alt="">
-                    {% else %}
-                        <a href="#">
-                        <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">
-                        </a>
-                    {% endif %}
+                                
+                {% if profile.avatar %}
+                <img src="{{ profile.avatar.url }}" alt="" style="width: 200px; height: 200px; border-radius: 50%;">
+                {% else %}
+                    <a href="#">
+                    <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="">
+                    </a>
+                {% endif %}
                 
                   <h3>{{ user.username }}</h3>
+                  
               </div>
-    
               <ul class="nav nav-pills nav-stacked">
-                  <li class="active" ><a href="/editprofile"> <i class="fa fa-edit"></i>Edit profile</a></li>
+                  <li class="active" ><a href="/editprofile"> <i class="fa fa-edit" ></i>Edit profile</a></li>
               </ul>
           </div>
       </div>
+
       <div class="profile-info col-md-9">
           <div class="row">
               <div class="panel-body bio-graph-info">
                   <div class="row" style="width: auto;">
                     <div class="bio-row">
-                      <h2 style="color:white;">Information</h2>
+                      <h2 style="color:white; size-adjust: auto">Information</h2>
                       <p><strong>Name:</strong> {{ user.first_name }}</p>
                       <p><strong>Email:</strong> {{ user.email }}</p>
                     </div> 
                   </div>
               </div>
           </div>
-          
-          <div class="row">
+          <div class="row" style="width: auto;">
             <div class="panel-body bio-graph-info">
-                <div class="row" style="width: auto;">
+                <div class="row">
                   <div class="bio-row">
                     <h2 style="color:white;">Friends</h2>
-                {% if profile.friends %}
+                    {% if profile.friends %}
                     <ul>
-                    {% for friends in friends_names %}
-                        <li>{{ friends }}</li>
+                    {% for cucu in cucus %}
+                        <li>{{ cucu.username }}: 
+                            {%if cucu.profile.is_online == True %}
+                                <p style="color:#97be4b"> on line</p>
+                            {% else %}
+                            <p style="color:#e31444"> off line</p>
+                            {% endif%}
+                        </li>
                     {% endfor %}
                     </ul>
-                {% else %}
-                    <p>Not friends yet.</p>
-                {% endif %}
-                <a
-                data-mdb-ripple-init
-                class="btn btn-outline-light btn-lg m-2"
-                style="font-family: Pixelify Sans, sans-serif; font-weight: bold;"
-                style="font-family: Pixelify Sans, sans-serif;"
-                target="_blank"
-                role="button"
-                onclick="addFriends()"
-                >Add friends</a>
+                    {% else %}
+                        <p>Not friends yet.</p>
+                    {% endif %}
+                    <a
+                    data-mdb-ripple-init
+                    class="btn btn-outline-light btn-lg m-2"
+                    style="font-family: Pixelify Sans, sans-serif; font-weight: bold;"
+                    style="font-family: Pixelify Sans, sans-serif;"
+                    target="_blank"
+                    role="button"
+                    onclick="addFriends()"
+                    >Add friends</a>
+                    <a
+                    data-mdb-ripple-init
+                    class="btn btn-outline-light btn-lg m-2"
+                    style="font-family: Pixelify Sans, sans-serif; font-weight: bold;"
+                    style="font-family: Pixelify Sans, sans-serif;"
+                    target="_blank"
+                    role="button"
+                    onclick="deleteFriends()"
+                    >Delete friends</a>
                   </div> 
                 </div>
             </div>
         </div>
 
-              <div class="row" style="background-color: black; width: auto;">
-                <h1 style="color: red; font-family: Sixtyfour Convergence, sans-serif;font-size:40px">Statistics</h1>
-                  <div class="col-md-8">
-                      <div class="panel">
-                          <div class="bio-chart">
-                            <h3>Victoris</h3>
-                              <h3>&nbsp</h3>
-                              <h3>{{ loged_stats.wins }}</h3>
-                          </div>
-                          
-                    </div>
+                <div class="row" style="background-color: black; width: auto;">
+                    <h1 style="color: red; font-family: Sixtyfour Convergence, sans-serif;font-size:40px">Statistics</h1>
+                    <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif">Victoris {{ profile.wins }}</h3>
+                    <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif">Losses {{ profile.losses }}</h3>
+                    <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif">Won tournaments {{ profile.tournaments_won }}</h3>
                 </div>
-                <div class="col-md-8">
-                  <div class="panel">
-                  
-                      <div class="bio-chart">
-                        <h3>Losses</h3>
-                        <h3>&nbsp</h3>
-                        <h3>{{ loged_stats.losses }}</h3>
-                      </div>
-                </div>
-            </div>
-                <div class="col-md-8">
-                    <div class="panel">
-                        <div class="bio-chart">
-                            <h3>Won tournaments</h3>
-                            <h3>&nbsp</h3>
-                            <h3>{{ loged_stats.tournaments_won }}</h3>
-                        </div>
-                    </div>
-                </div>
-              </div>
-
-              
-          </div>
         </div>
       </div>
     </div>
 </div>
 
-            
+
             
 <script>
     function addFriends() {
+    window.open("http://localhost:8000/lista_y_selecciona_usuarios", "width=1200,height=800,left=300,top=100");
+    }
+    function deleteFriends() {
     // Abre una nueva ventana con la URL especificada, un nombre y características
-    window.open("/lista_y_selecciona_usuarios", "width=600,height=400,left=150,top=50");
+    window.open("/delete_friends", "width=200,height=200,left=150,top=100");
     }
 </script>
 
 
-  <br><br>
-  <!-- Footer -->
+<br><br>
+    <!-- Footer -->
   <footer class="text-center text-white" style="background-image: url('https://64.media.tumblr.com/647cfeeb6827dd332b390e6ce5e2b16a/175e171edbe54538-fe/s2048x3072/97e4760df288f74b0c7f817dbc5fa000552d8118.gifv'); background-position: center center; background-repeat: no-repeat; background-size: cover;";> <!--  #cd09d4 -->
     <!-- Grid container -->
     <div class="container">
@@ -555,39 +628,30 @@
           <!-- Grid column -->
           <div class="col-md-3">
             <h6 class="footer_nav">
-              <a class="nav-link" href="/index" data-i18n="nav.home">Home</a>
+              <a href="/">Home</a>
+            </h6>
+          </div>
+          <!-- Grid column -->
+          <!-- Grid column -->
+          <div class="col-md-3">
+            <h6 class="footer_nav">
+              <a href="/register">Sign in</a>
             </h6>
           </div>
           <!-- Grid column -->
 
           <!-- Grid column -->
-          <div class="col-md-2">
+          <div class="col-md-3">
             <h6 class="footer_nav">
-              <a href="/playground">Play</a>
+              <a href="/select">Select</a>
             </h6>
           </div>
           <!-- Grid column -->
 
           <!-- Grid column -->
-          <div class="col-md-2">
+          <div class="col-md-3">
             <h6 class="footer_nav">
-              <a class="nav-link" href="/register" data-i18n="nav.register">Register</a>
-            </h6>
-          </div>
-          <!-- Grid column -->
-
-          <!-- Grid column -->
-          <div class="col-md-2">
-            <h6 class="footer_nav">
-              <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
-            </h6>
-          </div>
-          <!-- Grid column -->
-
-          <!-- Grid column -->
-          <div class="col-md-2">
-            <h6 class="footer_nav">
-              <a class="nav-link" href="/about" data-i18n="nav.about">About us</a>
+              <a href="/about">About us</a>
             </h6>
           </div>
           <!-- Grid column -->
@@ -603,26 +667,30 @@
         <div class="row d-flex justify-content-center pt-3">
           <div class="col-lg-10">
             <p style="font-family: Honk, system-ui; font-size: 30px;">
-                Lorem ipsum transcendeces sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
-                commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
+              Lorem ipsum transcendeces sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
+              commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
             </p>
           </div>
         </div>
       </section>
       <!-- Section: Text -->
+
     </div>
     <!-- Grid container -->
 
     <!-- Copyright -->
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
+    <div
+         class="text-center p-3"
+         style="background-color: rgba(0, 0, 0, 0.2)"
+         >
       © 2025 Copyright:
-      <a class="text-white" href="https://mdbootstrap.com/"
-         >Retropong</a
-        >
+      <a class="text-white" href="https://en.wikipedia.org/wiki/Pong">Retropong</a>
     </div>
-  <!-- Copyright -->
+    <!-- Copyright -->
   </footer>
-  <!-- Footer --> 
+  <!-- Footer -->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
 </html>
