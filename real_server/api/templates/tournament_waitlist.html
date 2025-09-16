@@ -148,8 +148,17 @@
         {% csrf_token %}
         {% for usuario in usuarios %}
           <div>
-            <input type="checkbox" id="player_{{ usuario.id }}" name="player_ids[]" value="{{ usuario.user.id }}">
-            <label for="player_{{ usuario.id }}">{{ usuario.user.username }}</label>
+            {% if usuario.user.id == current_user.id %}
+              <input type="checkbox" id="player_{{ usuario.id }}" name="player_ids[]" value="{{ usuario.user.id }}" checked disabled>
+              <input type="hidden" name="player_ids[]" value="{{ usuario.user.id }}">
+              <label for="player_{{ usuario.id }}">
+                {{ usuario.user.username }} 
+                <span data-i18n="waitlist.you">(You)</span>
+              </label>
+            {% else %}
+              <input type="checkbox" id="player_{{ usuario.id }}" name="player_ids[]" value="{{ usuario.user.id }}">
+              <label for="player_{{ usuario.id }}">{{ usuario.user.username }}</label>
+            {% endif %}
           </div>
         {% empty %}
           <p data-i18n="waitlist.no_players">No hay jugadores disponibles</p>
@@ -162,20 +171,22 @@
   </div>
 
 	<script>
-		const form = document.getElementById('playersForm');
-		const playButton = document.getElementById('btnJugar');
-		const checkboxes = form.querySelectorAll('input[name="player_ids[]"]');
-
-		function isPowerOfTwo(n) {
-			return n > 0 && (n & (n - 1)) === 0;
-		}
-		checkboxes.forEach((checkbox) => {
-			checkbox.addEventListener('change', () => {
-        const selectedCheckboxes = Array.from(checkboxes).filter(cb => cb.checked);
-        playButton.disabled = !isPowerOfTwo(selectedCheckboxes.length) || selectedCheckboxes.length < 4;
-			});
-		});
-	</script>
+    const form = document.getElementById('playersForm');
+    const playButton = document.getElementById('btnJugar');
+    const checkboxes = form.querySelectorAll('input[name="player_ids[]"]');
+  
+    function isPowerOfTwo(n) {
+      return n > 0 && (n & (n - 1)) === 0;
+    }
+    function updatePlayButtonState() {
+      const selectedCheckboxes = Array.from(checkboxes).filter(cb => cb.checked);
+      playButton.disabled = !isPowerOfTwo(selectedCheckboxes.length) || selectedCheckboxes.length < 4;
+    }
+    checkboxes.forEach((checkbox) => {
+      checkbox.addEventListener('change', updatePlayButtonState);
+    });
+    updatePlayButtonState();
+  </script>
 
   <!-- Footer -->
   <footer class="text-center text-white" style="margin-top: -50px ;background-image: url('https://cdn.dribbble.com/userupload/28311765/file/original-b3d1b68257e6c14b3eca96fc95f0649c.gif');background-repeat: no-repeat; background-size: cover ;background-position: center center;";> <!--  #cd09d4 -->

@@ -18,7 +18,6 @@ import json, random
 from .models import User, Tournament, Match, ProfileData, UsersInTournament, UserProfile
 
 # Importar modelos y serializers
-from .models import User, Tournament, Match
 import json
 from django.contrib import messages
 from django.contrib.auth import authenticate, login
@@ -27,7 +26,6 @@ from django.contrib.auth import authenticate, login
 from .serializers import (
     UserSerializer,
     TournamentSerializer,
-    TournamentResultSerializer
 )
 # import the forms: sign in and register 
 from .forms import signInForm, RegisterForm
@@ -45,7 +43,7 @@ def playground(request):
     global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
 
-    if users_in_tournament.count() < 2:
+    if users_in_tournament.count() < 2 or not request.user.is_authenticated:
         users_in_tournament.delete()
         return render(request, 'error.html', {
             'message': "No hay suficientes usuarios para jugar 1vs1.",
@@ -71,7 +69,7 @@ def battleground(request):
     global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
 
-    if users_in_tournament.count() < 4:
+    if users_in_tournament.count() < 4 or not request.user.is_authenticated:
         users_in_tournament.delete()
         return render(request, 'error.html', {
             'message': "No hay suficientes usuarios para jugar battleground (mínimo 4).",
@@ -85,7 +83,7 @@ def tron(request):
     global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
 
-    if users_in_tournament.count() < 2:
+    if users_in_tournament.count() < 2 or not request.user.is_authenticated:
         users_in_tournament.delete()
         return render(request, 'error.html', {
             'message': "No hay suficientes usuarios para jugar tron.",
@@ -99,7 +97,7 @@ def tournament(request):
     global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
 
-    if users_in_tournament.count() < 4:
+    if users_in_tournament.count() < 4 or not request.user.is_authenticated:
         users_in_tournament.delete()
         return render(request, 'error.html', {
             'message': "No hay suficientes usuarios para un torneo (mínimo 4).",
@@ -203,46 +201,46 @@ def register(request):
 
 def tmp1vs1(request):
     global loged_user, loged_stats
-    usuarios = UserProfile.objects.filter(is_online=True)
-    return render(request, '1vs1_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
+    usuarios = list(UserProfile.objects.filter(is_online=True))
+    current_user = request.user
+    usuarios.sort(key=lambda u: u.user.id != current_user.id)
+    return render(request, '1vs1_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios, 'current_user': current_user})
 
 def tmpbattleground(request):
     global loged_user, loged_stats
-    usuarios = UserProfile.objects.all()  # Obtén todos los usuarios
-    return render(request, 'battleground_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
+    usuarios = list(UserProfile.objects.filter(is_online=True))
+    current_user = request.user
+    usuarios.sort(key=lambda u: u.user.id != current_user.id)
+    return render(request, 'battleground_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios, 'current_user': current_user})
 
 def tmptron(request):
     global loged_user, loged_stats
-    usuarios = UserProfile.objects.all()  # Obtén todos los usuarios
-    return render(request, 'tron_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
+    usuarios = list(UserProfile.objects.filter(is_online=True))
+    current_user = request.user
+    usuarios.sort(key=lambda u: u.user.id != current_user.id)
+    return render(request, 'tron_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios, 'current_user': current_user})
 
 def tmptournament(request):
     global loged_user, loged_stats
-    usuarios = UserProfile.objects.all()  # Obtén todos los usuarios
-    return render(request, 'tournament_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios})
+    usuarios = list(UserProfile.objects.filter(is_online=True))
+    current_user = request.user
+    usuarios.sort(key=lambda u: u.user.id != current_user.id)
+    return render(request, 'tournament_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios, 'current_user': current_user})
 
 @csrf_exempt
 def duplicate_1vsIA(request):
     if request.method == 'POST':
         try:
-            # Eliminar todos los registros existentes en UsersInTournament
             UsersInTournament.objects.all().delete()
-
-            # Obtener el usuario logueado
             if not request.user.is_authenticated:
                 return JsonResponse({'error': 'Usuario no autenticado.'}, status=401)
-
             player = UserProfile.objects.get(user=request.user)
-
-            # Crear un nuevo registro en UsersInTournament
             UsersInTournament.objects.create(
                 username=player.user.username,
                 wins=player.wins,
                 losses=player.losses,
                 tournaments_won=player.tournaments_won
             )
-
-            # Redirigir directamente al juego
             return JsonResponse({'redirect_url': '/playground2'}, status=200)
         except UserProfile.DoesNotExist:
             return JsonResponse({'error': 'El usuario logueado no tiene un perfil asociado.'}, status=404)
@@ -258,7 +256,6 @@ def duplicate_1vs1(request):
             if not selected_player_ids or len(selected_player_ids) != 2:
                 return JsonResponse({'error': 'Se necesitan exactamente 2 jugadores para 1vs1.'}, status=400)
             UsersInTournament.objects.all().delete()
-
             for player_id in selected_player_ids:
                 player = UserProfile.objects.get(user_id=player_id)
                 UsersInTournament.objects.create(
@@ -474,15 +471,11 @@ def get_tournament_players(request):
 
     try:
         total_players = UsersInTournament.objects.count()
-        # Buscar la mayor potencia de 2 posible con los jugadores disponibles
         max_power = 1
         while (max_power * 2) <= total_players:
             max_power *= 2
-
         if max_power < 2:
             return Response({'error': 'No hay suficientes jugadores para un torneo (mínimo 2)'}, status=400)
-
-        # Obtener los primeros max_power jugadores
         players = list(UsersInTournament.objects.order_by('id')[:max_power])
         serialized = [{'username': p.username} for p in players]
         return Response({'players': serialized}, status=200)
@@ -500,20 +493,14 @@ def submit_tournament_match(request):
         return Response({'error': 'Faltan datos: winner y loser son requeridos.'}, status=400)
 
     try:
-        # Actualizar datos en UsersInTournament
         winner_entry, _ = UsersInTournament.objects.get_or_create(username=winner)
         loser_entry, _ = UsersInTournament.objects.get_or_create(username=loser)
-
         winner_entry.wins += 1
         loser_entry.losses += 1
-
         if is_final:
             winner_entry.tournaments_won += 1
-
         winner_entry.save()
         loser_entry.save()
-
-        # Si el torneo ha finalizado, sincronizar con UserProfile
         if is_final:
             sync_users_in_tournament_to_user_profile()
 
@@ -565,12 +552,6 @@ def update_user_profile(request):
         return Response({'error': f'El usuario {username} no existe.'}, status=404)
     except Exception as e:
         return Response({'error': str(e)}, status=500)
-
-
-
-
-
-
 
 def sync_users_in_tournament_to_user_profile():
     try:

@@ -1,20 +1,9 @@
 window.onload = async function () {
-    try {
-        log("Cargando jugador...");
-        await fetchPlayer();
-        log("Jugador cargado con éxito.");
-        updateAIDifficulty();
-        resetBall();
-        gameLoop();
-    } catch (error) {
-        log("Error al iniciar el juego:", error.message);
-    }
-};
 
 /*********************************************
  * 1. Redirigir console.log al elemento HTML *
  *********************************************/
-function logMessage(message) {
+/* function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
     p.innerHTML = message.replace(/\n/g, "<br>");
@@ -28,7 +17,7 @@ function log(...args) {
     args.forEach(arg => {
         logMessage(typeof arg === "object" ? JSON.stringify(arg) : arg);
     });
-}
+} */
 
 /********************
  * Conexión con API *
@@ -42,12 +31,12 @@ async function fetchPlayer() {
         const data = await response.json();
         if (response.ok && data.players && data.players.length > 0) {
             playerUsername = data.players[0].username;
-            log("Jugador cargado:", playerUsername);
+            //log("Jugador cargado:", playerUsername);
         } else {
             throw new Error(data.error || "No se pudo obtener jugador.");
         }
     } catch (error) {
-        log("Error obteniendo jugador:", error.message);
+        //log("Error obteniendo jugador:", error.message);
         throw error;
     }
 }
@@ -68,9 +57,9 @@ async function updateUserProfile(username, wins, losses) {
         if (!response.ok) {
             throw new Error(data.error || "Error al actualizar perfil.");
         }
-        log("Perfil actualizado:", data);
+        //log("Perfil actualizado:", data);
     } catch (error) {
-        log("Error actualizando perfil:", error.message);
+        //log("Error actualizando perfil:", error.message);
     }
 }
 
@@ -89,9 +78,9 @@ async function sync1vsIAStats() {
         if (!response.ok) {
             throw new Error(data.error || "Error al sincronizar estadísticas.");
         }
-        log("Estadísticas 1vsIA sincronizadas:", data.message);
+        //log("Estadísticas 1vsIA sincronizadas:", data.message);
     } catch (error) {
-        log("Error al sincronizar estadísticas 1vsIA:", error.message);
+        //log("Error al sincronizar estadísticas 1vsIA:", error.message);
     }
 }
 
@@ -179,16 +168,28 @@ const difficultySelect = document.getElementById('difficultySelect');
 AI_CONFIG.difficultyLevel = difficultySelect.value;
 
 document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowUp")
-        rightPaddle.dy = -5;
-    if (e.key === "ArrowDown")
-        rightPaddle.dy = 5;
-    if (e.key.toLowerCase() === "p")
-        isPaused = !isPaused;
+    if (!isPaused) {
+        if (e.key === "w")
+            leftPaddle.dy = -5;
+        if (e.key === "s")
+            leftPaddle.dy = 5;
+    }
 });
 document.addEventListener("keyup", (e) => {
-    if (["ArrowUp", "ArrowDown"].includes(e.key)) rightPaddle.dy = 0;
-});;
+    if (e.key === "w" || e.key === "s")
+        leftPaddle.dy = 0;
+    if (e.key === "p" || e.key === "P")
+        isPaused = !isPaused;
+});
+
+
+difficultySelect.addEventListener('change', (e) => {
+    AI_CONFIG.difficultyLevel  = e.target.value;
+    updateAIDifficulty();
+});
+
+document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
+document.getElementById("startButton").addEventListener("click", () => isPaused = false);
 
 function updateAIDifficulty() {
     const difficulty = AI_CONFIG.difficulties[AI_CONFIG.difficultyLevel];
@@ -316,3 +317,7 @@ function gameLoop() {
         requestAnimationFrame(gameLoop);
     }
 }
+
+updateAIDifficulty();
+gameLoop();
+};

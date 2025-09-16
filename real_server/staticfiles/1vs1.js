@@ -28,7 +28,7 @@ let playerUsernames = [];
 /*********************************************
  * 2. Redirigir console.log al elemento HTML *
  *********************************************/
-function logMessage(message) {
+/* function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
     p.innerHTML = message.replace(/\n/g, "<br>");
@@ -42,24 +42,21 @@ function log(...args) {
     args.forEach(arg => {
         logMessage(typeof arg === "object" ? JSON.stringify(arg) : arg);
     });
-}
+} */
 /* **** */
 
 async function fetchPlayersForGame(mode = "1vs1") {
     try {
-        log("obteniendo jugadores");
         const response = await fetch(`/get_players_for_game?game_type=${mode}`);
-        log("response");
         const data = await response.json();
-        log("data");
         if (response.ok) {
             playerUsernames = data.players.map(p => p.username);
-            log("Jugadores asignados:", playerUsernames);
+            //log("Jugadores asignados:", playerUsernames);
         } else {
-            log("Error obteniendo jugadores:", data.error);
+            //log("Error obteniendo jugadores:", data.error);
         }
     } catch (err) {
-        log("Error en la cuxion:", err.message);
+        //log("Error en la cuxion:", err.message);
     }
 }
 
@@ -147,16 +144,15 @@ async function sync1vs1Stats() {
                 'X-CSRFToken': getCookie('csrftoken'),
             },
         });
-        log("concexion")
 
         const data = await response.json();
         if (!response.ok) {
-            log("Error al sincronizar estadísticas 1vs1:", data.error);
+            //log("Error al sincronizar estadísticas 1vs1:", data.error);
         } else {
-            log("Estadísticas 1vs1 sincronizadas:", data.message);
+            //log("Estadísticas 1vs1 sincronizadas:", data.message);
         }
     } catch (error) {
-        log("Error de conexión al sincronizar estadísticas 1vs1:", error.message);
+        //log("Error de conexión al sincronizar estadísticas 1vs1:", error.message);
     }
 }
 
@@ -217,12 +213,12 @@ async function updateUserProfile(username, wins, losses) {
 
         const data = await response.json();
         if (!response.ok) {
-            log("Error:", data);
+            //log("Error:", data);
         } else {
-            log("Stats actualizadas:", data);
+            //log("Stats actualizadas:", data);
         }
     } catch (error) {
-        log("Error de conexión:", error.message);
+        //log("Error de conexión:", error.message);
     }
 }
 

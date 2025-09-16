@@ -148,8 +148,17 @@
         {% csrf_token %}
         {% for usuario in usuarios %}
           <div>
-            <input type="checkbox" id="player_{{ usuario.id }}" name="player_ids[]" value="{{ usuario.user.id }}">
-            <label for="player_{{ usuario.id }}">{{ usuario.user.username }}</label>
+            {% if usuario.user.id == current_user.id %}
+              <input type="checkbox" id="player_{{ usuario.id }}" name="player_ids[]" value="{{ usuario.user.id }}" checked disabled>
+              <input type="hidden" name="player_ids[]" value="{{ usuario.user.id }}">
+              <label for="player_{{ usuario.id }}">
+                {{ usuario.user.username }}
+                <span data-i18n="waitlist.you">(You)</span>
+              </label>
+            {% else %}
+              <input type="checkbox" id="player_{{ usuario.id }}" name="player_ids[]" value="{{ usuario.user.id }}">
+              <label for="player_{{ usuario.id }}">{{ usuario.user.username }}</label>
+            {% endif %}
           </div>
         {% empty %}
           <p data-i18n="waitlist.no_players">No hay jugadores disponibles</p>

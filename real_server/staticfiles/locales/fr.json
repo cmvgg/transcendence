@@ -86,6 +86,26 @@
 		"select2": "Sélectionnez les Judateurs Battleground",
 		"select3": "Sélectionnez les Judateurs Torneo",
 		"select4": "Sélectionnez les Judateurs Tron",
-		"no_players": "Aucun joueur disponible"
+		"no_players": "Aucun joueur disponible",
+		"you": "Vous"
+	},
+
+	"comentaruio9": "profile.html",
+	"profile": {
+		"title": "Profil",
+		"edit": "Modifier le profil",
+		"information": "Informations",
+		"name": "Nom",
+		"email": "E-mail",
+		"friends": "Amis",
+		"online": "En ligne",
+		"offline": "Hors ligne",
+		"no_friends": "Pas encore d'amis.",
+		"add_friend": "Ajouter un ami",
+		"remove_friend": "Supprimer un ami",
+		"stats": "Statistiques",
+		"victories": "Victoires",
+		"defeats": "Défaites",
+		"tournaments": "Tournois remportés"
 	}
 }

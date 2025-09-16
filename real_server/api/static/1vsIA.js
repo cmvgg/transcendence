@@ -3,7 +3,7 @@ window.onload = async function () {
 /*********************************************
  * 1. Redirigir console.log al elemento HTML *
  *********************************************/
-function logMessage(message) {
+/* function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
     p.innerHTML = message.replace(/\n/g, "<br>");
@@ -17,7 +17,7 @@ function log(...args) {
     args.forEach(arg => {
         logMessage(typeof arg === "object" ? JSON.stringify(arg) : arg);
     });
-}
+} */
 
 /********************
  * Conexión con API *
@@ -31,12 +31,12 @@ async function fetchPlayer() {
         const data = await response.json();
         if (response.ok && data.players && data.players.length > 0) {
             playerUsername = data.players[0].username;
-            log("Jugador cargado:", playerUsername);
+            //log("Jugador cargado:", playerUsername);
         } else {
             throw new Error(data.error || "No se pudo obtener jugador.");
         }
     } catch (error) {
-        log("Error obteniendo jugador:", error.message);
+        //log("Error obteniendo jugador:", error.message);
         throw error;
     }
 }
@@ -57,9 +57,9 @@ async function updateUserProfile(username, wins, losses) {
         if (!response.ok) {
             throw new Error(data.error || "Error al actualizar perfil.");
         }
-        log("Perfil actualizado:", data);
+        //log("Perfil actualizado:", data);
     } catch (error) {
-        log("Error actualizando perfil:", error.message);
+        //log("Error actualizando perfil:", error.message);
     }
 }
 
@@ -78,9 +78,9 @@ async function sync1vsIAStats() {
         if (!response.ok) {
             throw new Error(data.error || "Error al sincronizar estadísticas.");
         }
-        log("Estadísticas 1vsIA sincronizadas:", data.message);
+        //log("Estadísticas 1vsIA sincronizadas:", data.message);
     } catch (error) {
-        log("Error al sincronizar estadísticas 1vsIA:", error.message);
+        //log("Error al sincronizar estadísticas 1vsIA:", error.message);
     }
 }
 

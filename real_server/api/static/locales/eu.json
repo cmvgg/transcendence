@@ -26,8 +26,8 @@
 		"tournament": "Txapelketa"
 	},
 	
-	"high_score": "Puntuzio altuena: ",
-	"score": "Puntuzioa: ",
+	"high_score": "Puntuazio altuena: ",
+	"score": "Puntuazioa: ",
 
 	"__comentario2": "about.html",
 	"team": {
@@ -81,11 +81,31 @@
 
 	"__comentario8": "waitlist.html",
 	"waitlist": {
-		"title": "Espera",
-		"select1": "Selecciona Judadores 1vs1",
-		"select2": "Selecciona Judadores Battleground",
-		"select3": "Selecciona Judadores Torneo",
-		"select4": "Selecciona Judadores Tron",
-		"no_players": "No hay jugadores disponibles"
+		"title": "Itxaron",
+		"select1": "Aukeratu 1vs1 Jokalariak",
+		"select2": "Aukeratu Battleground Jokalariak",
+		"select3": "Aukeratu Torneo Jokalariak",
+		"select4": "Aukeratu Tron Jokalariak",
+		"no_players": "Ez dago jokalaririk erabilgarririk",
+		"you": "Zu"
+	},
+
+	"comentaruio9": "profile.html",
+	"profile": {
+		"title": "Profila",
+		"edit": "Editatu profila",
+		"information": "Informazioa",
+		"name": "Izena",
+		"email": "Posta elektronikoa",
+		"friends": "Lagunak",
+		"online": "Sarean",
+		"offline": "Lineaz kanpo",
+		"no_friends": "Oraindik ez duzu lagunik.",
+		"add_friend": "Laguna gehitu",
+		"remove_friend": "Laguna kendu",
+		"stats": "Estatistikak",
+		"victories": "Garaipenak",
+		"defeats": "Porrotak",
+		"tournaments": "Irabazitako txapelketak"
 	}
 }

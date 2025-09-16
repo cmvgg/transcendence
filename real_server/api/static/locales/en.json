@@ -6,7 +6,9 @@
 		"signin": "Sign in",
 		"register": "Register",
 		"select": "Select",
-		"about": "About us"
+		"about": "About us",
+		"profile": "Profile",
+		"logout": "Log out"
 	},
 
 	"player1_name": "[player 1 name]",
@@ -86,13 +88,33 @@
         "no_players": "Not enough players to play in the playground."
     },
 
-	"__comentario8": "waitlist.html",
+	"__comentario8": "waitlist",
 	"waitlist": {
 		"title": "Waitlist",
 		"select1": "Select 1vs1 Players",
 		"select2": "Select Battleground Players",
 		"select3": "Select Tournament Players",
 		"select4": "Select tron Players",
-		"no_players": "No players available"
+		"no_players": "No players available",
+		"you": "You"
+	},
+
+	"comentaruio9": "profile.html",
+	"profile": {
+		"title": "Profile",
+		"edit": "Edit profile",
+		"information": "Information",
+		"name": "Name",
+		"email": "Email",
+		"friends": "Friends",
+		"online": "Online",
+		"offline": "Offline",
+		"no_friends": "No friends yet.",
+		"add_friend": "Add friend",
+		"remove_friend": "Remove friend",
+		"stats": "Statistics",
+		"victories": "Victories",
+		"defeats": "Defeats",
+		"tournaments": "Tournaments won"
 	}
 }

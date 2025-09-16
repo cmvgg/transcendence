@@ -88,11 +88,31 @@
 
 	"__comentario8": "waitlist.html",
 	"waitlist": {
-		"title": "Itxaron",
-		"select1": "Aukeratu 1vs1 Jokalariak",
-		"select2": "Aukeratu Battleground Jokalariak",
-		"select3": "Aukeratu Torneo Jokalariak",
-		"select4": "Aukeratu Tron Jokalariak",
-		"no_players": "Ez dago jokalaririk erabilgarririk"
+		"title": "Espera",
+		"select1": "Selecciona Judadores 1vs1",
+		"select2": "Selecciona Judadores Battleground",
+		"select3": "Selecciona Judadores Torneo",
+		"select4": "Selecciona Judadores Tron",
+		"no_players": "No hay jugadores disponibles",
+		"you": "Tú"
+	},
+
+	"comentaruio9": "profile.html",
+	"profile": {
+		"title": "Perfil",
+		"edit": "Editar perfil",
+		"information": "Información",
+		"name": "Nombre",
+		"email": "Mail",
+		"friends": "Amigos",
+		"online": "En línea",
+		"offline": "Desconectado",
+		"no_friends": "Aún no hay amigos.",
+		"add_friend": "Añade amigos",
+		"remove_friend": "Eliminar amigos",
+		"stats": "Estadisticascas",
+		"victories": "Victorias",
+		"defeats": "Derrotas",
+		"tournaments": "Torneos ganados"
 	}
 }
