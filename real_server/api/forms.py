@@ -21,7 +21,7 @@ class signInForm(forms.Form):
 #registrarse
 class RegisterForm(forms.Form):
     name = forms.CharField(label='Name')
-    nickname = forms.CharField(label='Nickname')
+    nickname = forms.CharField(label='Username')
     email = forms.EmailField(label='Email')
     password = forms.CharField(max_length=20, widget=forms.PasswordInput())
     avatar = forms.ImageField(label='avatar', required=False)

@@ -133,37 +133,39 @@ def register(request):
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             avatar = form.cleaned_data.get('avatar')
-
-            # Crear el usuario utilizando el nombre como username
-            user = User.objects.create_user(first_name=name, email=email, password=password, username=nickname)
-            login(request, user)
-            profile = UserProfile.objects.get(user = user)
-            profile.avatar = avatar
-            profile.save()
-            # Crear estadisticas de usuario
-            user_stats = TournamentStats.objects.create(id = user.id, username=user.username, wins=0, losses=0, tournaments_won=0)
-            user_stats.save()
-            # Crear el perfil de usuario
-            #user_profile = UserProfile.objects.create(
-            #    user = user,
-            #    avatar= avatar,
-            #)
-            #user_profile.friends.add(user.id)
-            #user_profile.save()
-            
-            return HttpResponse("""
-                <html>
-                <head>
-                    <script type="text/javascript">
-                        window.opener.location.href = "/profile"
-                    </script>
-                    <script type="text/javascript">
-                        window.close();
-                    </script>
-                </head>
-                <body></body>
-                </html>                                                                                                                   
-            """)
+            if User.objects.filter(username=nickname).exists():
+                    messages.error(request, 'This username already exists.')
+            else:
+                    # Crear el usuario utilizando el nombre como username
+                    user = User.objects.create_user(first_name=name, email=email, password=password, username=nickname)
+                    login(request, user)
+                    profile = UserProfile.objects.get(user = user)
+                    profile.avatar = avatar
+                    profile.save()
+                    # Crear estadisticas de usuario
+                    user_stats = TournamentStats.objects.create(id = user.id, username=user.username, wins=0, losses=0, tournaments_won=0)
+                    user_stats.save()
+                    # Crear el perfil de usuario
+                    #user_profile = UserProfile.objects.create(
+                    #    user = user,
+                    #    avatar= avatar,
+                    #)
+                    #user_profile.friends.add(user.id)
+                    #user_profile.save()
+                    
+                    return HttpResponse("""
+                        <html>
+                        <head>
+                            <script type="text/javascript">
+                                window.opener.location.href = "/profile"
+                            </script>
+                            <script type="text/javascript">
+                                window.close();
+                            </script>
+                        </head>
+                        <body></body>
+                        </html>                                                                                                                   
+                    """)
 
     else:
         form = RegisterForm(request.GET)
@@ -456,7 +458,10 @@ def lista_y_selecciona_usuarios(request):
         for usuario in usuarios_seleccionados:
             if usuario != user:
                 user_profile.friends.append(usuario.id)
+                mutual = UserProfile.objects.get(user=usuario)
+                mutual.friends.append(user.id)
         user_profile.save()
+        mutual.save()
 
         # Opcional: Redirigir después del procesamiento
         # from django.shortcuts import redirect
@@ -499,7 +504,10 @@ def delete_friends(request):
         for usuario in usuarios_seleccionados:
             if usuario != user:
                 user_profile.friends.remove(usuario.id)
+                mutual = UserProfile.objects.get(user=usuario)
+                mutual.friends.remove(user.id)
         user_profile.save()
+        mutual.save()
 
         context = {'usuarios_seleccionados': usuarios_seleccionados}
         return HttpResponse("""

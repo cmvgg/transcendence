@@ -117,7 +117,13 @@
 <div class="row  ">
   <div class="col"></div>
   <div style="background-color: black ;color: whitesmoke; height: auto; font-family: Pixelify Sans, sans-serif; background-image: url('../../staticfiles/oie_transparent.png'); background-repeat: no-repeat; background-position: center; background-size: cover; border-radius: 10px;" class="col-3 shadow-lm text-center border-5 border-white">
-    
+    {% if messages %}
+      <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
     <div class="container py-3">
       <h5 class="d-flex justify-content-center" style="font-family: Tourney, sans-serif; color:rgb(84, 201, 201)">Register as retrogamer</h5>
       {% block content %}
