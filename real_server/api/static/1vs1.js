@@ -1,7 +1,7 @@
 window.onload = async function () {
-    log("kepasa");
+    //log("kepasa");
     await fetchPlayersForGame("1vs1");
-    log("otros")
+    //log("otros")
     resetBall();
     gameLoop();
 };
@@ -10,7 +10,7 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 const paddleWidth = 3;
-const paddleHeight = 20; //cambiar a 30
+const paddleHeight = 30; //cambiar a 30
 const borderHeight = 5;
 
 let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0, color: "white" };
@@ -45,27 +45,33 @@ function log(...args) {
 } */
 /* **** */
 
+function updatePlayerNames(playerUsernames) {
+    const player1NameElement = document.querySelector("#player1Name");
+    const player2NameElement = document.querySelector("#player2Name");
+
+    if (playerUsernames.length >= 2) {
+        player1NameElement.textContent = playerUsernames[0] || "Player 1";
+        player2NameElement.textContent = playerUsernames[1] || "Player 2";
+    } else {
+        player1NameElement.textContent = "Waiting...";
+        player2NameElement.textContent = "Waiting...";
+    }
+}
+
 async function fetchPlayersForGame(mode = "1vs1") {
     try {
         const response = await fetch(`/get_players_for_game?game_type=${mode}`);
         const data = await response.json();
         if (response.ok) {
             playerUsernames = data.players.map(p => p.username);
-            //log("Jugadores asignados:", playerUsernames);
+            updatePlayerNames(playerUsernames); // Actualizar nombres
         } else {
-            //log("Error obteniendo jugadores:", data.error);
+            //console.error("Error obteniendo jugadores:", data.error);
         }
     } catch (err) {
-        //log("Error en la cuxion:", err.message);
+        //console.error("Error en la conexión:", err.message);
     }
 }
-
-/* document.getElementById("pauseButton").addEventListener("click", () => {
-    isPaused = true;
-});
-document.getElementById("startButton").addEventListener("click", () => {
-    isPaused = false;
-}); */
 
 /* document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
 document.getElementById("startButton").addEventListener("click", () => isPaused = false);

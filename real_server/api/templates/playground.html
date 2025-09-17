@@ -117,16 +117,23 @@
 <body style="background-image: url('https://kingdomofhart.wordpress.com/wp-content/uploads/2014/08/smashwall.jpg'); background-repeat: no-repeat; background-size: cover;">
   <div class="row  " style=" display: flex; justify-content: center; height: 700px;">
     <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
-      <img src="{{ profile.avatar }}" alt="player one avatar" style="padding-top: 10px;"  width="200" height="200">
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" style="padding-top: 10px;" width="200px;" height="200px;">
+      {% else %}
+        <a href="#">
+          <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" style="padding-top: 10px;" width="200" height="200">
+        </a>
+      {% endif %}
       <br><br>
       <div style="background: linear-gradient(
         45deg,
         hsla(168, 85%, 52%, 0.5),
         hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
         height: 200px">
+        <br>
         <h1 style="font-family: 'Press Start 2P', system-ui; color:white; padding-top: 10px;" data-i18n="1up">1UP</h1>
-        <h1 style="font-family: 'Press Start 2P', system-ui; color:white" >{{user.username}}</h1>
-        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" >{{ user.id }}</h5>
+        <br>
+        <h2 id="player1Name" style="font-family: 'Press Start 2P', system-ui; color:white;" data-i18n="player1_name">[player 1 name]</h2>
       </div>
     </div>
 
@@ -145,15 +152,23 @@
     </script>
     <script src="{% static '1vs1.js' %}"></script>
     <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
-      <img src="../../staticfiles/avatar2.jpg" alt="player two avatar" width="200" height="200">
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" style="padding-top: 10px;" width="200px;" height="200px;">
+      {% else %}
+        <a href="#">
+          <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" style="padding-top: 10px;" width="200" height="200">
+        </a>
+      {% endif %}
       <br><br>
       <div style="background: linear-gradient(
         45deg,
         hsla(168, 85%, 52%, 0.5),
         hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
         height: 200px;">
-        <h1 style="font-family: 'Press Start 2P', system-ui; color: white;" data-i18n="2up">2UP</h1>
-        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player2_name">[player 2 name]</h5>
+        <br>
+        <h1 style="font-family: 'Press Start 2P', system-ui; color: white; padding-top: 10px;" data-i18n="2up">2UP</h1>
+        <br>
+        <h2 id="player2Name" style="font-family: 'Press Start 2P', system-ui; color:white;" data-i18n="player2_name">[player 2 name]</h2>  
       </div>
     </div>
   </div>
@@ -171,14 +186,14 @@
     </div>
     <div class="col"></div>
   </div>
-
+  <br>
   <!-- <div id="log"></div>  --><!-- Logs -->
 
   <div class="col">
     <p style="background-color: black;">
     <div style="font-family: 'Press Start 2P', system-ui; color:white; background-color: black; display: flex; justify-content: center; align-items: center;">
       <h1 data-i18n="high_score" style="margin-right: 10px;">High score:</h1>
-      <h1>[ {{ high_score.username }}: {{high_score.wins}} ]</h1>
+      <h1>[ {{ high_score.user.username }}: {{high_score.wins}} ]</h1>
     </div>
   </div>
 </body>
@@ -205,15 +220,11 @@
               <a class="nav-link" href="/register" data-i18n="nav.signin">Sign in</a>
             </h6>
           </div>
-          <!-- Grid column -->
-          <!-- Grid column -->
           <div class="col-md-2">
             <h6 class="footer_nav">
               <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
             </h6>
           </div>
-          <!-- Grid column -->
-          <!-- Grid column -->
           <div class="col-md-2">
             <h6 class="footer_nav">
               <a class="nav-link" href="/about" data-i18n="nav.about">About us</a>
@@ -250,6 +261,5 @@
     <!-- Copyright -->
   </footer>
   <!-- Footer -->
-   
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
 </html>

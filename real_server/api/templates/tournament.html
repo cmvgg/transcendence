@@ -150,19 +150,25 @@
 <body style="background-image: url('https://kingdomofhart.wordpress.com/wp-content/uploads/2014/08/smashwall.jpg'); background-repeat: no-repeat; background-size: cover;">
   <div class="row  " style=" display: flex; justify-content: center; height: 700px;">
     <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
-      <img src="../../staticfiles/avatar1.jpg" alt="player one avatar" style="padding-top: 10px;"  width="200" height="200">
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" style="padding-top: 10px;" width="200px;" height="200px;">
+      {% else %}
+        <a href="#">
+          <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" style="padding-top: 10px;" width="200" height="200">
+        </a>
+      {% endif %}
       <br><br>
       <div style="background: linear-gradient(
         45deg,
         hsla(168, 85%, 52%, 0.5),
         hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
         height: 200px">
+        <br>
         <h1 style="font-family: 'Press Start 2P', system-ui; color:white; padding-top: 10px;" data-i18n="1up">1UP</h1>
-        <h1 style="font-family: 'Press Start 2P', system-ui; color:white" >{{loged_user.username}}</h1>
-        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" >{{ loged_user.id }}</h5>
+        <br>
+        <h1 id="player1Name" style="font-family: 'Press Start 2P', system-ui; color:white;" data-i18n="player1_name">[player 1 name]</h1>
       </div>
     </div>
-
     <div style=" font-family: Tourney, sans-serif; height: 650px; display: flex; justify-content: center; background-size:contain; background-position: center top; background-repeat: no-repeat" class="col-7 shadow display: flex; flex-direction: row">
       <canvas class=" border border-5 border-white " id="gameCanvas"  style=" margin-top: 10% ; width:90%; height: 90%; background-color:black; border-radius: 20px;"></canvas>	
     </div>
@@ -178,19 +184,27 @@
     </script>
     <script src="{% static 'tournament.js' %}"></script>
     <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
-      <img src="../../staticfiles/avatar2.jpg" alt="player two avatar" width="200" height="200">
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" style="padding-top: 10px;" width="200px;" height="200px;">
+      {% else %}
+        <a href="#">
+          <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" style="padding-top: 10px;" width="200" height="200">
+        </a>
+      {% endif %}
+      <!-- <img src="../../staticfiles/avatar2.jpg" alt="player two avatar" width="200" height="200"> -->
       <br><br>
       <div style="background: linear-gradient(
         45deg,
         hsla(168, 85%, 52%, 0.5),
         hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
         height: 200px;">
-        <h1 style="font-family: 'Press Start 2P', system-ui; color: white;" data-i18n="2up">2UP</h1>
-        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player2_name">[player 2 name]</h5>
+        <br>
+        <h1 style="font-family: 'Press Start 2P', system-ui; color: white; padding-top: 10px;" data-i18n="2up">2UP</h1>
+        <br>
+        <h1 id="player2Name" style="font-family: 'Press Start 2P', system-ui; color:white;" data-i18n="player2_name">[player 2 name]</h1>
       </div>
     </div>
-
-  </div>
+  </div>  
   <div class="row" style="justify-content: center; ">
     <div class="col"></div>
     <div class="col-2 border-5 border-white" style="background: linear-gradient(
@@ -211,12 +225,12 @@
     </h2>
   </div> -->
   <div id="bracket" style="align-items: center;"></div>
-  <!-- <div id="log" style="align-items: center;"></div> --> <!-- Cambiar estilos a los retro -->
+  <!-- <div id="log" style="align-items: center;"></div> --> <!-- Cambiar estilos a los retro -->  
   <div class="col">
     <p style="background-color: black;">
     <div style="font-family: 'Press Start 2P', system-ui; color:white; background-color: black; display: flex; justify-content: center; align-items: center;">
       <h1 data-i18n="high_score" style="margin-right: 10px;">High score:</h1>
-      <h1>[ {{ high_score.username }}: {{high_score.wins}} ]</h1>
+      <h1>[ {{ high_score.user.username }}: {{high_score.wins}} ]</h1>
     </div>
   </div>
 </body>

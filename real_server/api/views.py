@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
-from django.forms import TextInput, EmailInput, Textarea
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets
@@ -10,18 +9,10 @@ from rest_framework.decorators import api_view
 from django.utils import timezone
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
-from django.contrib.auth.decorators import login_required
-from django.core.paginator import Paginator
-from django.db.models import Q
-import json, random
-from .models import User, Tournament, Match, ProfileData, UsersInTournament, UserProfile
-
+from .models import User, Tournament, UsersInTournament, UserProfile
 # Importar modelos y serializers
 import json
-from django.contrib import messages
 from django.contrib.auth import authenticate, login
-
 # Importar modelos y serializers
 from .serializers import (
     UserSerializer,
@@ -30,7 +21,6 @@ from .serializers import (
 # import the forms: sign in and register 
 from .forms import signInForm, RegisterForm
 
-#variables globales
 loged_user = None
 loged_stats = None
 
@@ -42,8 +32,7 @@ def index(request):
 def playground(request):
     global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
-
-    if users_in_tournament.count() < 2 or not request.user.is_authenticated:
+    if users_in_tournament.count() < 2:
         users_in_tournament.delete()
         return render(request, 'error.html', {
             'message': "No hay suficientes usuarios para jugar 1vs1.",
@@ -55,10 +44,9 @@ def playground(request):
 
 def playground2(request):
     global loged_user, loged_stats
-
     if not request.user.is_authenticated:
         return render(request, 'error.html', {
-            'message': "No hay suficientes usuarios para jugar 1vsIA.",
+            'message': "Your are not logged in to play 1vsIA.",
             'redirect_url': 'select',
             'redirect_text': 'Volver'
         })
@@ -68,8 +56,7 @@ def playground2(request):
 def battleground(request):
     global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
-
-    if users_in_tournament.count() < 4 or not request.user.is_authenticated:
+    if users_in_tournament.count() < 4:
         users_in_tournament.delete()
         return render(request, 'error.html', {
             'message': "No hay suficientes usuarios para jugar battleground (mínimo 4).",
@@ -82,8 +69,7 @@ def battleground(request):
 def tron(request):
     global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
-
-    if users_in_tournament.count() < 2 or not request.user.is_authenticated:
+    if users_in_tournament.count() < 2:
         users_in_tournament.delete()
         return render(request, 'error.html', {
             'message': "No hay suficientes usuarios para jugar tron.",
@@ -96,8 +82,7 @@ def tron(request):
 def tournament(request):
     global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
-
-    if users_in_tournament.count() < 4 or not request.user.is_authenticated:
+    if users_in_tournament.count() < 4:
         users_in_tournament.delete()
         return render(request, 'error.html', {
             'message': "No hay suficientes usuarios para un torneo (mínimo 4).",
@@ -204,6 +189,12 @@ def tmp1vs1(request):
     usuarios = list(UserProfile.objects.filter(is_online=True))
     current_user = request.user
     usuarios.sort(key=lambda u: u.user.id != current_user.id)
+    if not request.user.is_authenticated:
+        return render(request, 'error.html', {
+            'message': "You are not logued in.",
+            'redirect_url': 'select',
+            'redirect_text': 'Log in'
+        })
     return render(request, '1vs1_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios, 'current_user': current_user})
 
 def tmpbattleground(request):
@@ -211,6 +202,12 @@ def tmpbattleground(request):
     usuarios = list(UserProfile.objects.filter(is_online=True))
     current_user = request.user
     usuarios.sort(key=lambda u: u.user.id != current_user.id)
+    if not request.user.is_authenticated:
+        return render(request, 'error.html', {
+            'message': "You are not logued in.",
+            'redirect_url': 'select',
+            'redirect_text': 'Log in'
+        })
     return render(request, 'battleground_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios, 'current_user': current_user})
 
 def tmptron(request):
@@ -218,6 +215,12 @@ def tmptron(request):
     usuarios = list(UserProfile.objects.filter(is_online=True))
     current_user = request.user
     usuarios.sort(key=lambda u: u.user.id != current_user.id)
+    if not request.user.is_authenticated:
+        return render(request, 'error.html', {
+            'message': "You are not logued in.",
+            'redirect_url': 'select',
+            'redirect_text': 'Log in'
+        })
     return render(request, 'tron_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios, 'current_user': current_user})
 
 def tmptournament(request):
@@ -225,6 +228,12 @@ def tmptournament(request):
     usuarios = list(UserProfile.objects.filter(is_online=True))
     current_user = request.user
     usuarios.sort(key=lambda u: u.user.id != current_user.id)
+    if not request.user.is_authenticated:
+        return render(request, 'error.html', {
+            'message': "You are not logued in.",
+            'redirect_url': 'select',
+            'redirect_text': 'Log in'
+        })
     return render(request, 'tournament_waitlist.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'usuarios': usuarios, 'current_user': current_user})
 
 @csrf_exempt
@@ -233,7 +242,7 @@ def duplicate_1vsIA(request):
         try:
             UsersInTournament.objects.all().delete()
             if not request.user.is_authenticated:
-                return JsonResponse({'error': 'Usuario no autenticado.'}, status=401)
+                return JsonResponse({'error': 'User not autenticated.'}, status=401)
             player = UserProfile.objects.get(user=request.user)
             UsersInTournament.objects.create(
                 username=player.user.username,

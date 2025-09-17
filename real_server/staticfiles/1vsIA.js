@@ -227,12 +227,14 @@ function moveAI() {
 function update() {
     if (gameOver || isPaused) return;
 
-    let speed = Math.sqrt(ball.dx ** 2 + ball.dy ** 2);
-    speed = Math.min(speed * currentSettings.growth, currentSettings.maxSpeed);
 
-    const angle = Math.atan2(ball.dy, ball.dx);
+    //Cambiar velocidad
+    /* let speed = Math.sqrt(ball.dx ** 2 + ball.dy ** 2);
+    speed = Math.min(speed * currentSettings.growth, currentSettings.maxSpeed); */
+
+    /* const angle = Math.atan2(ball.dy, ball.dx);
     ball.dx = speed * Math.cos(angle);
-    ball.dy = speed * Math.sin(angle);
+    ball.dy = speed * Math.sin(angle); */
 
     leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y + leftPaddle.dy));
     moveAI();
@@ -244,20 +246,14 @@ function update() {
     if (ball.y - ball.radius < borderHeight || ball.y + ball.radius > canvas.height - borderHeight)
         ball.dy *= -1;
 
-    if (ball.dx < 0 &&
-        ball.x - ball.radius <= paddleWidth &&
-        ball.y > leftPaddle.y && ball.y < leftPaddle.y + paddleHeight)
-    {
+    if (ball.dx < 0 && ball.x - ball.radius <= paddleWidth && ball.y > leftPaddle.y && ball.y < leftPaddle.y + paddleHeight) {
         ball.dx *= -1;
-        ball.x = paddleWidth + ball.radius + 0.1;
+        /* ball.x = paddleWidth + ball.radius + 0.1; */
     }
 
-    if (ball.dx > 0 &&
-        ball.x + ball.radius >= canvas.width - paddleWidth &&
-        ball.y > rightPaddle.y && ball.y < rightPaddle.y + paddleHeight)
-    {
+    if (ball.dx > 0 && ball.x + ball.radius >= canvas.width - paddleWidth && ball.y > rightPaddle.y && ball.y < rightPaddle.y + paddleHeight) {
         ball.dx *= -1;
-        ball.x = canvas.width - paddleWidth - ball.radius - 0.1;
+        /* ball.x = canvas.width - paddleWidth - ball.radius - 0.1; */
     }
 
     if (ball.x - ball.radius < 0) {

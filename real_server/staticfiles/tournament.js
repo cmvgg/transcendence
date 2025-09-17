@@ -25,6 +25,9 @@ class Tournament {
     }
 
     getCurrentMatch() {
+        /* log("Ronda actual:", this.currentRound);
+        log("Índice de partido actual:", this.currentMatchIndex);
+        log("Partidos en la ronda actual:", this.matches[this.currentRound]) */
         const currentMatches = this.matches[this.currentRound];
         if (this.currentMatchIndex >= currentMatches.length) {
             return null;
@@ -84,7 +87,11 @@ class Tournament {
 /* function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
-    p.innerHTML = message.replace(/\n/g, "<br>");
+
+    // Asegurarte de que `message` sea una cadena
+    const safeMessage = typeof message === "string" ? message : JSON.stringify(message);
+
+    p.innerHTML = safeMessage.replace(/\n/g, "<br>");
     logDiv.appendChild(p);
     logDiv.scrollTop = logDiv.scrollHeight;
 }
@@ -183,6 +190,20 @@ function update() {
     }
 }
 
+function updatePlayerNames(currentMatch) {
+    const player1NameElement = document.querySelector("#player1Name");
+    const player2NameElement = document.querySelector("#player2Name");
+
+    //log("Valor de currentMatch:", currentMatch);
+    if (currentMatch) {
+        player1NameElement.textContent = currentMatch.player1 || "BYE";
+        player2NameElement.textContent = currentMatch.player2 || "BYE";
+    } else {
+        player1NameElement.textContent = "Waiting...";
+        player2NameElement.textContent = "Waiting...";
+    }
+}
+
 function checkGameOver() {
     if (leftScore >= maxScore) {
         gameOver = true;
@@ -231,6 +252,7 @@ function resetGameForNextMatch() {
         return;
     }
     //log(`\nNuevo partido: ${currentMatch.player1} vs ${currentMatch.player2}`);
+    updatePlayerNames(currentMatch);
     gameLoop();
 }
 
@@ -362,6 +384,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (currentMatch) {
             //log(`Comienza el torneo. Primer partido: ${currentMatch.player1} vs ${currentMatch.player2}`);
+            updatePlayerNames(currentMatch);
             resetGameForNextMatch();
         } else {
             //log("Error: No hay partidos disponibles.");
@@ -370,3 +393,4 @@ document.addEventListener("DOMContentLoaded", async () => {
         //log("Error de red:", err.message);
     }
 });
+

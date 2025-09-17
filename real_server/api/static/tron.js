@@ -50,6 +50,19 @@ function log(...args) {
  * 2. Conexión con la API *
  **************************/
 
+function updatePlayerNames(playerUsernames) {
+    const player1NameElement = document.querySelector("#player1Name");
+    const player2NameElement = document.querySelector("#player2Name");
+
+    if (playerUsernames.length >= 2) {
+        player1NameElement.textContent = playerUsernames[0] || "Player 1";
+        player2NameElement.textContent = playerUsernames[1] || "Player 2";
+    } else {
+        player1NameElement.textContent = "Waiting...";
+        player2NameElement.textContent = "Waiting...";
+    }
+}
+
 // Obtener jugadores para el modo "tron"
 async function fetchPlayersForGame(mode = "tron") {
     try {
@@ -57,12 +70,12 @@ async function fetchPlayersForGame(mode = "tron") {
         const data = await response.json();
         if (data.players && data.players.length > 0) {
             playerUsernames = data.players.map(p => p.username);
-            //log("Jugadores cargados:", playerUsernames);
+            updatePlayerNames(playerUsernames); // Actualizar nombres
         } else {
-            //log("No se pudo obtener jugadores.");
+            //console.error("No se pudo obtener jugadores.");
         }
     } catch (error) {
-        //log("Error obteniendo jugadores:", error);
+        //console.error("Error obteniendo jugadores:", error);
     }
 }
 

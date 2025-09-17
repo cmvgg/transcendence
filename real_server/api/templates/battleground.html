@@ -105,34 +105,42 @@
 <body style="background-image: url('../../staticfiles/fullscreen.png'); background-repeat: no-repeat; background-size: cover;">
 -->
 <body style="background-image: url('https://kingdomofhart.wordpress.com/wp-content/uploads/2014/08/smashwall.jpg'); background-repeat: no-repeat; background-size: cover;">
-  <div class="row  " style=" display: flex; justify-content: center; height: 810px;">
-    <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
-      <img src="../../staticfiles/avatar1.jpg" alt="player one avatar" style="padding-top: 10px;"  width="200" height="200">
-      <br>
+  <div class="row" style=" display: flex; justify-content: center; height: 810px;">
+    <div class="col-md-2 text-center " style="margin-top: 3%; justify-content: end;">
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" style="padding-top: 10px;" width="180px;" height="180px;">
+      {% else %}
+        <a href="#">
+          <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" style="padding-top: 10px;" width="200" height="200">
+        </a>
+      {% endif %}
+      <br><br>
       <div style="background: linear-gradient(
         45deg,
         hsla(168, 85%, 52%, 0.5),
         hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
         height: auto; padding: 10px 10px;">
-        <h1 style="font-family: 'Press Start 2P', system-ui; color:blue; padding-top: 10px;">1UP</h1>
-        <h1 style="font-family: 'Press Start 2P', system-ui; color:white" >{{user.username}}</h1>
-        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player1_name">[player 1 name]</h5>
-        <br>
-        <h3 style="font-family: 'Press Start 2P', system-ui; color:white" id="player1-score" data-i18n="">Score: 0</h3>
+        <h3 style="font-family: 'Press Start 2P', system-ui; color:blue; padding-top: 10px;" data-i18n="1up">1UP</h3>
+        <h3 id="player1Name" style="font-family: 'Press Start 2P', system-ui; color:white;" data-i18n="player1_name">[player 1 name]</h3>
+        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" id="player1-score" data-i18n="">Score: 0</h5>
       </div>
       <br><br>
-      <img src="../../staticfiles/avatar1.jpg" alt="player one avatar" style="padding-top: 10px;"  width="200" height="200">
-      <br>
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" style="padding-top: 10px;" width="180px;" height="180px;">
+      {% else %}
+        <a href="#">
+          <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" style="padding-top: 10px;" width="200" height="200">
+        </a>
+      {% endif %}
+      <br><br>
       <div style="background: linear-gradient(
         45deg,
         hsla(168, 85%, 52%, 0.5),
         hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
         height: auto; padding: 10px 10px;">
-        <h1 style="font-family: 'Press Start 2P', system-ui; color:green; padding-top: 10px;">2UP</h1>
-        <h1 style="font-family: 'Press Start 2P', system-ui; color:white">{{user.username}}</h1>
-        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player2_name">[player 2 name]</h5>
-        <br>
-        <h3 style="font-family: 'Press Start 2P', system-ui; color:white" id="player2-score" >Score: 0</h3>
+        <h3 style="font-family: 'Press Start 2P', system-ui; color: green; padding-top: 10px;" data-i18n="2up">2UP</h3>
+        <h3 id="player2Name" style="font-family: 'Press Start 2P', system-ui; color:white;" data-i18n="player2_name">[player 2 name]</h3>
+        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" id="player2-score" >Score: 0</h5>
       </div>
     </div>
 
@@ -150,31 +158,41 @@
     </script>
     <script src="{% static 'battleground.js' %}"></script>
 
-    <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
-      <img src="../../staticfiles/avatar2.jpg" alt="player two avatar" width="200" height="200">
-      <br>
+    <div class="col-md-2 text-center " style="margin-top: 3%; justify-content: end;">
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" style="padding-top: 10px;" width="180px;" height="180px;">
+      {% else %}
+        <a href="#">
+          <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" style="padding-top: 10px;" width="200" height="200">
+        </a>
+      {% endif %}
+      <br><br>
       <div style="background: linear-gradient(
         45deg,
         hsla(168, 85%, 52%, 0.5),
         hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
         height: auto; padding: 10px 10px;">
-        <h1 style="font-family: 'Press Start 2P', system-ui; color: red;">3UP</h1>
-        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player3_name">[player 3 name]</h5>
-        <br>
-        <h3 style="font-family: 'Press Start 2P', system-ui; color:white" id="player3-score" >Score: 0</h3>
+        <h3 style="font-family: 'Press Start 2P', system-ui; color:red; padding-top: 10px;" data-i18n="1up">3UP</h3>
+        <h3 id="player3Name" style="font-family: 'Press Start 2P', system-ui; color:white;" data-i18n="player3_name">[player 3 name]</h3>
+        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" id="player3-score" data-i18n="">Score: 0</h5>
       </div>
       <br><br>
-      <img src="../../staticfiles/avatar2.jpg" alt="player two avatar" width="200" height="200">
-      <br>
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" style="padding-top: 10px;" width="180px;" height="180px;">
+      {% else %}
+        <a href="#">
+          <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" style="padding-top: 10px;" width="200" height="200">
+        </a>
+      {% endif %}
+      <br><br>
       <div style="background: linear-gradient(
         45deg,
         hsla(168, 85%, 52%, 0.5),
         hsla(263, 88%, 45%, 0.7) 75%);  border-radius: 10px;
         height: auto; padding: 10px 10px;">
-        <h1 style="font-family: 'Press Start 2P', system-ui; color: yellow;">4UP</h1>
-        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player4_name">[player 4 name]</h5>
-        <br>
-        <h3 style="font-family: 'Press Start 2P', system-ui; color:white" id="player4-score" >Score: 0</h3>
+        <h3 style="font-family: 'Press Start 2P', system-ui; color:yellow; padding-top: 10px;" data-i18n="1up">4UP</h3>
+        <h3 id="player4Name" style="font-family: 'Press Start 2P', system-ui; color:white;" data-i18n="player4_name">[player 4 name]</h3>
+        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" id="player4-score" data-i18n="">Score: 0</h5>
       </div>
     </div>
     </div>
