@@ -6,7 +6,8 @@
 		"signin": "Iniciar sesion",
 		"register": "Registrarse",
 		"select": "Seleccionar",
-		"about": "Acerca de nosotros"
+		"about": "Acerca de nosotros",
+		"profile": "Perfil"
 	},
 
 	"player1_name": "[Nombre jugador 1]",

@@ -6,7 +6,8 @@
 		"signin": "Se connecter",
 		"register": "Enregistrer",
 		"select": "Sélectionner",
-		"about": "À propos de nous"
+		"about": "À propos de nous",
+		"profile": "Profil"
 	},
 
 	"player1_name": "[Nom du joueur 1]",

@@ -1,26 +1,23 @@
-{% load static %}
-<!DOCTYPE html>
+
+ <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title data-i18n="profile.title">Profile</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
   <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css" rel="stylesheet">
-  <link rel="stylesheet"  href="../../staticfiles/rest_framework/css/profile.css">
+{% load static %}
+  <script src="{% static 'i18n.js' %}"></script>
 </head>
 
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Honk&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P:wght@400&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');
   @import url('https://fonts.googleapis.com/css2?family=Sixtyfour+Convergence&display=swap');
-  @font-face {
-    font-family: 'Press Start 2P';
-    font-style: normal;
-    font-display: swap;
-    font-weight: 400;
-    src: url(@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff2) format('woff2'), url(@fontsource/press-start-2p/files/press-start-2p-latin-400-normal.woff) format('woff');
-    unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
-  }
+  @import url('https://fonts.googleapis.com/css2?family=Honk&family=Pixelify+Sans:wght@400..700&family=Press+Start+2P&family=Tourney:ital,wght@0,100..900;1,100..900&family=Sixtyfour+Convergence&display=swap');
+
+
   body {
     color: #797979;
     background: #f1f2f7;
@@ -396,6 +393,8 @@ text-rendering: optimizeLegibility;
           <li class="nav-item active">
             <a class="nav-link"  aria-current="page" href="/" data-i18n="nav.home">Home</a>
           </li>
+          
+          
           <li class="nav-item">
             <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
           </li>
@@ -404,20 +403,33 @@ text-rendering: optimizeLegibility;
           </li>
           {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" href="/profile"  data-i18n="nav.profile">Profile</a>
+            <a class="nav-link" href="/profile" >Profile</a>
           </li>
           {% else %}
-          <li class="nav-item">
-              <a class="nav-link" href="/signin" data-i18n="nav.signin">Sign in</a>
-            </li>
+            <a
+                data-mdb-ripple-init
+                class="btn btn-outline-light btn-sm m-2"
+                style="font-family: Pixelify Sans, sans-serif; ;"
+                onclick="openSignIn()"
+                role="button"
+                rel="nofollow"
+                target="_blank"
+                >Log in</a>
           {% endif%}
           {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link" href="/logout"  data-i18n="nav.logout">logout</a>
+            <a class="nav-link" href="/logout" >logout</a>
           </li>
           {% else %}
           <li class="nav-item">
-              <a class="nav-link" target="_self" href="/register" data-i18n="nav.register">Register</a>
+            <a
+            data-mdb-ripple-init
+            class="btn btn-outline-light btn-sm m-2"
+            style="font-family: Pixelify Sans, sans-serif; font-weight: bold;"
+            target="_blank"
+            role="button"
+            onclick="openRegister()"
+            >Register</a>
             </li>
           {% endif%}
         </ul>
@@ -518,9 +530,18 @@ text-rendering: optimizeLegibility;
         </div>
         <div class="row" style="background-color: black; width: auto;">
           <h1 style="color: red; font-family: Sixtyfour Convergence, sans-serif;font-size:40px" data-i18n="profile.stats">Statistics</h1>
-          <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif" data-i18n="profile.victories">Victories {{ profile.wins }}</h3>
-          <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif" data-i18n="profile.defeats">Losses {{ profile.losses }}</h3>
-          <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif" data-i18n="profile.tournaments">Won tournaments {{ profile.tournaments_won }}</h3>
+          <div style="display: flex; align-items: center; gap: 2vh;">
+            <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif" data-i18n="profile.victories">Victories</h3>
+            <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif">{{ profile.wins }}</h3>
+          </div>
+          <div style="display: flex; align-items: center; gap: 2vh;">
+            <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif" data-i18n="profile.defeats">Losses </h3>
+            <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif">{{ profile.losses }}</h3>
+          </div>
+          <div style="display: flex; align-items: center; gap: 2vh;">
+            <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif" data-i18n="profile.tournaments">Won tournaments </h3>
+            <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif">{{ profile.tournaments_won }}</h3>
+          </div>
         </div>
       </div>
     </div>
@@ -543,24 +564,41 @@ text-rendering: optimizeLegibility;
         <!-- Grid column -->
         <div class="col-md-3">
           <h6 class="footer_nav">
-            <a href="/">Home</a>
+            <a class="nav-link" href="/" data-i18n="nav.home">Home</a>
           </h6>
         </div>
         <!-- Grid column -->
         <!-- Grid column -->
-        <!-- <div class="col-md-3">
-          <h6 class="footer_nav">
-            <a href="/register">Sign in</a>
-          </h6>
-        </div> -->
         <div class="col-md-3">
           <h6 class="footer_nav">
-            <a href="/select">Select</a>
+            {% if user.is_authenticated %}
+              <a class="nav-link" href="/logout" >logout</a>
+            {% else %}
+              <!-- <a class="nav-link" href="/register" data-i18n="nav.register">Register</a> -->
+              <a
+                data-mdb-ripple-init
+                class="button btn-lm m-2"
+                style="text-decoration: none; display: flex; align-items: flex-end;"
+                onclick="openSignIn()"
+                role="button"
+                rel="nofollow"
+                target="_blank"
+                >Log in</a>
+            {% endif %}
           </h6>
         </div>
+        <!-- Grid column -->
+        <!-- Grid column -->
         <div class="col-md-3">
           <h6 class="footer_nav">
-            <a href="/about">About us</a>
+            <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
+          </h6>
+        </div>
+        <!-- Grid column -->
+        <!-- Grid column -->
+        <div class="col-md-3">
+          <h6 class="footer_nav">
+            <a class="nav-link" href="/about" data-i18n="nav.about">About us</a>
           </h6>
         </div>
         <!-- Grid column -->
@@ -591,6 +629,4 @@ text-rendering: optimizeLegibility;
   <!-- Copyright -->
 </footer>
 <!-- Footer -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-<script src="{% static 'i18n.js' %}"></script>
 </html>

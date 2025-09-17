@@ -7,8 +7,7 @@
 		"register": "Register",
 		"select": "Select",
 		"about": "About us",
-		"profile": "Profile",
-		"logout": "Log out"
+		"profile": "Profile"
 	},
 
 	"player1_name": "[player 1 name]",

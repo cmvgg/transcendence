@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pong mania</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T6c9IE9Ud4/bQv9lnJgffn18/G/2+H/xMOv9ikP0GlnFoum/5k7n9m7k9Xm/9Xm" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <link rel="shortcut icon" type="image/ico" href="/pong.png">
     <style>@import url('https://fonts.googleapis.com/css2?family=Honk&family=Pixelify+Sans:wght@400..700&family=Tourney:ital,wght@0,100..900;1,100..900&display=swap');</style>
 </head>
@@ -150,16 +150,35 @@
               <a class="nav-link" href="/" data-i18n="nav.home">Home</a>
             </h6>
           </div>
+          <!-- Grid column -->
+          <!-- Grid column -->
           <div class="col-md-3">
             <h6 class="footer_nav">
-              <a class="nav-link" href="/register" data-i18n="nav.register">Register</a>
+              {% if user.is_authenticated %}
+                <a class="nav-link" href="/logout" >logout</a>
+              {% else %}
+                <!-- <a class="nav-link" href="/register" data-i18n="nav.register">Register</a> -->
+                <a
+                  data-mdb-ripple-init
+                  class="button btn-lm m-2"
+                  style="text-decoration: none; display: flex; align-items: flex-end;"
+                  onclick="openSignIn()"
+                  role="button"
+                  rel="nofollow"
+                  target="_blank"
+                  >Log in</a>
+              {% endif %}
             </h6>
           </div>
-          <div class="col-md-3">
+          <!-- Grid column -->
+          <!-- Grid column -->
+          <div class="col-md-3">  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
             <h6 class="footer_nav">
               <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
             </h6>
           </div>
+          <!-- Grid column -->
+          <!-- Grid column -->
           <div class="col-md-3">
             <h6 class="footer_nav">
               <a class="nav-link" href="/about" data-i18n="nav.about">About us</a>
@@ -175,15 +194,7 @@
       <!-- Section: Text -->
       <section class="mb-5">
         <div class="row d-flex justify-content-center pt-3">
-          <div class="col-lg-10">
-            <p style="font-family: Honk, system-ui; font-size: 30px;">
-              Lorem ipsum transcendeces sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
-              commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
-            </p>
-          </div>
-        </div>
-      </section>
-      <!-- Section: Text -->
+          <div class="col-lg-10">    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     </div>
     <!-- Grid container -->
     <!-- Copyright -->
@@ -195,9 +206,9 @@
   </footer>
   <!-- Footer -->
    
-  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Qi+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+
   <!-- Cambiar -->
   <script src="{% static 'i18n.js' %}"></script>
-</body>
+</body>  
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 </html>

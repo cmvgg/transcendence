@@ -21,7 +21,7 @@ class signInForm(forms.Form):
 #registrarse
 class RegisterForm(forms.Form):
     name = forms.CharField(label='Name')
-    nickname = forms.CharField(label='Nickname')
+    nickname = forms.CharField(label='Username')
     email = forms.EmailField(label='Email')
     password = forms.CharField(max_length=20, widget=forms.PasswordInput())
     avatar = forms.ImageField(label='avatar', required=False)
@@ -31,24 +31,25 @@ class RegisterForm(forms.Form):
         self.helper = FormHelper()
         self.helper.form_id = 'id-exampleForm'
         self.helper.form_class = 'blueForms'
-        self.helper.form_method = 'get'
+        self.helper.form_method = 'post'
         self.helper.form_action = 'submit_survey'
         self.helper.add_input(Submit('submit', 'Submit'))
 
 #obtener la informacion de un usuario para editar su profile
-class editProfile(models.Model):
+class EditProfileForm(forms.Form):
     name = forms.CharField(label='Name')
     nickname = forms.CharField(label='Nickname')
     email = forms.EmailField(label='Email')
     password = forms.CharField(max_length=20, widget=forms.PasswordInput())
+    avatar = forms.ImageField(label='Avatar', required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.helper.form_id = 'id-exampleForm'
+        self.helper.form_id = 'id-editProfileForm'
         self.helper.form_class = 'blueForms'
-        self.helper.form_method = 'get'
+        self.helper.form_method = 'post'
         self.helper.form_action = 'submit_survey'
-        self.helper.add_input(Submit('submit', 'Submit'))
+        self.helper.add_input(Submit('submit', 'Save'))
 
-#CLAUDE
+

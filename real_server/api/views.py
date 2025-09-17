@@ -19,7 +19,7 @@ from .serializers import (
     TournamentSerializer,
 )
 # import the forms: sign in and register 
-from .forms import signInForm, RegisterForm
+from .forms import signInForm, RegisterForm, EditProfileForm
 
 loged_user = None
 loged_stats = None
@@ -138,6 +138,7 @@ def logout_view(request):
         logout(request)
         return redirect("/")
 
+import django.contrib.messages as messages
 def register(request):
     if request.method == 'POST':
         form = RegisterForm(request.POST, request.FILES)
@@ -148,37 +149,38 @@ def register(request):
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             avatar = form.cleaned_data.get('avatar')
+            if User.objects.filter(username=nickname).exists():
+                    messages.error(request, 'This username already exists.')
+            else:
+                    # Crear el usuario utilizando el nombre como username
+                    user = User.objects.create_user(first_name=name, email=email, password=password, username=nickname)
+                    login(request, user)
+                    profile = UserProfile.objects.get(user = user)
+                    profile.avatar = avatar
+                    profile.save()
+                    # Crear estadisticas de usuario
 
-            # Crear el usuario utilizando el nombre como username
-            user = User.objects.create_user(first_name=name, email=email, password=password, username=nickname)
-            login(request, user)
-            profile = UserProfile.objects.get(user = user)
-            profile.avatar = avatar
-            profile.save()
-            # Crear estadisticas de usuario
-            
-
-            # Crear el perfil de usuario
-            #user_profile = UserProfile.objects.create(
-            #    user = user,
-            #    avatar= avatar,
-            #)
-            #user_profile.friends.add(user.id)
-            #user_profile.save()
-            
-            return HttpResponse("""
-                <html>
-                <head>
-                    <script type="text/javascript">
-                        window.opener.location.href = "/profile"
-                    </script>
-                    <script type="text/javascript">
-                        window.close();
-                    </script>
-                </head>
-                <body></body>
-                </html>                                                                                                                   
-            """)
+                    # Crear el perfil de usuario
+                    #user_profile = UserProfile.objects.create(
+                    #    user = user,
+                    #    avatar= avatar,
+                    #)
+                    #user_profile.friends.add(user.id)
+                    #user_profile.save()
+                    
+                    return HttpResponse("""
+                        <html>
+                        <head>
+                            <script type="text/javascript">
+                                window.opener.location.href = "/profile"
+                            </script>
+                            <script type="text/javascript">
+                                window.close();
+                            </script>
+                        </head>
+                        <body></body>
+                        </html>                                                                                                                   
+                    """)
 
     else:
         form = RegisterForm(request.GET)
@@ -353,11 +355,11 @@ def duplicate_tournament(request):
     return JsonResponse({'error': 'Método no permitido.'}, status=405)
 
 def editprofile(request):
-    global loged_user, loged_stats
+   
     if request.method == 'POST':
 
 
-        form = RegisterForm(request.POST, request.FILES)
+        form = EditProfileForm(request.POST, request.FILES)
         if form.is_valid():
             # Extraer datos del formulario
             name = form.cleaned_data.get('name')
@@ -367,23 +369,26 @@ def editprofile(request):
             avatar = form.cleaned_data.get('avatar')
 
             # hacer de user el usuario logeado
-            user = User.objects.get(username=nickname)
-            #user = request.user
-            stats = UserProfile.objects.get(user=user)
+            #user = User.objects.get(username=nickname)
+            user = request.user
+           
             user.set_password(password)
             user.username = nickname
             user.first_name = name
             user.email = email
-            stats.avatar = avatar
-            
-            # Guardar los cambios
             user.save()
+            stats = UserProfile.objects.get(user=user)
+            stats.avatar = avatar
             stats.save()
+            # volver a logear al usuario con los nuevos datos   
+            
+            
+            
             login(request, user)
-            log_user = authenticate(request, username=nickname, password=password)
+            #log_user = authenticate(request, username=nickname, password=password)
             #stats = UserProfile.objects.get(user=log_user)
             #return render(request, 'signin.html', {'form': form})
-            return redirect("/profile", {'log_user': log_user, 'loged_stats':stats})
+            return redirect("/profile", {'log_user': user, 'profile':stats})
         
     else:
         form = RegisterForm(request.GET, request.FILES)
@@ -665,7 +670,12 @@ def lista_y_selecciona_usuarios(request):
         for usuario in usuarios_seleccionados:
             if usuario != user:
                 user_profile.friends.append(usuario.id)
+                mutual = UserProfile.objects.get(user=usuario)
+                mutual.friends.append(user.id)
+                mutual.save()
         user_profile.save()
+
+            
 
         # Opcional: Redirigir después del procesamiento
         # from django.shortcuts import redirect
@@ -708,7 +718,11 @@ def delete_friends(request):
         for usuario in usuarios_seleccionados:
             if usuario != user:
                 user_profile.friends.remove(usuario.id)
+                mutual = UserProfile.objects.get(user=usuario)
+                mutual.friends.remove(user.id)
+                mutual.save()
         user_profile.save()
+
 
         context = {'usuarios_seleccionados': usuarios_seleccionados}
         return HttpResponse("""

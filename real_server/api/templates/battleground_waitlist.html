@@ -10,8 +10,8 @@
     </style>
     </style>
     <link rel="shortcut icon" type="image/ico" href="/static/images/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="../../staticfiles/rest_framework/css/team.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 </head>
 
 <style>
@@ -93,38 +93,65 @@
   <!-- Navbar -->
   <nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
     45deg,
-    hsla(168, 85%, 52%, 0.5),
-    hsla(263, 88%, 45%, 0.5) 100%
+    hsla(168, 85%, 52%, 0.8),
+    hsla(263, 88%, 45%, 0.7) 100%
   )">
-    <div class="container-fluid" style="color: aqua; "> 
+    <div class="container-fluid" style="color: aqua; ">   
       <button
         data-mdb-collapse-init
         class="navbar-toggler"
         type="button"
-        data-mdb-target="#navbarExample01"
-        aria-controls="navbarExample01"
+        data-mdb-target="#header_navbar"
+        aria-controls="header_navbar"
         aria-expanded="false"
         aria-label="Toggle navigation"
       >
         <i class="fas fa-bars" style="color: aqua;"></i>
       </button>
-      <div class="collapse navbar-collapse" id="navbarExample01">
+      <div class="collapse navbar-collapse" id="header_navbar">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0" style="font-family: Pixelify Sans, sans-serif;">
           <li class="nav-item active">
             <a class="nav-link"  aria-current="page" href="/" data-i18n="nav.home">Home</a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" target="_self" href="/playground" data-i18n="nav.play">Play</a>
-          </li> -->
+          
+          
           <li class="nav-item">
-            <a class="nav-link" href="/register" data-i18n="nav.signin">Sign in</a>
+            <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
           </li>
-          <!-- <li class="nav-item">
-            <a class="nav-link" href="#" data-i18n="nav.select">Tournament</a>
-          </li> -->
           <li class="nav-item">
             <a class="nav-link" href="/about" data-i18n="nav.about">About</a>
           </li>
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="/profile" >Profile</a>
+          </li>
+          {% else %}
+            <a
+                data-mdb-ripple-init
+                class="btn btn-outline-light btn-sm m-2"
+                style="font-family: Pixelify Sans, sans-serif; ;"
+                onclick="openSignIn()"
+                role="button"
+                rel="nofollow"
+                target="_blank"
+                >Log in</a>
+          {% endif%}
+          {% if user.is_authenticated %}
+          <li class="nav-item">
+            <a class="nav-link" href="/logout" >logout</a>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a
+            data-mdb-ripple-init
+            class="btn btn-outline-light btn-sm m-2"
+            style="font-family: Pixelify Sans, sans-serif; font-weight: bold;"
+            target="_blank"
+            role="button"
+            onclick="openRegister()"
+            >Register</a>
+            </li>
+          {% endif%}
         </ul>
       </div>
       <select id="language-selector">
@@ -200,22 +227,41 @@
               <a class="nav-link" href="/playground" data-i18n="nav.play">Play</a>
             </h6>
           </div> -->
-          <div class="col-md-2">
+          <div class="col-md-3">
             <h6 class="footer_nav">
-              <a class="nav-link" href="/signin" data-i18n="nav.signin">Sign in</a>
+              <a class="nav-link" href="/" data-i18n="nav.home">Home</a>
             </h6>
           </div>
-          <div class="col-md-2">
+          <!-- Grid column -->
+          <!-- Grid column -->
+          <div class="col-md-3">
             <h6 class="footer_nav">
-              <a class="nav-link" href="/register" data-i18n="nav.register">Register</a>
+              {% if user.is_authenticated %}
+                <a class="nav-link" href="/logout" >logout</a>
+              {% else %}
+                <!-- <a class="nav-link" href="/register" data-i18n="nav.register">Register</a> -->
+                <a
+                  data-mdb-ripple-init
+                  class="button btn-lm m-2"
+                  style="text-decoration: none; display: flex; align-items: flex-end;"
+                  onclick="openSignIn()"
+                  role="button"
+                  rel="nofollow"
+                  target="_blank"
+                  >Log in</a>
+              {% endif %}
             </h6>
           </div>
-          <div class="col-md-2">
+          <!-- Grid column -->
+          <!-- Grid column -->
+          <div class="col-md-3">
             <h6 class="footer_nav">
               <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
             </h6>
           </div>
-          <div class="col-md-2">
+          <!-- Grid column -->
+          <!-- Grid column -->
+          <div class="col-md-3">
             <h6 class="footer_nav">
               <a class="nav-link" href="/about" data-i18n="nav.about">About us</a>
             </h6>
@@ -252,7 +298,7 @@
     <!-- Copyright -->
   </footer>
   <!-- Footer -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
   <script src="{% static 'i18n.js' %}"></script>
 </body>
 </html>
