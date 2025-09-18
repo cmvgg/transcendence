@@ -118,12 +118,5 @@ LOGGING = {
     }
 }
 
-# ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
-# URL a la que redirige @login_required si no hay sesión:
 LOGIN_URL = 'signin'
-# ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾
 
-
-#CLAUDE
-
-#CLAUDE END

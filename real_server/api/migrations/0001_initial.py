@@ -25,7 +25,6 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='UserProfile',
             fields=[
-                #('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('user', models.OneToOneField(
                     on_delete=models.CASCADE, 
                     to=settings.AUTH_USER_MODEL,
@@ -39,7 +38,6 @@ class Migration(migrations.Migration):
                 )),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                # more info to use instead of TournamentStats
                 ('wins', models.IntegerField(default=0, null = True)),
                 ('losses', models.IntegerField(default=0, blank=True, null=True)),
                 ("tournaments_won", models.IntegerField(default=0, blank=True, null=True)),

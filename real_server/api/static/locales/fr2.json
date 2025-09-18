@@ -1,0 +1,108 @@
+{
+	"__comentario1": "oui.html",
+	"nav": {
+		"home": "Baguette",
+		"play": "Croissant",
+		"signin": "Chocolat",
+		"register": "Eiffel",
+		"select": "Macaron",
+		"about": "Escargot",
+		"profile": "Fromage"
+	},
+
+	"player1_name": "[Oui]",
+	"player2_name": "[Croissant]",
+	"player3_name": "[Baguette]",
+	"player4_name": "[Chocolat]",
+
+	"button": {
+		"start": "Oui",
+		"pause": "Pain",
+		"close": "Baguette",
+		"save": "Escargot",
+		"submit": "Paris",
+		"one_player": "Tour Eiffel",
+		"two_player": "Louvre",
+		"battleground": "Ratatouille",
+		"tournament": "Notre-Dame"
+	},
+	
+	"high_score": "Bonjour",
+	"score": "Liberté",
+
+	"__comentario2": "baguette.html",
+	"team": {
+		"title": "Croissant",
+		"members": {
+			"cesar": {
+				"position": "Escargot",
+				"description": "Chocolat chaud."
+			},
+			"izaro": {
+				"position": "Baguette",
+				"description": "Parisien."
+			},
+			"jeffrey": {
+				"position": "Bordeaux",
+				"description": "Vive le fromage."
+			},
+			"basabe": {
+				"position": "Moulin Rouge",
+				"description": "Crêpes au sucre."
+			}
+		}
+	},
+
+	"__comentario3": "oui.html",
+	"hero": {
+		"title": "Baguette de la victoire",
+		"description": "Macaron et croissant ensemble!",
+		"project": "Liberté, égalité, fraternité!",
+		"gaming": "Escargots et crêpes!",
+		"register": "Vive la France!"
+	},
+	"modal": {
+		"title": "Oui",
+		"desc": "Chocolat au lait"
+	},
+
+	"__comentario4": "baguette.html",
+	"form": "Pain au chocolat",
+	"retrogamer": "Vive le fromage",
+
+	"__comentario5": "escargot.html",
+	"select": "Paris",
+	"choice": "Baguette et fromage",
+
+	"__comentario6": "tournament.html",
+	
+	"__comentario8": "pain.html",
+	"waitlist": {
+		"title": "Escargot",
+		"select1": "Croissant 1vs1",
+		"select2": "Macaron battleground",
+		"select3": "Tour Eiffel torneo",
+		"select4": "Louvre Tron",
+		"no_players": "Baguette",
+		"you": "Croissant"
+	},
+
+	"comentaruio9": "fromage.html",
+	"profile": {
+		"title": "Croissant",
+		"edit": "Chocolat",
+		"information": "Escargot",
+		"name": "Oui",
+		"email": "Baguette",
+		"friends": "Pain",
+		"online": "Chocolat",
+		"offline": "Escargot",
+		"no_friends": "Croissant",
+		"add_friend": "Baguette",
+		"remove_friend": "Escargot",
+		"stats": "Chocolat",
+		"victories": "Oui",
+		"defeats": "Baguette",
+		"tournaments": "Paris"
+	}
+}

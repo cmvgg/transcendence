@@ -4,7 +4,6 @@ from django import forms
 from django.db import models
 
 
-#logearse
 class signInForm(forms.Form):
     nickname = forms.CharField(label='Your Nickname')
     password = forms.CharField(max_length=20, widget=forms.PasswordInput())
@@ -18,7 +17,6 @@ class signInForm(forms.Form):
         self.helper.form_action = 'submit_survey'
         self.helper.add_input(Submit('submit', 'Submit'))
 
-#registrarse
 class RegisterForm(forms.Form):
     name = forms.CharField(label='Name')
     nickname = forms.CharField(label='Username')
@@ -35,7 +33,6 @@ class RegisterForm(forms.Form):
         self.helper.form_action = 'submit_survey'
         self.helper.add_input(Submit('submit', 'Submit'))
 
-#obtener la informacion de un usuario para editar su profile
 class EditProfileForm(forms.Form):
     name = forms.CharField(label='Name')
     nickname = forms.CharField(label='Nickname')

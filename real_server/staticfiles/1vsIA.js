@@ -228,13 +228,6 @@ function update() {
     if (gameOver || isPaused) return;
 
 
-    //Cambiar velocidad
-    /* let speed = Math.sqrt(ball.dx ** 2 + ball.dy ** 2);
-    speed = Math.min(speed * currentSettings.growth, currentSettings.maxSpeed); */
-
-    /* const angle = Math.atan2(ball.dy, ball.dx);
-    ball.dx = speed * Math.cos(angle);
-    ball.dy = speed * Math.sin(angle); */
 
     leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y + leftPaddle.dy));
     moveAI();

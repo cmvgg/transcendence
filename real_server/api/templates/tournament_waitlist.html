@@ -46,7 +46,7 @@
     text-decoration:dotted;
     font-size: 40px;
   }
-  .usuarios-box {
+  .users-box {
     background: rgba(0,0,0,0.7);
     padding: 30px 50px;
     border: 3px solid aqua;
@@ -62,7 +62,7 @@
     justify-content: center;
     margin-top: 20px;
   }
-  .usuarios-box p { margin: 8px 0; }
+  .users-box p { margin: 8px 0; }
   .arcade_botton {
     position: relative;
     border-style: double;
@@ -90,7 +90,6 @@
 </style>
 
 <body>
-  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
   45deg,
   hsla(168, 85%, 52%, 0.8),
@@ -159,36 +158,35 @@
       <option value="es">🇪🇸 Español</option>
       <option value="eu">🇵🇲 Euskera</option>
       <option value="fr">🇫🇷 Français</option>
+      <option value="fr2">🥐 Clouseau</option>
     </select>
   </div>
 </nav>
-  <!-- Navbar -->
 
   <div class="videobg">
     <video autoplay loop muted>
       <source src="https://www.shutterstock.com/shutterstock/videos/3467987197/preview/stock-footage--k-abstract-pixel-animation-multicolored-digital-background-geometric-of-square-pattern-moving-with.webm" type="video/webm">
     </video>
     <h1 style="text-align:center; font-family:Tourney, sans-serif; color:aqua; margin-top:2vw;" data-i18n="waitlist.select3">Select Tournament Players</h1>
-    <!-- Bloque central de usuarios -->
-    <div class="usuarios-box">
+    <div class="users-box">
       <form id="playersForm" method="POST" action="{% url 'duplicate_tournament' %}">
         {% csrf_token %}
-        {% for usuario in usuarios %}
+        {% for tmp_user in users %}
           <div>
-            {% if usuario.user.id == current_user.id %}
-              <input type="checkbox" id="player_{{ usuario.id }}" name="player_ids[]" value="{{ usuario.user.id }}" checked disabled>
-              <input type="hidden" name="player_ids[]" value="{{ usuario.user.id }}">
-              <label for="player_{{ usuario.id }}">
-                {{ usuario.user.username }} 
+            {% if tmp_user.user.id == current_user.id %}
+              <input type="checkbox" id="player_{{ tmp_user.id }}" name="player_ids[]" value="{{ tmp_user.user.id }}" checked disabled>
+              <input type="hidden" name="player_ids[]" value="{{ tmp_user.user.id }}">
+              <label for="player_{{ tmp_user.id }}">
+                {{ tmp_user.user.username }} 
                 <span data-i18n="waitlist.you">(You)</span>
               </label>
             {% else %}
-              <input type="checkbox" id="player_{{ usuario.id }}" name="player_ids[]" value="{{ usuario.user.id }}">
-              <label for="player_{{ usuario.id }}">{{ usuario.user.username }}</label>
+              <input type="checkbox" id="player_{{ tmp_user.id }}" name="player_ids[]" value="{{ tmp_user.user.id }}">
+              <label for="player_{{ tmp_user.id }}">{{ tmp_user.user.username }}</label>
             {% endif %}
           </div>
         {% empty %}
-          <p data-i18n="waitlist.no_players">No hay jugadores disponibles</p>
+          <p data-i18n="waitlist.no_players">No available players</p>
         {% endfor %}
         <div class="btn-container">
           <button id="btnJugar" class="arcade_botton" type="submit" disabled data-i18n="nav.play">Jugar</button>
@@ -215,28 +213,20 @@
     updatePlayButtonState();
   </script>
 
-  <!-- Footer -->
-  <footer class="text-center text-white" style="margin-top: -50px ;background-image: url('https://cdn.dribbble.com/userupload/28311765/file/original-b3d1b68257e6c14b3eca96fc95f0649c.gif');background-repeat: no-repeat; background-size: cover ;background-position: center center;";> <!--  #cd09d4 -->
-    <!-- Grid container -->
+  <footer class="text-center text-white" style="margin-top: -50px ;background-image: url('https://cdn.dribbble.com/userupload/28311765/file/original-b3d1b68257e6c14b3eca96fc95f0649c.gif');background-repeat: no-repeat; background-size: cover ;background-position: center center;";>
     <div class="container">
-      <!-- Section: Links -->
       <section class="mt-5" style="height: 50px;">
-        <!-- Grid row-->
         <div class="row text-center d-flex justify-content-center pt-3" style="font-family: Honk, system-ui;">
-          <!-- Grid column -->
           <div class="col-md-3">
             <h6 class="footer_nav">
               <a class="nav-link" href="/" data-i18n="nav.home">Home</a>
             </h6>
           </div>
-          <!-- Grid column -->
-          <!-- Grid column -->
           <div class="col-md-3">
             <h6 class="footer_nav">
               {% if user.is_authenticated %}
                 <a class="nav-link" href="/logout" >logout</a>
               {% else %}
-                <!-- <a class="nav-link" href="/register" data-i18n="nav.register">Register</a> -->
                 <a
                   data-mdb-ripple-init
                   class="button btn-lm m-2"
@@ -249,52 +239,39 @@
               {% endif %}
             </h6>
           </div>
-          <!-- Grid column -->
-          <!-- Grid column -->
           <div class="col-md-3">
             <h6 class="footer_nav">
               <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
             </h6>
           </div>
-          <!-- Grid column -->
-          <!-- Grid column -->
           <div class="col-md-3">
             <h6 class="footer_nav">
               <a class="nav-link" href="/about" data-i18n="nav.about">About us</a>
             </h6>
           </div>
-          <!-- Grid column -->
         </div>
-        <!-- Grid row-->
       </section>
-      <!-- Section: Links -->
 
       <hr class="my-2" />
 
-      <!-- Section: Text -->
       <section class="mb-5">
         <div class="row d-flex justify-content-center pt-3">
           <div class="col-lg-10">
             <p style="font-family: Honk, system-ui; font-size: 30px;">
-              Lorem ipsum transcendeces sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
-              commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
+              Lorem ipsum transcendece sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
+              common-core pariatur est quia magnam 42 Urduliz, ommnia est bytes.
             </p>
           </div>
         </div>
       </section>
-      <!-- Section: Text -->
 
     </div>
-    <!-- Grid container -->
 
-    <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
       © 2025 Copyright:
       <a class="text-white" href="https://mdbootstrap.com/">Retropong</a>
     </div>
-    <!-- Copyright -->
   </footer>
-  <!-- Footer -->
   <script src="{% static 'i18n.js' %}"></script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 window.onload = async function () {
 
-/*********************************************
- * 1. Redirigir console.log al elemento HTML *
- *********************************************/
+/**************************
+ * 1. console.log to HTML *
+ **************************/
 /* function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
@@ -19,68 +19,53 @@ function log(...args) {
     });
 } */
 
-/********************
- * Conexión con API *
- ********************/
+/*****************
+ * Conection API *
+ *****************/
 let playerUsername = "";
 
-// Fetch del jugador humano
 async function fetchPlayer() {
     try {
         const response = await fetch("/get_players_for_game?game_type=1vsIA");
         const data = await response.json();
         if (response.ok && data.players && data.players.length > 0) {
             playerUsername = data.players[0].username;
-            //log("Jugador cargado:", playerUsername);
         } else {
             throw new Error(data.error || "No se pudo obtener jugador.");
         }
     } catch (error) {
-        //log("Error obteniendo jugador:", error.message);
         throw error;
     }
 }
 
-// Enviar estadísticas al backend
 async function updateUserProfile(username, wins, losses) {
-    try {
-        const response = await fetch("/update_user_profile/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken"),
-            },
-            body: JSON.stringify({ username, wins, losses }),
-        });
+    const response = await fetch("/update_user_profile/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken"),
+        },
+        body: JSON.stringify({ username, wins, losses }),
+    });
 
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.error || "Error al actualizar perfil.");
-        }
-        //log("Perfil actualizado:", data);
-    } catch (error) {
-        //log("Error actualizando perfil:", error.message);
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error || "Error al actualizar perfil.");
     }
 }
 
-// Sincronizar estadísticas de 1vsIA
 async function sync1vsIAStats() {
-    try {
-        const response = await fetch("/sync_1vsIA_stats/", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRFToken": getCookie("csrftoken"),
-            },
-        });
+    const response = await fetch("/sync_1vsIA_stats/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRFToken": getCookie("csrftoken"),
+        },
+    });
 
-        const data = await response.json();
-        if (!response.ok) {
-            throw new Error(data.error || "Error al sincronizar estadísticas.");
-        }
-        //log("Estadísticas 1vsIA sincronizadas:", data.message);
-    } catch (error) {
-        //log("Error al sincronizar estadísticas 1vsIA:", error.message);
+    const data = await response.json();
+    if (!response.ok) {
+        throw new Error(data.error || "Error al sincronizar estadísticas.");
     }
 }
 
@@ -119,9 +104,9 @@ async function checkGameOver() {
     }
 }
 
-/********************
- * Lógica del Juego *
- ********************/
+/********
+ * Game *
+ ********/
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -227,15 +212,6 @@ function moveAI() {
 function update() {
     if (gameOver || isPaused) return;
 
-
-    //Cambiar velocidad
-    /* let speed = Math.sqrt(ball.dx ** 2 + ball.dy ** 2);
-    speed = Math.min(speed * currentSettings.growth, currentSettings.maxSpeed); */
-
-    /* const angle = Math.atan2(ball.dy, ball.dx);
-    ball.dx = speed * Math.cos(angle);
-    ball.dy = speed * Math.sin(angle); */
-
     leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y + leftPaddle.dy));
     moveAI();
     rightPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, rightPaddle.y));
@@ -248,12 +224,10 @@ function update() {
 
     if (ball.dx < 0 && ball.x - ball.radius <= paddleWidth && ball.y > leftPaddle.y && ball.y < leftPaddle.y + paddleHeight) {
         ball.dx *= -1;
-        /* ball.x = paddleWidth + ball.radius + 0.1; */
     }
 
     if (ball.dx > 0 && ball.x + ball.radius >= canvas.width - paddleWidth && ball.y > rightPaddle.y && ball.y < rightPaddle.y + paddleHeight) {
         ball.dx *= -1;
-        /* ball.x = canvas.width - paddleWidth - ball.radius - 0.1; */
     }
 
     if (ball.x - ball.radius < 0) {

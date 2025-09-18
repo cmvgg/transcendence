@@ -48,7 +48,7 @@ urlpatterns = [
     #
     path('', include(router.urls)),
 	path('', include('django_prometheus.urls')),
-    path('lista_y_selecciona_usuarios', views.lista_y_selecciona_usuarios, name='lista_y_selecciona_usuarios'),
+    path('add_friends', views.add_friends, name='add_friends'),
     path('delete_friends', views.delete_friends, name='delete_friends'),
 ]
 

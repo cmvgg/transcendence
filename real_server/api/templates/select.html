@@ -65,7 +65,6 @@
 </style>
 
 <body>
-<!-- Navbar -->
 <nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
   45deg,
   hsla(168, 85%, 52%, 0.8),
@@ -134,6 +133,7 @@
       <option value="es">🇪🇸 Español</option>
       <option value="eu">🇵🇲 Euskera</option>
       <option value="fr">🇫🇷 Français</option>
+      <option value="fr2">🥐 Clouseau</option>
     </select>
   </div>
 </nav>
@@ -146,12 +146,6 @@
     window.open("http://localhost:8000/signin", "registration form", "width=1200,height=800,left=300,top=100");
   }
 </script>
-<!-- Navbar -->
-
-  <!-- recursos
-  https://www.shutterstock.com/shutterstock/videos/3467987197/preview/stock-footage--k-abstract-pixel-animation-multicolored-digital-background-geometric-of-square-pattern-moving-with.webm
-  https://us.123rf.com/450wm/tetsuobuseteru/tetsuobuseteru1701/tetsuobuseteru170100005/68319422-m%C3%A1quina-de-juego-de-arcade-retro-ilustraci%C3%B3n-del-vector.jpg
-  -->
 
   <div class="videobg" >
     <video autoplay loop muted>
@@ -162,7 +156,6 @@
     </div>
      <div class="row fit-content" style="display: flex; justify-content: space-around;">
       <div class="col text-center" style="display: flex; justify-content: flex-start; height: 250px; max-width: 200px;">
-        <!-- <button class="arcade_botton border-5 rounded-circle" onclick="window.location.href='/playground2'">One Player</button> -->
         <button class="arcade_botton border-5 rounded-circle" onclick="start1vsIA()">One Player</button>
         <script>
           async function start1vsIA() {
@@ -216,27 +209,20 @@
     </div>      
   </div>
 
-  <!-- Footer -->
-  <footer class="text-center text-white" style="margin-top: -50px ;background-image: url('https://cdn.dribbble.com/userupload/28311765/file/original-b3d1b68257e6c14b3eca96fc95f0649c.gif');background-repeat: no-repeat; background-size: cover ;background-position: center center;";> <!--  #cd09d4 -->
-    <!-- Grid container -->
+  <footer class="text-center text-white" style="margin-top: -50px ;background-image: url('https://cdn.dribbble.com/userupload/28311765/file/original-b3d1b68257e6c14b3eca96fc95f0649c.gif');background-repeat: no-repeat; background-size: cover ;background-position: center center;";>
     <div class="container">
-      <!-- Section: Links -->
       <section class="mt-5" style="height: 50px;">
-        <!-- Grid row-->
         <div class="row text-center d-flex justify-content-center pt-3" style="font-family: Honk, system-ui;">
-          <!-- Grid column -->
           <div class="col-md-3">
             <h6 class="footer_nav">
               <a class="nav-link" href="/" data-i18n="nav.home">Home</a>
             </h6>
           </div>
-          <!-- Grid column -->
           <div class="col-md-3">
             <h6 class="footer_nav">
               {% if user.is_authenticated %}
                 <a class="nav-link" href="/logout">logout</a>
               {% else %}
-                <!-- <a class="nav-link" href="/register" data-i18n="nav.register">Register</a> -->
                 <a
                   data-mdb-ripple-init
                   class="button btn-lm m-2"
@@ -249,51 +235,39 @@
               {% endif %}
             </h6>
           </div>
-          <!-- Grid column -->
-          <!-- Grid column -->
           <div class="col-md-3">
             <h6 class="footer_nav">
               <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
             </h6>
           </div>
-          <!-- Grid column -->
           <div class="col-md-3">
             <h6 class="footer_nav">
               <a class="nav-link" href="/about" data-i18n="nav.about">About us</a>
             </h6>
           </div>
-          <!-- Grid column -->
         </div>
-        <!-- Grid row-->
       </section>
-      <!-- Section: Links -->
 
       <hr class="my-2" />
 
-      <!-- Section: Text -->
       <section class="mb-5">
         <div class="row d-flex justify-content-center pt-3">
           <div class="col-lg-10">
             <p style="font-family: Honk, system-ui; font-size: 30px;">
-              Lorem ipsum transcendeces sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
-              commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
+              Lorem ipsum transcendece sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
+              common-core pariatur est quia magnam 42 Urduliz, ommnia est bytes.
             </p>
           </div>
         </div>
       </section>
-      <!-- Section: Text -->
 
     </div>
-    <!-- Grid container -->
 
-    <!-- Copyright -->
     <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
       © 2025 Copyright:
       <a class="text-white" href="https://en.wikipedia.org/wiki/Pong">Retropong</a>
     </div>
-    <!-- Copyright -->
   </footer>
-  <!-- Footer -->
   <script src="{% static 'i18n.js' %}"></script>
 </body>
 </html>

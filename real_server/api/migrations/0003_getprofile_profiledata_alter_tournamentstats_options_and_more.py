@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterModelOptions(
             name='userprofile',
-            options={'ordering': ['-wins', 'alias'], 'verbose_name': 'Perfil de Usuario', 'verbose_name_plural': 'Perfiles de Usuario'},
+            options={'ordering': ['-wins', 'alias'], 'verbose_name': 'User Profiles', 'verbose_name_plural': 'User Profiles'},
         ),
         migrations.AddField(
             model_name='tournament',

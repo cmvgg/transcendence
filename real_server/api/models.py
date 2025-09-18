@@ -3,30 +3,6 @@ from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 
-"""
-class Userstatistics(models.Model):
-    alias = models.CharField(max_length=50, unique=True)
-    wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return self.alias
-
-    def win_rate(self):
-        total = self.wins + self.losses
-        return self.wins / total if total > 0 else 0
-
-    def total_games(self):
-        return self.wins + self.losses
-
-    class Meta:
-        ordering = ['-wins', 'alias']
-        verbose_name = 'Perfil de Usuario'
-        verbose_name_plural = 'Perfiles de Usuario'
-"""
-
 class TournamentStats(models.Model):
     username = models.CharField(max_length=100, unique=True)
     wins = models.IntegerField(default=0)
@@ -34,18 +10,15 @@ class TournamentStats(models.Model):
     tournaments_won = models.IntegerField(default=0)
 
     def __str__(self):
-        #return f"{self.username} - {self.wins}W/{self.losses}L"
         return self.username
     
     def win_rate(self):
-        """Calcula el porcentaje de victorias"""
         total_games = self.wins + self.losses
         if total_games == 0:
             return 0.0
         return self.wins / total_games
     
     def total_games(self):
-        """Retorna el total de partidas jugadas"""
         return self.wins + self.losses
 
     class Meta:
@@ -121,8 +94,6 @@ def got_offline(sender, user, request, **kwargs):
 class Tournament(models.Model):
     name = models.CharField(max_length=100)
     start_date = models.DateTimeField(auto_now_add=True)
-    #participants = models.ManyToManyField('UserProfile', related_name='tournaments')
-    
     status = models.CharField(
         max_length=20,
         choices=[('upcoming', 'Upcoming'), ('ongoing', 'Ongoing'), ('finished', 'Finished')],
@@ -135,51 +106,21 @@ class Tournament(models.Model):
         return self.name
 
     def clean(self):
-        # Se requiere al menos 4 participantes (ajusta este número según tus necesidades)
         if self.participants.count() < 4:
             raise ValidationError('A tournament must have at least 4 participants.')
 
     class Meta:
         ordering = ['-start_date']
 
-""" class UserProfile(models.Model):
-    user_id = models.PositiveIntegerField(unique=True, null=True, blank=True)
-    # user = models.OneToOneField(User, on_delete=models.CASCADE)  # Descomenta si quieres usar relación
-    alias = models.CharField(max_length=50, unique=True)
-    wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)
-    avatar = models.ImageField(upload_to='avatars/', null=True, blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    
-    def __str__(self):
-        return self.alias  # Cambiado para que funcione correctamente
-    
-    def win_rate(self):
-        total_games = self.wins + self.losses
-        if total_games == 0:
-            return 0.0
-        return self.wins / total_games
-    
-    def total_games(self):
-        return self.wins + self.losses
-    
-    class Meta:
-        ordering = ['-wins', 'alias']  # Ordenar por victorias descendente, luego por alias
-        verbose_name = 'Perfil de Usuario'
-        verbose_name_plural = 'Perfiles de Usuario' """
-
 class ProfileData(models.Model):
-    # modelo para endpoint get que consulte los datos del jugador
     alias = models.CharField(max_length=50)
     wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)  # Agregué losses para consistencia
+    losses = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.alias} - {self.wins}W"
     
     def win_rate(self):
-        """Calcula el porcentaje de victorias"""
         total_games = self.wins + self.losses
         if total_games == 0:
             return 0.0

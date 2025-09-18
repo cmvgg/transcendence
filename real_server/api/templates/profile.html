@@ -370,7 +370,6 @@ text-rendering: optimizeLegibility;
 -webkit-font-smoothing: antialiased;
 -moz-font-smoothing: antialiased;">
 
-  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg border border-5 border-white" style="background: linear-gradient(
     45deg,
     hsla(168, 85%, 52%, 0.8),
@@ -439,10 +438,10 @@ text-rendering: optimizeLegibility;
         <option value="es">🇪🇸 Español</option>
         <option value="eu">🇵🇲 Euskera</option>
         <option value="fr">🇫🇷 Français</option>
+        <option value="fr2">🥐 Clouseau</option>
       </select>
     </div>
   </nav>
-  <!-- Navbar --> 
 
   <div class="container bootstrap snippets bootdey">
     <p style="height: 50px;"></p>
@@ -456,7 +455,6 @@ text-rendering: optimizeLegibility;
       <div class="profile-nav col-md-3">
         <div class="panel">
           <div class="user-heading bio-graph-heading round">
-            <!--<img src="{{ user.profile.avatar }}" alt="avatar not found">-->          
             {% if profile.avatar %}
             <img src="{{ profile.avatar.url }}" alt="" style="width: 200px; height: 200px; border-radius: 50%;">
             {% else %}
@@ -547,34 +545,26 @@ text-rendering: optimizeLegibility;
     </div>
   </div>
   <script>
-    function addFriends() {window.open("http://localhost:8000/lista_y_selecciona_usuarios", "width=1200,height=800,left=300,top=100");}
+    function addFriends() {window.open("http://localhost:8000/add_friends", "width=1200,height=800,left=300,top=100");}
     function deleteFriends() {window.open("/delete_friends", "width=200,height=200,left=150,top=100");}
   </script>
   <br><br>
 </body>
 
-<!-- Footer -->
-<footer class="text-center text-white" style="background-image: url('https://64.media.tumblr.com/647cfeeb6827dd332b390e6ce5e2b16a/175e171edbe54538-fe/s2048x3072/97e4760df288f74b0c7f817dbc5fa000552d8118.gifv'); background-position: center center; background-repeat: no-repeat; background-size: cover;";> <!--  #cd09d4 -->
-  <!-- Grid container -->
+<footer class="text-center text-white" style="background-image: url('https://64.media.tumblr.com/647cfeeb6827dd332b390e6ce5e2b16a/175e171edbe54538-fe/s2048x3072/97e4760df288f74b0c7f817dbc5fa000552d8118.gifv'); background-position: center center; background-repeat: no-repeat; background-size: cover;";>
   <div class="container">
-    <!-- Section: Links -->
     <section class="mt-5" style="height: 50px;">
-      <!-- Grid row-->
       <div class="row text-center d-flex justify-content-center pt-3" style="font-family: Honk, system-ui;">
-        <!-- Grid column -->
         <div class="col-md-3">
           <h6 class="footer_nav">
             <a class="nav-link" href="/" data-i18n="nav.home">Home</a>
           </h6>
         </div>
-        <!-- Grid column -->
-        <!-- Grid column -->
         <div class="col-md-3">
           <h6 class="footer_nav">
             {% if user.is_authenticated %}
               <a class="nav-link" href="/logout" >logout</a>
             {% else %}
-              <!-- <a class="nav-link" href="/register" data-i18n="nav.register">Register</a> -->
               <a
                 data-mdb-ripple-init
                 class="button btn-lm m-2"
@@ -587,46 +577,33 @@ text-rendering: optimizeLegibility;
             {% endif %}
           </h6>
         </div>
-        <!-- Grid column -->
-        <!-- Grid column -->
         <div class="col-md-3">
           <h6 class="footer_nav">
             <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
           </h6>
         </div>
-        <!-- Grid column -->
-        <!-- Grid column -->
         <div class="col-md-3">
           <h6 class="footer_nav">
             <a class="nav-link" href="/about" data-i18n="nav.about">About us</a>
           </h6>
         </div>
-        <!-- Grid column -->
       </div>
-      <!-- Grid row-->
     </section>
-    <!-- Section: Links -->
     <hr class="my-2" />
-    <!-- Section: Text -->
     <section class="mb-5">
       <div class="row d-flex justify-content-center pt-3">
         <div class="col-lg-10">
           <p style="font-family: Honk, system-ui; font-size: 30px;">
-            Lorem ipsum transcendeces sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
-            commodi optio pariatur est quia magnam eum harum corrupti dicta, aliquam sequi voluptate quas.
+            Lorem ipsum transcendece sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
+              common-core pariatur est quia magnam 42 Urduliz, ommnia est bytes.
           </p>
         </div>
       </div>
     </section>
-    <!-- Section: Text -->
   </div>
-  <!-- Grid container -->
-  <!-- Copyright -->
   <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
     © 2025 Copyright:
     <a class="text-white" href="https://en.wikipedia.org/wiki/Pong">Retropong</a>
   </div>
-  <!-- Copyright -->
 </footer>
-<!-- Footer -->
 </html>

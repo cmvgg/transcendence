@@ -22,5 +22,5 @@ class TournamentResultSerializer(serializers.Serializer):
             child=serializers.CharField()
         )
     )
-    winner = serializers.CharField()  # Asegúrate de que este campo esté definido
+    winner = serializers.CharField()
 

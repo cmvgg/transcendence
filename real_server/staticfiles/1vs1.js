@@ -1,7 +1,5 @@
 window.onload = async function () {
-    //log("kepasa");
     await fetchPlayersForGame("1vs1");
-    //log("otros")
     resetBall();
     gameLoop();
 };
@@ -10,7 +8,7 @@ const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
 const paddleWidth = 3;
-const paddleHeight = 30; //cambiar a 30
+const paddleHeight = 30;
 const borderHeight = 5;
 
 let leftPaddle = { y: (canvas.height - paddleHeight) / 2, dy: 0, color: "white" };
@@ -25,9 +23,9 @@ let isPaused = true;
 let winner = "";
 let playerUsernames = [];
 
-/*********************************************
- * 2. Redirigir console.log al elemento HTML *
- *********************************************/
+/**************************
+ * 2. console.log to HTML *
+ **************************/
 /* function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
@@ -43,7 +41,6 @@ function log(...args) {
         logMessage(typeof arg === "object" ? JSON.stringify(arg) : arg);
     });
 } */
-/* **** */
 
 function updatePlayerNames(playerUsernames) {
     const player1NameElement = document.querySelector("#player1Name");
@@ -64,7 +61,7 @@ async function fetchPlayersForGame(mode = "1vs1") {
         const data = await response.json();
         if (response.ok) {
             playerUsernames = data.players.map(p => p.username);
-            updatePlayerNames(playerUsernames); // Actualizar nombres
+            updatePlayerNames(playerUsernames); 
         } else {
             //console.error("Error obteniendo jugadores:", data.error);
         }
@@ -73,9 +70,6 @@ async function fetchPlayersForGame(mode = "1vs1") {
     }
 }
 
-/* document.getElementById("pauseButton").addEventListener("click", () => isPaused = true);
-document.getElementById("startButton").addEventListener("click", () => isPaused = false);
- */
 document.addEventListener("keydown", (e) => {
     if (e.key === "w")
         leftPaddle.dy = -5;
@@ -129,13 +123,13 @@ async function checkGameOver() {
         winner = playerUsernames[0];
         await updateUserProfile(playerUsernames[0], 1, 0);
         await updateUserProfile(playerUsernames[1], 0, 1);
-        await sync1vs1Stats(); // Sincronizar datos para 1vs1
+        await sync1vs1Stats();
     } else if (rightScore >= maxScore) {
         gameOver = true;
         winner = playerUsernames[1];
         await updateUserProfile(playerUsernames[1], 1, 0);
         await updateUserProfile(playerUsernames[0], 0, 1);
-        await sync1vs1Stats(); // Sincronizar datos para 1vs1
+        await sync1vs1Stats();
     } else {
         resetBall();
     }
@@ -180,9 +174,7 @@ function resetBall() {
 function draw() {
     ctx.fillStyle = "white";
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    /* ctx.fillStyle = leftPaddle.color; */
     ctx.fillRect(0, leftPaddle.y, paddleWidth, paddleHeight);
-    /* ctx.fillStyle = rightPaddle.color; */
     ctx.fillRect(canvas.width - paddleWidth, rightPaddle.y, paddleWidth, paddleHeight);
 
     ctx.font = "20px monospace";
