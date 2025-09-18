@@ -147,7 +147,7 @@
         <br>
         <h1 style="font-family: 'Press Start 2P', system-ui; color:white; padding-top: 10px;" data-i18n="1up">1UP</h1>
         <br>
-        <h5 style="font-family: 'Press Start 2P', system-ui; color:white" data-i18n="player1_name">[player 1 name]</h5>
+        <h5 style="font-family: 'Press Start 2P', system-ui; color:white">{{ user.username }}</h5>
       </div>
     </div>
 
@@ -183,9 +183,9 @@
 
   <div class="difficulty-selector d-flex justify-content-center my-3">
     <select id="difficultySelect" class="form-select w-auto text-center">
-      <option value="easy">Fácil</option>
+      <option value="easy">Easy</option>
       <option value="medium" selected>Normal</option>
-      <option value="hard">Difícil</option>
+      <option value="hard">Difficult</option>
     </select>
   </div>
 
@@ -203,7 +203,7 @@
     <div class="col"></div>
   </div>
 
-  <!-- <div id="log"></div> -->
+  <div id="log"></div>
 
   <div class="col">
     <p style="background-color: black;">

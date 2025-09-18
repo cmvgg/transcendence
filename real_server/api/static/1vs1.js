@@ -42,25 +42,52 @@ function log(...args) {
     });
 } */
 
-function updatePlayerNames(playerUsernames) {
-    const player1NameElement = document.querySelector("#player1Name");
-    const player2NameElement = document.querySelector("#player2Name");
-
-    if (playerUsernames.length >= 2) {
-        player1NameElement.textContent = playerUsernames[0] || "Player 1";
-        player2NameElement.textContent = playerUsernames[1] || "Player 2";
-    } else {
-        player1NameElement.textContent = "Waiting...";
-        player2NameElement.textContent = "Waiting...";
+    function updatePlayerNames(playerUsernames, playerAvatars) {
+        const player1NameElement = document.querySelector("#player1Name");
+        const player1Avatar = document.querySelector('#player1Avatar');
+        const player2NameElement = document.querySelector("#player2Name");
+        const player2Avatar = document.querySelector('#player2Avatar');
+    
+        // Comprobamos si los datos de los jugadores están disponibles
+        if (playerUsernames.length >= 2) {
+            // Actualiza los nombres de los jugadores
+            player1NameElement.textContent = playerUsernames[0] || "Player 1";
+            player2NameElement.textContent = playerUsernames[1] || "Player 2";
+            
+            // Solo actualiza el avatar del primer jugador si no tiene una imagen de Django
+            if (player1Avatar.src === "https://bootdey.com/img/Content/avatar/avatar3.png") {
+                player1Avatar.src = playerAvatars[0] || "https://bootdey.com/img/Content/avatar/avatar3.png";
+            }
+    
+            // Solo actualiza el avatar del segundo jugador si está usando la imagen predeterminada
+            if (player2Avatar.src === "https://bootdey.com/img/Content/avatar/avatar3.png") {
+                player2Avatar.src = playerAvatars[1] || "https://bootdey.com/img/Content/avatar/avatar3.png";
+            }
+        } else {
+            // Si no hay jugadores disponibles
+            player1NameElement.textContent = "Waiting...";
+            player2NameElement.textContent = "Waiting...";
+    
+            // Si no hay jugadores, avatares por defecto
+            if (player1Avatar.src === "https://bootdey.com/img/Content/avatar/avatar3.png") {
+                player1Avatar.src = "https://bootdey.com/img/Content/avatar/avatar3.png";
+            }
+            if (player2Avatar.src === "https://bootdey.com/img/Content/avatar/avatar3.png") {
+                player2Avatar.src = "https://bootdey.com/img/Content/avatar/avatar3.png";
+            }
+        }
     }
-}
+    
+    
+    
 
 async function fetchPlayersForGame(mode = "1vs1") {
     const response = await fetch(`/get_players_for_game?game_type=${mode}`);
     const data = await response.json();
     if (response.ok) {
-        playerUsernames = data.players.map(p => p.username);
-        updatePlayerNames(playerUsernames);
+        const playerUsernames = data.players.map(p => p.username);
+        const playerAvatars = data.players.map(p => p.avatar || "https://bootdey.com/img/Content/avatar/avatar3.png");
+        updatePlayerNames(playerUsernames, playerAvatars);
     }
 }
 

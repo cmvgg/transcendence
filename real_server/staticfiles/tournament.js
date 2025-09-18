@@ -1,5 +1,5 @@
 /**********************
- * 1. Lógica del Torneo
+ * 1. Tournament
  **********************/
 class Tournament {
     constructor(players) {
@@ -25,9 +25,6 @@ class Tournament {
     }
 
     getCurrentMatch() {
-        /* log("Ronda actual:", this.currentRound);
-        log("Índice de partido actual:", this.currentMatchIndex);
-        log("Partidos en la ronda actual:", this.matches[this.currentRound]) */
         const currentMatches = this.matches[this.currentRound];
         if (this.currentMatchIndex >= currentMatches.length) {
             return null;
@@ -38,23 +35,18 @@ class Tournament {
     setWinner(winner) {
         const match = this.getCurrentMatch();
         if (!match) return;
-
         match.winner = winner;
-        //log(`Partido finalizado: ${match.player1} vs ${match.player2} - Ganador: ${winner}`);
-
         this.currentMatchIndex++;
-
         if (this.currentMatchIndex >= this.matches[this.currentRound].length) {
             this.generateNextRound();
         }
-        renderBracket(this.matches); // Render actualizado del bracket
+        renderBracket(this.matches);
     }
 
     generateNextRound() {
         const winners = this.matches[this.currentRound].map(match => match.winner).filter(winner => winner !== "BYE");
 
         if (winners.length === 1) {
-            //log(`🏆 ¡El campeón del torneo es ${winners[0]}!`);
             return;
         }
 
@@ -72,7 +64,6 @@ class Tournament {
         this.matches.push(nextRoundMatches);
         this.currentRound++;
         this.currentMatchIndex = 0;
-        //log(`Iniciando ronda ${this.currentRound + 1}`);
     }
 
     isTournamentOver() {
@@ -88,7 +79,6 @@ class Tournament {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
 
-    // Asegurarte de que `message` sea una cadena
     const safeMessage = typeof message === "string" ? message : JSON.stringify(message);
 
     p.innerHTML = safeMessage.replace(/\n/g, "<br>");
@@ -104,9 +94,9 @@ function log(...args) {
     });
 } */
 
-/***********************
- * 3. Lógica del Juego *
- ***********************/
+/**********
+ * 3. Game*
+ **********/
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -158,10 +148,8 @@ document.addEventListener("keyup", (e) => {
 function update() {
     if (gameOver || isPaused) return;
 
-    // Aumentar velocidad gradualmente
-    const speedIncrease = 0.003; // Ajusta para mayor o menor aceleración
+    const speedIncrease = 0.003;
     ball.speed += speedIncrease;
-    // Recalcular la dirección manteniendo el ángulo
     const angle = Math.atan2(ball.dy, ball.dx);
     ball.dx = Math.cos(angle) * ball.speed;
     ball.dy = Math.sin(angle) * ball.speed;
@@ -194,7 +182,6 @@ function updatePlayerNames(currentMatch) {
     const player1NameElement = document.querySelector("#player1Name");
     const player2NameElement = document.querySelector("#player2Name");
 
-    //log("Valor de currentMatch:", currentMatch);
     if (currentMatch) {
         player1NameElement.textContent = currentMatch.player1 || "BYE";
         player2NameElement.textContent = currentMatch.player2 || "BYE";
@@ -208,12 +195,10 @@ function checkGameOver() {
     if (leftScore >= maxScore) {
         gameOver = true;
         currentMatch.winner = currentMatch.player1;
-        //log(`¡${currentMatch.winner} ha ganado el partido!`);
         endMatch();
     } else if (rightScore >= maxScore) {
         gameOver = true;
         currentMatch.winner = currentMatch.player2;
-        //log(`¡${currentMatch.winner} ha ganado el partido!`);
         endMatch();
     } else {
         resetBall();
@@ -224,7 +209,7 @@ function resetBall() {
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
     ball.radius = 3;
-    ball.speed = 2; // velocidad inicial cada vez
+    ball.speed = 2;
 
     let angle;
     do {
@@ -248,10 +233,8 @@ function resetGameForNextMatch() {
     resetBall();
     currentMatch = tournament.getCurrentMatch();
     if (!currentMatch) {
-        //log("Error: No se pudo obtener el siguiente partido.");
         return;
     }
-    //log(`\nNuevo partido: ${currentMatch.player1} vs ${currentMatch.player2}`);
     updatePlayerNames(currentMatch);
     gameLoop();
 }
@@ -283,9 +266,9 @@ function gameLoop() {
     }
 }
 
-/***********************
- * 6. Conexión con API *
- ***********************/
+/*********************
+ * 6. Conection  API *
+ *********************/
 async function endMatch() {
     if (!currentMatch) return;
 
@@ -293,26 +276,19 @@ async function endMatch() {
     const loserName = currentMatch.player1 === winnerName ? currentMatch.player2 : currentMatch.player1;
     const isFinal = tournament.isTournamentOver();
 
-    try {
-        const response = await fetch('/submit_tournament_match/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-            body: JSON.stringify({ winner: winnerName, loser: loserName, is_final: isFinal })
-        });
-        const data = await response.json();
-        //log(data.message || "Resultado reportado.");
-    } catch (err) {
-        //log("Error al reportar el partido:", err.message);
-    }
+    const response = await fetch('/submit_tournament_match/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ winner: winnerName, loser: loserName, is_final: isFinal })
+    });
+    const data = await response.json();
 
     tournament.setWinner(winnerName);
     if (!tournament.isTournamentOver()) {
         resetGameForNextMatch();
-    } else {
-        //log(`🏆 Torneo finalizado. Campeón: ${winnerName}`);
     }
 }
 
@@ -331,9 +307,9 @@ function getCookie(name) {
     return cookieValue;
 }
 
-/***********************
- * 7. Render Bracket Visual *
- ***********************/
+/*************
+ * 7. Render *
+ *************/
 function renderBracket(matchesByRound) {
     const bracketContainer = document.getElementById("bracket");
     bracketContainer.innerHTML = '';
@@ -363,34 +339,26 @@ function renderBracket(matchesByRound) {
     });
 }
 
-/***********************
- * 8. Iniciar el Torneo *
- ***********************/
+/*****************
+ * 8. Tournament *
+ *****************/
 document.addEventListener("DOMContentLoaded", async () => {
-    try {
-        const response = await fetch('/get_tournament_players/');
-        const data = await response.json();
+    const response = await fetch('/get_tournament_players/');
+    const data = await response.json();
 
-        if (!response.ok) {
-            //log("Error al obtener jugadores:", data.error);
-            return;
-        }
+    if (!response.ok) {
+        return;
+    }
 
-        const playerNames = data.players.map(p => p.username);
-        tournament = new Tournament(playerNames);
-        currentMatch = tournament.getCurrentMatch();
+    const playerNames = data.players.map(p => p.username);
+    tournament = new Tournament(playerNames);
+    currentMatch = tournament.getCurrentMatch();
 
-        renderBracket(tournament.matches);
+    renderBracket(tournament.matches);
 
-        if (currentMatch) {
-            //log(`Comienza el torneo. Primer partido: ${currentMatch.player1} vs ${currentMatch.player2}`);
-            updatePlayerNames(currentMatch);
-            resetGameForNextMatch();
-        } else {
-            //log("Error: No hay partidos disponibles.");
-        }
-    } catch (err) {
-        //log("Error de red:", err.message);
+    if (currentMatch) {
+        updatePlayerNames(currentMatch);
+        resetGameForNextMatch();
     }
 });
 

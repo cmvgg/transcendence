@@ -3,7 +3,7 @@ window.onload = async function () {
 /**************************
  * 1. console.log to HTML *
  **************************/
-/* function logMessage(message) {
+function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
     p.innerHTML = message.replace(/\n/g, "<br>");
@@ -17,7 +17,7 @@ function log(...args) {
     args.forEach(arg => {
         logMessage(typeof arg === "object" ? JSON.stringify(arg) : arg);
     });
-} */
+}
 
 /*****************
  * Conection API *
@@ -103,6 +103,8 @@ async function checkGameOver() {
         resetBall();
     }
 }
+
+await fetchPlayer();
 
 /********
  * Game *

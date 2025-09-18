@@ -26,8 +26,11 @@ class TournamentStats(models.Model):
         verbose_name_plural = "Tournament Stats"
         ordering = ['-wins', 'username']
 
+from django_resized import ResizedImageField
+
 class UsersInTournament(models.Model):
     username = models.CharField(max_length=100, unique=True)
+    avatar = ResizedImageField(size=[200,200], upload_to='', blank=True, null=True)
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
     tournaments_won = models.IntegerField(default=0)
@@ -48,7 +51,7 @@ from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
 from django.db.models.signals import post_save
 from django.dispatch import receiver
-from django_resized import ResizedImageField
+
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 
 class UserProfile(models.Model):

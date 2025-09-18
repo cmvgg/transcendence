@@ -25,11 +25,11 @@ let player2 = {
 let gameOver = false;
 let isPaused = true;
 let winner = "";
-let playerUsernames = []; // Almacena los nombres de los jugadores obtenidos de la API
+let playerUsernames = [];
 
-/*********************************************
- * 1. Redirigir console.log al elemento HTML *
- *********************************************/
+/**************************
+ * 1. console.log to HTML *
+ **************************/
 /* function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
@@ -46,9 +46,9 @@ function log(...args) {
     });
 } */
 
-/**************************
- * 2. Conexión con la API *
- **************************/
+/********************
+ * 2. Conection API *
+ ********************/
 
 function updatePlayerNames(playerUsernames) {
     const player1NameElement = document.querySelector("#player1Name");
@@ -63,23 +63,15 @@ function updatePlayerNames(playerUsernames) {
     }
 }
 
-// Obtener jugadores para el modo "tron"
 async function fetchPlayersForGame(mode = "tron") {
-    try {
-        const response = await fetch(`/get_players_for_game/?game_type=${mode}`);
-        const data = await response.json();
-        if (data.players && data.players.length > 0) {
-            playerUsernames = data.players.map(p => p.username);
-            updatePlayerNames(playerUsernames); // Actualizar nombres
-        } else {
-            //console.error("No se pudo obtener jugadores.");
-        }
-    } catch (error) {
-        //console.error("Error obteniendo jugadores:", error);
+    const response = await fetch(`/get_players_for_game/?game_type=${mode}`);
+    const data = await response.json();
+    if (data.players && data.players.length > 0) {
+        playerUsernames = data.players.map(p => p.username);
+        updatePlayerNames(playerUsernames);
     }
 }
 
-// Obtener el token CSRF
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -95,9 +87,9 @@ function getCookie(name) {
     return cookieValue;
 }
 
-/***********************
- * 3. Lógica del juego *
- ***********************/
+/***********
+ * 3. Game *
+ ***********/
 
 document.addEventListener("keydown", (e) => {
     if (e.key === "w" && player1.dy === 0) {
@@ -138,7 +130,6 @@ document.addEventListener("keydown", (e) => {
 });
 
 function checkCollision(player) {
-    // Colisión con las paredes
     if (player.x < 0 || player.x >= canvas.width || player.y < 0 || player.y >= canvas.height) {
         gameOver = true;
         winner = player === player1 ? playerUsernames[1] : playerUsernames[0];
@@ -146,7 +137,6 @@ function checkCollision(player) {
         return true;
     }
 
-    // Colisión con su propia estela
     for (let i = 0; i < player.trail.length - 1; i++) {
         if (player.x === player.trail[i].x && player.y === player.trail[i].y) {
             gameOver = true;
@@ -156,7 +146,6 @@ function checkCollision(player) {
         }
     }
 
-    // Colisión con la estela del otro jugador
     let otherPlayer = player === player1 ? player2 : player1;
     for (let i = 0; i < otherPlayer.trail.length; i++) {
         if (player.x === otherPlayer.trail[i].x && player.y === otherPlayer.trail[i].y) {
@@ -181,51 +170,30 @@ async function updateStatsOnGameOver() {
         await updateUserProfile(playerUsernames[0], 0, 1);
     }
 
-    //log("Sincronizando estadísticas...");
     await syncTronStats();
 }
 
 async function updateUserProfile(username, wins, losses) {
-    try {
-        const response = await fetch('/update_user_profile/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-            body: JSON.stringify({ username, wins, losses })
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-            //log("Error:", data);
-        } else {
-            //log("Stats actualizadas:", data);
-        }
-    } catch (error) {
-        //log("Error de conexión:", error.message);
-    }
+    const response = await fetch('/update_user_profile/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ username, wins, losses })
+    });
+    const data = await response.json();
 }
 
 async function syncTronStats() {
-    try {
-        const response = await fetch('/sync_tron_stats/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-            //log("Error al sincronizar estadísticas de Tron:", data.error);
-        } else {
-            //log("Estadísticas de Tron sincronizadas:", data.message);
-        }
-    } catch (error) {
-        //log("Error de conexión al sincronizar estadísticas de Tron:", error.message);
-    }
+    const response = await fetch('/sync_tron_stats/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+    });
+    const data = await response.json();
 }
 
 function update() {
@@ -233,13 +201,11 @@ function update() {
         return;
     }
 
-    // Actualizar la posición de los jugadores
     player1.x += player1.dx;
     player1.y += player1.dy;
     player2.x += player2.dx;
     player2.y += player2.dy;
 
-    // Agregar la posición actual a la estela
     player1.trail.push({ x: player1.x, y: player1.y });
     player2.trail.push({ x: player2.x, y: player2.y });
 
@@ -252,7 +218,6 @@ function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
     }
 
-    // Dibujar trayectorias
     for (let i = 1; i < player1.trail.length; i++) {
         ctx.strokeStyle = player1.color;
         ctx.lineWidth = 2;
@@ -270,7 +235,6 @@ function draw() {
         ctx.stroke();
     }
 
-    // Dibujar jugadores
     ctx.fillStyle = player1.color;
     ctx.fillRect(player1.x, player1.y, 3, 3);
     ctx.fillStyle = player2.color;

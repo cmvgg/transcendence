@@ -32,11 +32,11 @@ let lastTouched = null;
 let isPaused = true;
 let gameOver = false;
 let winner = "";
-let playerUsernames = []; // Almacena los nombres de los jugadores obtenidos de la API
+let playerUsernames = [];
 
-/*********************************************
- * 1. Redirigir console.log al elemento HTML *
- *********************************************/
+/**************************
+ * 1. console.log to HTML *
+ **************************/
 /* function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
@@ -53,72 +53,44 @@ function log(...args) {
     });
 } */
 
-/**************************
- * 2. Conexión con la API *
- **************************/
+/********************
+ * 2. Conection API *
+ ********************/
 
-// Obtener jugadores para el modo "battleground"
 async function fetchPlayersForGame(mode = "battleground") {
-    try {
-        const response = await fetch(`/get_players_for_game/?game_type=${mode}`);
-        const data = await response.json();
-        if (data.players && data.players.length > 0) {
-            playerUsernames = data.players.map(p => p.username);
-            updatePlayerNames(playerUsernames); // Actualizar nombres
-        } else {
-            //console.error("No se pudo obtener jugadores.");
-        }
-    } catch (error) {
-        //console.error("Error obteniendo jugadores:", error);
+    const response = await fetch(`/get_players_for_game/?game_type=${mode}`);
+    const data = await response.json();
+    if (data.players && data.players.length > 0) {
+        playerUsernames = data.players.map(p => p.username);
+        updatePlayerNames(playerUsernames);
     }
 }
 
-// Sincronizar estadísticas al finalizar el juego
 async function syncBattlegroundStats() {
-    try {
-        const response = await fetch('/sync_tournament_stats/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-        });
+    const response = await fetch('/sync_tournament_stats/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+    });
 
-        const data = await response.json();
-        if (!response.ok) {
-            //log("Error al sincronizar estadísticas de Battleground:", data.error);
-        } else {
-            //log("Estadísticas de Battleground sincronizadas:", data.message);
-        }
-    } catch (error) {
-        //log("Error de conexión al sincronizar estadísticas de Battleground:", error.message);
-    }
+    const data = await response.json();
 }
 
-// Actualizar el perfil de un jugador
 async function updateUserProfile(username, wins, losses) {
-    try {
-        const response = await fetch('/update_user_profile/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-            body: JSON.stringify({ username, wins, losses })
-        });
+    const response = await fetch('/update_user_profile/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ username, wins, losses })
+    });
 
-        const data = await response.json();
-        if (!response.ok) {
-            //log("Error:", data);
-        } else {
-            //log("Stats actualizadas:", data);
-        }
-    } catch (error) {
-        //log("Error de conexión:", error.message);
-    }
+    const data = await response.json();
 }
 
-// Obtener el token CSRF
 function getCookie(name) {
     let cookieValue = null;
     if (document.cookie && document.cookie !== '') {
@@ -153,9 +125,9 @@ function updatePlayerNames(playerUsernames) {
     }
 }
 
-/***********************
- * 3. Lógica del juego *
- ***********************/
+/***********
+ * 3. Game *
+ ***********/
 
 document.addEventListener("keydown", (e) => {
     if (e.key === "j")
@@ -192,17 +164,14 @@ document.addEventListener("keyup", (e) => {
 function update() {
     if (isPaused || gameOver) return;
 
-    // Movimiento paletas
     leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleLength, leftPaddle.y + leftPaddle.dy));
     rightPaddle.y = Math.max(0, Math.min(canvas.height - paddleLength, rightPaddle.y + rightPaddle.dy));
     topPaddle.x = Math.max(0, Math.min(canvas.width - paddleLength, topPaddle.x + topPaddle.dx));
     bottomPaddle.x = Math.max(0, Math.min(canvas.width - paddleLength, bottomPaddle.x + bottomPaddle.dx));
 
-    // Movimiento bola
     ball.x += ball.dx;
     ball.y += ball.dy;
 
-    // Colisión con paletas verticales
     if (ball.dx < 0 && ball.x - ball.radius <= paddleThickness) {
         if (ball.y > leftPaddle.y && ball.y < leftPaddle.y + paddleLength) {
             ball.dx *= -1;
@@ -215,7 +184,6 @@ function update() {
             lastTouched = "right";
         }
     }
-    // Colisión con paletas horizontales
     if (ball.dy < 0 && ball.y - ball.radius <= paddleThickness) {
         if (ball.x > topPaddle.x && ball.x < topPaddle.x + paddleLength) {
             ball.dy *= -1;
@@ -228,7 +196,6 @@ function update() {
             lastTouched = "bottom";
         }
     }
-    // Goles
     if (ball.x - ball.radius < 0) {
         score("left");
     } else if (ball.x + ball.radius > canvas.width) {
@@ -257,7 +224,7 @@ function updateScoreDisplay() {
 }
 
 function checkGameOver() {
-    const maxScore = 3; // Cambia esto según las reglas del juego
+    const maxScore = 3;
     for (const [player, score] of Object.entries(scores)) {
         if (score >= maxScore) {
             gameOver = true;
@@ -279,7 +246,6 @@ async function updateStatsOnGameOver() {
             await updateUserProfile(username, 0, 1);
         }
     }
-    //log("Sincronizando estadísticas...");
     await syncBattlegroundStats();
 }
 
@@ -301,20 +267,15 @@ function resetBall() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Paletas
     ctx.fillStyle = leftPaddle.color;
     ctx.fillRect(0, leftPaddle.y, paddleThickness, paddleLength);
-
     ctx.fillStyle = rightPaddle.color;
     ctx.fillRect(canvas.width - paddleThickness, rightPaddle.y, paddleThickness, paddleLength);
-
     ctx.fillStyle = topPaddle.color;
     ctx.fillRect(topPaddle.x, 0, paddleLength, paddleThickness);
-
     ctx.fillStyle = bottomPaddle.color;
     ctx.fillRect(bottomPaddle.x, canvas.height - paddleThickness, paddleLength, paddleThickness);
     
-    // Bola
     ctx.fillStyle = "white";
 
     if (isPaused) {
@@ -333,7 +294,6 @@ function gameLoop() {
     if (!gameOver) requestAnimationFrame(gameLoop);
 }
 
-// Inicializar el juego
 resetBall();
 fetchPlayersForGame("battleground").then(() => {
     gameLoop();

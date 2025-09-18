@@ -27,7 +27,6 @@ def index(request):
     return render(request, 'index.html', {'loged_user':loged_user, 'loged_stats':loged_stats})
 
 def playground(request):
-    global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
     if users_in_tournament.count() < 2:
         users_in_tournament.delete()
@@ -37,10 +36,10 @@ def playground(request):
             'redirect_text': 'Return'
         })
     top = UserProfile.objects.order_by('wins').last()
-    return render(request, 'playground.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'high_score': top})
+    profile = UserProfile.objects.get(user=request.user)
+    return render(request, 'playground.html', {'profile': profile, 'high_score': top})
 
 def playground2(request):
-    global loged_user, loged_stats
     if not request.user.is_authenticated:
         return render(request, 'error.html', {
             'message': "Your are not logged in to play 1vsIA.",
@@ -48,10 +47,10 @@ def playground2(request):
             'redirect_text': 'Return'
         })
     top = UserProfile.objects.order_by('wins').last()
-    return render(request, 'playground_copy.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'high_score': top})
+    profile = UserProfile.objects.get(user=request.user)
+    return render(request, 'playground_copy.html', {'profile': profile, 'high_score': top})
 
 def battleground(request):
-    global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
     if users_in_tournament.count() < 4:
         users_in_tournament.delete()
@@ -61,10 +60,10 @@ def battleground(request):
             'redirect_text': 'Return'
         })
     top = UserProfile.objects.order_by('wins').last()
-    return render(request, 'battleground.html', {'loged_user':loged_user, 'loged_stats':loged_stats, 'high_score': top})
+    profile = UserProfile.objects.get(user=request.user)
+    return render(request, 'battleground.html', {'profile': profile, 'high_score': top})
 
 def tron(request):
-    global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
     if users_in_tournament.count() < 2:
         users_in_tournament.delete()
@@ -74,10 +73,10 @@ def tron(request):
             'redirect_text': 'Return'
         })
     top = UserProfile.objects.order_by('wins').last()
-    return render(request, 'playground_tron.html', {'loged_user':loged_user, 'loged_stats':loged_stats, 'high_score': top})
+    profile = UserProfile.objects.get(user=request.user)
+    return render(request, 'playground_tron.html', {'profile': profile, 'high_score': top})
 
 def tournament(request):
-    global loged_user, loged_stats
     users_in_tournament = UsersInTournament.objects.all()
     if users_in_tournament.count() < 4:
         users_in_tournament.delete()
@@ -87,7 +86,8 @@ def tournament(request):
             'redirect_text': 'Return'
         })
     top = UserProfile.objects.order_by('wins').last()
-    return render(request, 'tournament.html', {'loged_user': loged_user, 'loged_stats': loged_stats, 'high_score': top})
+    profile = UserProfile.objects.get(user=request.user)
+    return render(request, 'tournament.html', {'profile': profile, 'high_score': top})
 
 def about(request):
     global loged_user, loged_stats
@@ -256,6 +256,7 @@ def duplicate_1vs1(request):
                 player = UserProfile.objects.get(user_id=player_id)
                 UsersInTournament.objects.create(
                     username=player.user.username,
+                    avatar=player.avatar,
                     wins=0,
                     losses=0,
                     tournaments_won=0

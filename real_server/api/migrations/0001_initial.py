@@ -30,7 +30,8 @@ class Migration(migrations.Migration):
                     to=settings.AUTH_USER_MODEL,
                     related_name='profile'
                 )),
-                ('avatar', models.ImageField(upload_to='media/', blank=True, null=True)),                ('friends', ArrayField(
+                ('avatar', models.ImageField(upload_to='media/', blank=True, null=True)),                
+                ('friends', ArrayField(
                     models.IntegerField(),
                     size=100,
                     blank=True,
@@ -59,6 +60,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('username', models.CharField(max_length=100, unique=True)),
+                ('avatar', models.ImageField(upload_to='media/', blank=True, null=True)),
                 ('wins', models.IntegerField(default=0)),
                 ('losses', models.IntegerField(default=0)),
                 ('tournaments_won', models.IntegerField(default=0)),
