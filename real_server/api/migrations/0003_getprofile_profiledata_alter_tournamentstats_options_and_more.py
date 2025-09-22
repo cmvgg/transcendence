@@ -28,10 +28,6 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AlterModelOptions(
-            name='tournamentstats',
-            options={'ordering': ['-wins', 'username'], 'verbose_name': 'Tournament Stats', 'verbose_name_plural': 'Tournament Stats'},
-        ),
-        migrations.AlterModelOptions(
             name='userprofile',
             options={'ordering': ['-wins', 'alias'], 'verbose_name': 'User Profiles', 'verbose_name_plural': 'User Profiles'},
         ),

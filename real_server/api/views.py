@@ -40,9 +40,17 @@ def playground(request):
     return render(request, 'playground.html', {'profile': profile, 'high_score': top})
 
 def playground2(request):
+    users_in_tournament = UsersInTournament.objects.all()
     if not request.user.is_authenticated:
         return render(request, 'error.html', {
             'message': "Your are not logged in to play 1vsIA.",
+            'redirect_url': 'select',
+            'redirect_text': 'Return'
+        })
+    if users_in_tournament.count() < 1:
+        users_in_tournament.delete()
+        return render(request, 'error.html', {
+            'message': "Your cannot play 1vsIA again.",
             'redirect_url': 'select',
             'redirect_text': 'Return'
         })
@@ -233,9 +241,9 @@ def duplicate_1vsIA(request):
             player = UserProfile.objects.get(user=request.user)
             UsersInTournament.objects.create(
                 username=player.user.username,
-                wins=player.wins,
-                losses=player.losses,
-                tournaments_won=player.tournaments_won
+                wins=0,
+                losses=0,
+                tournaments_won=0
             )
             return JsonResponse({'redirect_url': '/playground2'}, status=200)
         except UserProfile.DoesNotExist:
@@ -261,6 +269,14 @@ def duplicate_1vs1(request):
                     losses=0,
                     tournaments_won=0
                 )
+            MatchHistory.objects.all().delete()
+            MatchHistory.objects.create(
+                winner="",
+                loser="",
+                w_points=0,
+                l_points=0,
+                date=timezone.now()
+            )
             return redirect('playground')
         except UserProfile.DoesNotExist:
             return JsonResponse({'error': 'One or more players dont exist.'}, status=404)
@@ -533,6 +549,7 @@ def update_user_profile(request):
     wins = int(request.data.get('wins', 0))
     losses = int(request.data.get('losses', 0))
     tournaments_won = int(request.data.get('tournaments_won', 0))
+    score = int(request.data.get('score', 0))
 
     if not username:
         return Response({'error': 'The users name is required'}, status=400)
@@ -542,6 +559,7 @@ def update_user_profile(request):
         user.wins += wins
         user.losses += losses
         user.tournaments_won += tournaments_won
+        user.score += score
         user.save()
         return Response({'message': f'{username} update correctly.'}, status=200)
     except UsersInTournament.DoesNotExist:
@@ -564,6 +582,7 @@ def sync_users_in_tournament_to_user_profile():
     except Exception as e:
         print(f"Error syncing data: {str(e)}")
 
+from .models import MatchHistory
 @api_view(['POST'])
 def sync_1vs1_stats(request):
     try:
@@ -573,6 +592,17 @@ def sync_1vs1_stats(request):
             user_profile.wins += user.wins
             user_profile.losses += user.losses
             user_profile.save()
+        
+        for user in users_in_tournament:
+            matching = MatchHistory.objects.first()
+            if user.wins > user.losses:
+                matching.winner = user.username
+                matching.w_points = user.score
+            else:
+                matching.loser = user.username
+                matching.l_points = user.score
+            matching.save()
+            
         users_in_tournament.delete()
         return Response({'message': 'Data correctly synced for 1vs1.'}, status=200)
     except Exception as e:

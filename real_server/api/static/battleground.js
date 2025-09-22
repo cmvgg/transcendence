@@ -24,8 +24,8 @@ const paddleThickness = 7;
 let ball = {
     x: canvas.width / 2,
     y: canvas.height / 2,
-    dx: 4,
-    dy: 3,
+    dx: 2,
+    dy: 2,
     radius: 8,
     speed: 2
 };
@@ -47,6 +47,7 @@ let isPaused = true;
 let gameOver = false;
 let winner = "";
 let playerUsernames = [];
+let playerAvatars = [];
 
 /**************************
  * 1. console.log to HTML *
@@ -96,8 +97,8 @@ async function fetchPlayersForGame(mode = "battleground") {
     const data = await response.json();
     if (data.players && data.players.length > 0) {
         const defaultAvatar = "https://bootdey.com/img/Content/avatar/avatar3.png";
-        const playerUsernames = data.players.map(p => p.username);
-        const playerAvatars = data.players.map(p => {
+        playerUsernames = data.players.map(p => p.username);
+        playerAvatars = data.players.map(p => {
             if (p.avatar && p.avatar.trim() !== "") {
                 return `/media/${p.avatar}`;
             } else {
@@ -184,6 +185,14 @@ document.addEventListener("keyup", (e) => {
         bottomPaddle.dx = 0;
 });
 
+function showGameOverPopup() {
+    document.getElementById("winnerText").innerText = winner;
+    document.getElementById("gameOverModal").style.display = "flex";
+}
+document.getElementById("goHome").addEventListener("click", function () {
+    window.location.href = "/select";
+});
+
 function update() {
     if (isPaused || gameOver) return;
 
@@ -253,6 +262,7 @@ function checkGameOver() {
             gameOver = true;
             winner = playerUsernames[player === "left" ? 0 : player === "right" ? 1 : player === "top" ? 2 : 3];
             updateStatsOnGameOver();
+            showGameOverPopup();
             break;
         }
     }

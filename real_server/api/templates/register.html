@@ -111,9 +111,7 @@
   </div>
   <div class="col"></div>
 </div>
-
-<br><br><br><br>
-<div class="row" style="height: 150px;">
+<div class="row" style="height: 325px;"></div>
     
   <script>
     function closeWindow() {
@@ -123,66 +121,6 @@
     return true;
 }
   </script>
-
-   <footer class="text-center text-white" style="margin-top: -50px ;background-image: url('https://cdn.dribbble.com/userupload/28311765/file/original-b3d1b68257e6c14b3eca96fc95f0649c.gif');background-repeat: no-repeat; background-size: cover ;background-position: center center;";>
-    <div class="container">
-      <section class="mt-5" style="height: 50px;">
-        <div class="row text-center d-flex justify-content-center pt-3" style="font-family: Honk, system-ui;">
-          <div class="col-md-3">
-            <h6 class="footer_nav">
-              <a class="nav-link" href="/" data-i18n="nav.home">Home</a>
-            </h6>
-          </div>
-          <div class="col-md-3">
-            <h6 class="footer_nav">
-              {% if user.is_authenticated %}
-                <a class="nav-link" href="/logout" >logout</a>
-              {% else %}
-                <a
-                  data-mdb-ripple-init
-                  class="button btn-lm m-2"
-                  style="text-decoration: none; display: flex; align-items: flex-end;"
-                  onclick="openSignIn()"
-                  role="button"
-                  rel="nofollow"
-                  target="_blank"
-                  >Log in</a>
-              {% endif %}
-            </h6>
-          </div>
-          <div class="col-md-3">
-            <h6 class="footer_nav">
-              <a class="nav-link" href="/select" data-i18n="nav.select">Select</a>
-            </h6>
-          </div>
-          <div class="col-md-3">
-            <h6 class="footer_nav">
-              <a class="nav-link" href="/about" data-i18n="nav.about">About us</a>
-            </h6>
-          </div>
-        </div>
-      </section>
-
-      <hr class="my-2" />
-
-      <section class="mb-5">
-        <div class="row d-flex justify-content-center pt-3">
-          <div class="col-lg-10">
-            <p style="font-family: Honk, system-ui; font-size: 30px;">
-              Lorem ipsum transcendece sit amet retropong adipisicing arcade. Sunt pong arena repellat quaerat voluptatibus placeat nam,
-              common-core pariatur est quia magnam 42 Urduliz, ommnia est bytes.
-            </p>
-          </div>
-        </div>
-      </section>
-
-    </div>
-
-    <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2)">
-      © 2025 Copyright:
-      <a class="text-white" href="https://en.wikipedia.org/wiki/Pong">Retropong</a>
-    </div>
-  </footer>
 
   <script src="{% static 'i18n.js' %}"></script>
 </body>

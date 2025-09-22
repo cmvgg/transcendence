@@ -2,31 +2,24 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.contrib.auth.models import User
 from django.contrib.postgres.fields import ArrayField
-
-class TournamentStats(models.Model):
-    username = models.CharField(max_length=100, unique=True)
-    wins = models.IntegerField(default=0)
-    losses = models.IntegerField(default=0)
-    tournaments_won = models.IntegerField(default=0)
-
-    def __str__(self):
-        return self.username
-    
-    def win_rate(self):
-        total_games = self.wins + self.losses
-        if total_games == 0:
-            return 0.0
-        return self.wins / total_games
-    
-    def total_games(self):
-        return self.wins + self.losses
-
-    class Meta:
-        verbose_name = "Tournament Stats"
-        verbose_name_plural = "Tournament Stats"
-        ordering = ['-wins', 'username']
-
+from django.db import models
+from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django_resized import ResizedImageField
+from django.contrib.auth.signals import user_logged_in, user_logged_out
+
+class MatchHistory(models.Model):
+    winner = models.CharField(max_length=100, unique=True)
+    loser = models.CharField(max_length=100, unique=True)
+    w_points = models.IntegerField(default=0)
+    l_points = models.IntegerField(default=0)
+    date = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.winner} defeated {self.loser} on {self.date.strftime('%Y-%m-%d %H:%M:%S')}"
+
 
 class UsersInTournament(models.Model):
     username = models.CharField(max_length=100, unique=True)
@@ -34,6 +27,7 @@ class UsersInTournament(models.Model):
     wins = models.IntegerField(default=0)
     losses = models.IntegerField(default=0)
     tournaments_won = models.IntegerField(default=0)
+    score = models.IntegerField(default=0)
 
     def __str__(self):
         return f"{self.username} - {self.wins}W/{self.losses}L"
@@ -43,17 +37,7 @@ class UsersInTournament(models.Model):
         verbose_name_plural = "Users In Tournament"
         ordering = ['-wins', 'username']
         
-
 #USER
-
-from django.db import models
-from django.contrib.auth.models import User
-from django.contrib.postgres.fields import ArrayField
-from django.db.models.signals import post_save
-from django.dispatch import receiver
-
-from django.contrib.auth.signals import user_logged_in, user_logged_out
-
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
     avatar = ResizedImageField(size=[200,200], upload_to='', blank=True, null=True)

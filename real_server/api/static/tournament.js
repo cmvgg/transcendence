@@ -12,7 +12,7 @@ class Tournament {
     createBracket(players) {
         let matches = [];
         if (players.length % 2 !== 0) {
-            players.push({ username: "BYE", avatar: null });
+            players.push("BYE");
         }
         for (let i = 0; i < players.length; i += 2) {
             matches.push({
@@ -26,14 +26,16 @@ class Tournament {
 
     getCurrentMatch() {
         const currentMatches = this.matches[this.currentRound];
-        if (this.currentMatchIndex >= currentMatches.length) return null;
+        if (this.currentMatchIndex >= currentMatches.length) {
+            return null;
+        }
         return currentMatches[this.currentMatchIndex];
     }
 
-    setWinner(winnerObj) {
+    setWinner(winner) {
         const match = this.getCurrentMatch();
         if (!match) return;
-        match.winner = winnerObj;
+        match.winner = winner;
         this.currentMatchIndex++;
         if (this.currentMatchIndex >= this.matches[this.currentRound].length) {
             this.generateNextRound();
@@ -42,18 +44,20 @@ class Tournament {
     }
 
     generateNextRound() {
-        const winners = this.matches[this.currentRound].map(match => match.winner).filter(Boolean);
+        const winners = this.matches[this.currentRound].map(match => match.winner).filter(winner => winner !== "BYE");
 
-        if (winners.length === 1) return;
-
+        if (winners.length === 1) {
+            return;
+        }
         let nextRoundMatches = [];
-        if (winners.length % 2 !== 0) winners.push({ username: "BYE", avatar: null });
-
+        if (winners.length % 2 !== 0) {
+            winners.push("BYE");
+        }
         for (let i = 0; i < winners.length; i += 2) {
             nextRoundMatches.push({
                 player1: winners[i],
                 player2: winners[i + 1],
-                winner: null
+                winner: null,
             });
         }
         this.matches.push(nextRoundMatches);
@@ -70,7 +74,8 @@ class Tournament {
 /*********************************************
  * 2. Redirigir console.log al elemento HTML *
  *********************************************/
-/* function logMessage(message) {
+/*
+function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
 
@@ -87,7 +92,8 @@ function log(...args) {
     args.forEach(arg => {
         logMessage(typeof arg === "object" ? JSON.stringify(arg) : arg);
     });
-} */
+}
+*/
 
 /**********
  * 3. Game*
@@ -140,11 +146,21 @@ document.addEventListener("keyup", (e) => {
         rightPaddle.dy = 0;
 });
 
+function showGameOverPopup(winnerName) {
+    document.getElementById("winnerText").innerText = winnerName;
+    document.getElementById("gameOverModal").style.display = "flex";
+}
+document.getElementById("goHome").addEventListener("click", function () {
+    window.location.href = "/select";
+});
+
 function update() {
     if (gameOver || isPaused) return;
 
     const speedIncrease = 0.003;
+
     ball.speed += speedIncrease;
+
     const angle = Math.atan2(ball.dy, ball.dx);
     ball.dx = Math.cos(angle) * ball.speed;
     ball.dy = Math.sin(angle) * ball.speed;
@@ -173,34 +189,16 @@ function update() {
     }
 }
 
-function updatePlayerNames(currentMatch) {
-    const p1Name = document.querySelector("#player1Name");
-    const p2Name = document.querySelector("#player2Name");
-    const p1Avatar = document.querySelector("#player1Avatar");
-    const p2Avatar = document.querySelector("#player2Avatar");
-
-    if (currentMatch) {
-        p1Name.textContent = currentMatch.player1?.username || "BYE";
-        p2Name.textContent = currentMatch.player2?.username || "BYE";
-        p1Avatar.src = currentMatch.player1?.avatar || "https://bootdey.com/img/Content/avatar/avatar3.png";
-        p2Avatar.src = currentMatch.player2?.avatar || "https://bootdey.com/img/Content/avatar/avatar3.png";
-    } else {
-        p1Name.textContent = "Waiting...";
-        p2Name.textContent = "Waiting...";
-        p1Avatar.src = "https://bootdey.com/img/Content/avatar/avatar3.png";
-        p2Avatar.src = "https://bootdey.com/img/Content/avatar/avatar3.png";
-    }
-}
-
-
 function checkGameOver() {
     if (leftScore >= maxScore) {
         gameOver = true;
         currentMatch.winner = currentMatch.player1;
+
         endMatch();
     } else if (rightScore >= maxScore) {
         gameOver = true;
         currentMatch.winner = currentMatch.player2;
+
         endMatch();
     } else {
         resetBall();
@@ -237,7 +235,8 @@ function resetGameForNextMatch() {
     if (!currentMatch) {
         return;
     }
-    updatePlayerNames(currentMatch);
+
+    updatePlayerNames(currentMatch, playerAvatarsMap);
     gameLoop();
 }
 
@@ -286,11 +285,14 @@ async function endMatch() {
         },
         body: JSON.stringify({ winner: winnerName, loser: loserName, is_final: isFinal })
     });
+
     const data = await response.json();
 
     tournament.setWinner(winnerName);
     if (!tournament.isTournamentOver()) {
         resetGameForNextMatch();
+    }else {
+        showGameOverPopup(winnerName);
     }
 }
 
@@ -315,30 +317,47 @@ function getCookie(name) {
 function renderBracket(matchesByRound) {
     const bracketContainer = document.getElementById("bracket");
     bracketContainer.innerHTML = '';
-
-    matchesByRound.forEach(round => {
+    matchesByRound.forEach((round, roundIndex) => {
         const roundDiv = document.createElement("div");
         roundDiv.classList.add("round");
-
         round.forEach(match => {
             const matchDiv = document.createElement("div");
             matchDiv.classList.add("match");
-
             const p1 = document.createElement("div");
-            p1.textContent = match.player1?.username || "BYE";
+            p1.textContent = match.player1 || "BYE";
             if (match.winner === match.player1) p1.classList.add("winner");
-
             const p2 = document.createElement("div");
-            p2.textContent = match.player2?.username || "BYE";
+            p2.textContent = match.player2 || "BYE";
             if (match.winner === match.player2) p2.classList.add("winner");
-
             matchDiv.appendChild(p1);
             matchDiv.appendChild(p2);
             roundDiv.appendChild(matchDiv);
         });
-
         bracketContainer.appendChild(roundDiv);
     });
+}
+
+const defaultAvatar = "https://bootdey.com/img/Content/avatar/avatar3.png";
+let playerAvatarsMap = {};  // Mapa global para acceder a los avatares
+
+function updatePlayerNames(currentMatch, avatars = {}) {
+    const player1NameElement = document.querySelector("#player1Name");
+    const player1Avatar = document.querySelector("#player1Avatar");
+    const player2NameElement = document.querySelector("#player2Name");
+    const player2Avatar = document.querySelector("#player2Avatar");
+
+    if (currentMatch) {
+        player1NameElement.textContent = currentMatch.player1 || "BYE";
+        player2NameElement.textContent = currentMatch.player2 || "BYE";
+
+        player1Avatar.src = avatars[currentMatch.player1] || defaultAvatar;
+        player2Avatar.src = avatars[currentMatch.player2] || defaultAvatar;
+    } else {
+        player1NameElement.textContent = "Waiting...";
+        player2NameElement.textContent = "Waiting...";
+        player1Avatar.src = defaultAvatar;
+        player2Avatar.src = defaultAvatar;
+    }
 }
 
 /*****************
@@ -346,19 +365,26 @@ function renderBracket(matchesByRound) {
  *****************/
 document.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch('/get_tournament_players/');
-    if (!response.ok)
-        return;
     const data = await response.json();
-    const playersData = data.players.map(p => ({
-        username: p.username,
-        avatar: p.avatar ? `${p.avatar}` : "https://bootdey.com/img/Content/avatar/avatar3.png"
-    }));
-    tournament = new Tournament(playersData);
+    if (!response.ok) {
+        return;
+    }
+
+    const playerNames = data.players.map(p => p.username);
+
+    // Crear el mapa de avatares
+    playerAvatarsMap = {};
+    data.players.forEach(p => {
+        playerAvatarsMap[p.username] = (p.avatar && p.avatar.trim() !== "")
+            ? `${p.avatar}`
+            : defaultAvatar;
+    });
+
+    tournament = new Tournament(playerNames);
     currentMatch = tournament.getCurrentMatch();
     renderBracket(tournament.matches);
     if (currentMatch) {
-        updatePlayerNames(currentMatch);
+        updatePlayerNames(currentMatch, playerAvatarsMap);
         resetGameForNextMatch();
     }
 });
-

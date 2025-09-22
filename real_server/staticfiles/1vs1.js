@@ -22,6 +22,8 @@ let gameOver = false;
 let isPaused = true;
 let winner = "";
 let playerUsernames = [];
+let playerAvatars = [];
+const defaultAvatar = "https://bootdey.com/img/Content/avatar/avatar3.png";
 
 /**************************
  * 2. console.log to HTML *
@@ -58,8 +60,8 @@ function updatePlayerNames(playerUsernames, playerAvatars) {
         player1NameElement.textContent = "Waiting...";
         player2NameElement.textContent = "Waiting...";
 
-        player1Avatar.src = "https://bootdey.com/img/Content/avatar/avatar3.png";
-        player2Avatar.src = "https://bootdey.com/img/Content/avatar/avatar3.png";
+        player1Avatar.src = defaultAvatar;
+        player2Avatar.src = defaultAvatar;
     }
 }   
     
@@ -67,9 +69,8 @@ async function fetchPlayersForGame(mode = "1vs1") {
     const response = await fetch(`/get_players_for_game?game_type=${mode}`);
     const data = await response.json();
     if (response.ok) {
-        const defaultAvatar = "https://bootdey.com/img/Content/avatar/avatar3.png";
-        const playerUsernames = data.players.map(p => p.username);
-        const playerAvatars = data.players.map(p => {
+        playerUsernames = data.players.map(p => p.username);
+        playerAvatars = data.players.map(p => {
             if (p.avatar && p.avatar.trim() !== "") {
                 return `/media/${p.avatar}`;
             } else {
@@ -96,13 +97,21 @@ document.addEventListener("keyup", (e) => {
     if (["w", "s"].includes(e.key)) leftPaddle.dy = 0;
     if (["ArrowUp", "ArrowDown"].includes(e.key)) rightPaddle.dy = 0;
 });
+function showGameOverPopup() {
+    document.getElementById("winnerText").innerText = winner;
+    document.getElementById("gameOverModal").style.display = "flex";
+}
+document.getElementById("goHome").addEventListener("click", function () {
+    window.location.href = "/select";
+});
 
 function update() {
-    if (gameOver || isPaused) return;
-    
+    if (gameOver || isPaused)
+        return;
+
     ball.x += ball.dx;
     ball.y += ball.dy;
-    
+
     leftPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, leftPaddle.y + leftPaddle.dy));
     rightPaddle.y = Math.max(0, Math.min(canvas.height - paddleHeight, rightPaddle.y + rightPaddle.dy));
 
@@ -131,17 +140,20 @@ async function checkGameOver() {
     if (leftScore >= maxScore) {
         gameOver = true;
         winner = playerUsernames[0];
-        await updateUserProfile(playerUsernames[0], 1, 0);
-        await updateUserProfile(playerUsernames[1], 0, 1);
+        await updateUserProfile(playerUsernames[0], 1, 0, leftScore);
+        await updateUserProfile(playerUsernames[1], 0, 1, rightScore);
         await sync1vs1Stats();
     } else if (rightScore >= maxScore) {
         gameOver = true;
         winner = playerUsernames[1];
-        await updateUserProfile(playerUsernames[1], 1, 0);
-        await updateUserProfile(playerUsernames[0], 0, 1);
+        await updateUserProfile(playerUsernames[1], 1, 0, rightScore);
+        await updateUserProfile(playerUsernames[0], 0, 1, leftScore);
         await sync1vs1Stats();
     } else {
         resetBall();
+    }
+    if (gameOver == true) {
+        showGameOverPopup();
     }
 }
 
@@ -198,14 +210,14 @@ function gameLoop() {
     if (!gameOver) requestAnimationFrame(gameLoop);
 }
 
-async function updateUserProfile(username, wins, losses) {
+async function updateUserProfile(username, wins, losses, score) {
     const response = await fetch('/update_user_profile/', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRFToken': getCookie('csrftoken'),
         },
-        body: JSON.stringify({ username, wins, losses })
+        body: JSON.stringify({ username, wins, losses, score })
     });
     const data = await response.json();
 }

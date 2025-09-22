@@ -46,13 +46,14 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.CreateModel(
-            name='TournamentStats',
+            name='MatchHistory',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('username', models.CharField(max_length=100, unique=True)),
-                ('wins', models.IntegerField(default=0)),
-                ('losses', models.IntegerField(default=0)),
-                ("tournaments_won", models.IntegerField(default=0)),
+                ('winner', models.CharField(max_length=100, unique=True, null=True)),
+                ('loser', models.CharField(max_length=100, unique=True, null=True)),
+                ('w_points', models.IntegerField(default=0)),
+                ("l_points", models.IntegerField(default=0)),
+                ('date', models.DateTimeField(auto_now_add=True, null=True)),
             ],
         ),
         migrations.CreateModel(
@@ -64,6 +65,7 @@ class Migration(migrations.Migration):
                 ('wins', models.IntegerField(default=0)),
                 ('losses', models.IntegerField(default=0)),
                 ('tournaments_won', models.IntegerField(default=0)),
+                ('score', models.IntegerField(default=0)),
             ],
         ),
     ]

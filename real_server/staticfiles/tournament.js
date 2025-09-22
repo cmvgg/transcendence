@@ -49,7 +49,6 @@ class Tournament {
         if (winners.length === 1) {
             return;
         }
-
         let nextRoundMatches = [];
         if (winners.length % 2 !== 0) {
             winners.push("BYE");
@@ -75,7 +74,8 @@ class Tournament {
 /*********************************************
  * 2. Redirigir console.log al elemento HTML *
  *********************************************/
-/* function logMessage(message) {
+/*
+function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
 
@@ -92,7 +92,8 @@ function log(...args) {
     args.forEach(arg => {
         logMessage(typeof arg === "object" ? JSON.stringify(arg) : arg);
     });
-} */
+}
+*/
 
 /**********
  * 3. Game*
@@ -145,11 +146,21 @@ document.addEventListener("keyup", (e) => {
         rightPaddle.dy = 0;
 });
 
+function showGameOverPopup(winnerName) {
+    document.getElementById("winnerText").innerText = winnerName;
+    document.getElementById("gameOverModal").style.display = "flex";
+}
+document.getElementById("goHome").addEventListener("click", function () {
+    window.location.href = "/select";
+});
+
 function update() {
     if (gameOver || isPaused) return;
 
     const speedIncrease = 0.003;
+
     ball.speed += speedIncrease;
+
     const angle = Math.atan2(ball.dy, ball.dx);
     ball.dx = Math.cos(angle) * ball.speed;
     ball.dy = Math.sin(angle) * ball.speed;
@@ -178,27 +189,16 @@ function update() {
     }
 }
 
-function updatePlayerNames(currentMatch) {
-    const player1NameElement = document.querySelector("#player1Name");
-    const player2NameElement = document.querySelector("#player2Name");
-
-    if (currentMatch) {
-        player1NameElement.textContent = currentMatch.player1 || "BYE";
-        player2NameElement.textContent = currentMatch.player2 || "BYE";
-    } else {
-        player1NameElement.textContent = "Waiting...";
-        player2NameElement.textContent = "Waiting...";
-    }
-}
-
 function checkGameOver() {
     if (leftScore >= maxScore) {
         gameOver = true;
         currentMatch.winner = currentMatch.player1;
+
         endMatch();
     } else if (rightScore >= maxScore) {
         gameOver = true;
         currentMatch.winner = currentMatch.player2;
+
         endMatch();
     } else {
         resetBall();
@@ -235,7 +235,8 @@ function resetGameForNextMatch() {
     if (!currentMatch) {
         return;
     }
-    updatePlayerNames(currentMatch);
+
+    updatePlayerNames(currentMatch, playerAvatarsMap);
     gameLoop();
 }
 
@@ -284,11 +285,14 @@ async function endMatch() {
         },
         body: JSON.stringify({ winner: winnerName, loser: loserName, is_final: isFinal })
     });
+
     const data = await response.json();
 
     tournament.setWinner(winnerName);
     if (!tournament.isTournamentOver()) {
         resetGameForNextMatch();
+    }else {
+        showGameOverPopup(winnerName);
     }
 }
 
@@ -313,30 +317,47 @@ function getCookie(name) {
 function renderBracket(matchesByRound) {
     const bracketContainer = document.getElementById("bracket");
     bracketContainer.innerHTML = '';
-
     matchesByRound.forEach((round, roundIndex) => {
         const roundDiv = document.createElement("div");
         roundDiv.classList.add("round");
-
         round.forEach(match => {
             const matchDiv = document.createElement("div");
             matchDiv.classList.add("match");
-
             const p1 = document.createElement("div");
             p1.textContent = match.player1 || "BYE";
             if (match.winner === match.player1) p1.classList.add("winner");
-
             const p2 = document.createElement("div");
             p2.textContent = match.player2 || "BYE";
             if (match.winner === match.player2) p2.classList.add("winner");
-
             matchDiv.appendChild(p1);
             matchDiv.appendChild(p2);
             roundDiv.appendChild(matchDiv);
         });
-
         bracketContainer.appendChild(roundDiv);
     });
+}
+
+const defaultAvatar = "https://bootdey.com/img/Content/avatar/avatar3.png";
+let playerAvatarsMap = {};  // Mapa global para acceder a los avatares
+
+function updatePlayerNames(currentMatch, avatars = {}) {
+    const player1NameElement = document.querySelector("#player1Name");
+    const player1Avatar = document.querySelector("#player1Avatar");
+    const player2NameElement = document.querySelector("#player2Name");
+    const player2Avatar = document.querySelector("#player2Avatar");
+
+    if (currentMatch) {
+        player1NameElement.textContent = currentMatch.player1 || "BYE";
+        player2NameElement.textContent = currentMatch.player2 || "BYE";
+
+        player1Avatar.src = avatars[currentMatch.player1] || defaultAvatar;
+        player2Avatar.src = avatars[currentMatch.player2] || defaultAvatar;
+    } else {
+        player1NameElement.textContent = "Waiting...";
+        player2NameElement.textContent = "Waiting...";
+        player1Avatar.src = defaultAvatar;
+        player2Avatar.src = defaultAvatar;
+    }
 }
 
 /*****************
@@ -345,20 +366,25 @@ function renderBracket(matchesByRound) {
 document.addEventListener("DOMContentLoaded", async () => {
     const response = await fetch('/get_tournament_players/');
     const data = await response.json();
-
     if (!response.ok) {
         return;
     }
 
     const playerNames = data.players.map(p => p.username);
+
+    // Crear el mapa de avatares
+    playerAvatarsMap = {};
+    data.players.forEach(p => {
+        playerAvatarsMap[p.username] = (p.avatar && p.avatar.trim() !== "")
+            ? `${p.avatar}`
+            : defaultAvatar;
+    });
+
     tournament = new Tournament(playerNames);
     currentMatch = tournament.getCurrentMatch();
-
     renderBracket(tournament.matches);
-
     if (currentMatch) {
-        updatePlayerNames(currentMatch);
+        updatePlayerNames(currentMatch, playerAvatarsMap);
         resetGameForNextMatch();
     }
 });
-

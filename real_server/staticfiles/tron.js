@@ -26,11 +26,12 @@ let gameOver = false;
 let isPaused = true;
 let winner = "";
 let playerUsernames = [];
+let playerAvatars = [];
 
 /**************************
  * 1. console.log to HTML *
  **************************/
-function logMessage(message) {
+/* function logMessage(message) {
     const logDiv = document.getElementById("log");
     const p = document.createElement("p");
     p.innerHTML = message.replace(/\n/g, "<br>");
@@ -44,7 +45,7 @@ function log(...args) {
     args.forEach(arg => {
         logMessage(typeof arg === 'object' ? JSON.stringify(arg) : arg);
     });
-}
+} */
 
 /********************
  * 2. Conection API *
@@ -55,7 +56,7 @@ function updatePlayerNames(playerUsernames, playerAvatars) {
     const player1Avatar = document.querySelector('#player1Avatar');
     const player2NameElement = document.querySelector("#player2Name");
     const player2Avatar = document.querySelector('#player2Avatar');
-    
+
     if (playerUsernames.length >= 2) {
         player1NameElement.textContent = playerUsernames[0] || "Player 1";
         player2NameElement.textContent = playerUsernames[1] || "Player 2";
@@ -74,15 +75,18 @@ function updatePlayerNames(playerUsernames, playerAvatars) {
 async function fetchPlayersForGame(mode = "tron") {
     const response = await fetch(`/get_players_for_game?game_type=${mode}`);
     const data = await response.json();
+    
     if (response.ok) {
         const defaultAvatar = "https://bootdey.com/img/Content/avatar/avatar3.png";
-        const playerUsernames = data.players.map(p => p.username);
-        const playerAvatars = data.players.map(p => {
-            return p.avatar ? `/media/${p.avatar}` : defaultAvatar;
+        playerUsernames = data.players.map(p => p.username);
+        playerAvatars = data.players.map(p => {
+            if (p.avatar && p.avatar.trim() !== "") {
+                return `/media/${p.avatar}`;
+            } else {
+                return defaultAvatar;
+            }
         });
         updatePlayerNames(playerUsernames, playerAvatars);
-        log("Avatars recibidos:", playerAvatars[0]);
-        log("Avatars recibidos:", playerAvatars[1]);
     }
 }
 
@@ -143,6 +147,14 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
+function showGameOverPopup() {
+    document.getElementById("winnerText").innerText = winner;
+    document.getElementById("gameOverModal").style.display = "flex";
+}
+document.getElementById("goHome").addEventListener("click", function () {
+    window.location.href = "/select";
+});
+
 function checkCollision(player) {
     if (player.x < 0 || player.x >= canvas.width || player.y < 0 || player.y >= canvas.height) {
         gameOver = true;
@@ -179,12 +191,12 @@ async function updateStatsOnGameOver() {
     if (winner === playerUsernames[0]) {
         await updateUserProfile(playerUsernames[0], 1, 0);
         await updateUserProfile(playerUsernames[1], 0, 1);
+        await syncTronStats();
     } else {
         await updateUserProfile(playerUsernames[1], 1, 0);
         await updateUserProfile(playerUsernames[0], 0, 1);
+        await syncTronStats();
     }
-
-    await syncTronStats();
 }
 
 async function updateUserProfile(username, wins, losses) {
@@ -255,9 +267,7 @@ function draw() {
     ctx.fillRect(player2.x, player2.y, 3, 3);
 
     if (gameOver) {
-        ctx.fillStyle = "black";
-        ctx.font = "30px Arial";
-        ctx.fillText(winner + " wins!", canvas.width / 2 - 100, canvas.height / 2);
+        showGameOverPopup();
     }
 }
 

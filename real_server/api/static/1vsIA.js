@@ -84,21 +84,30 @@ function getCookie(name) {
     return cookieValue;
 }
 
+function showGameOverPopup() {
+    document.getElementById("winnerText").innerText = winner;
+    document.getElementById("gameOverModal").style.display = "flex";
+}
+document.getElementById("goHome").addEventListener("click", function () {
+    window.location.href = "/select";
+});
+
 async function checkGameOver() {
     if (leftScore >= maxScore) {
         gameOver = true;
-        winner = "¡Has ganado!";
+        winner = "¡You have won!";
         await updateUserProfile(playerUsername, 1, 0);
         await sync1vsIAStats();
     } else if (rightScore >= maxScore) {
         gameOver = true;
-        winner = "La IA ha ganado...";
+        winner = "The IA has won...";
         await updateUserProfile(playerUsername, 0, 1);
         await sync1vsIAStats();
     }
 
     if (gameOver) {
-        alert(winner);
+        //alert(winner);
+        showGameOverPopup();
     } else {
         resetBall();
     }

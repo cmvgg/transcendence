@@ -26,6 +26,7 @@ let gameOver = false;
 let isPaused = true;
 let winner = "";
 let playerUsernames = [];
+let playerAvatars = [];
 
 /**************************
  * 1. console.log to HTML *
@@ -77,8 +78,8 @@ async function fetchPlayersForGame(mode = "tron") {
     
     if (response.ok) {
         const defaultAvatar = "https://bootdey.com/img/Content/avatar/avatar3.png";
-        const playerUsernames = data.players.map(p => p.username);
-        const playerAvatars = data.players.map(p => {
+        playerUsernames = data.players.map(p => p.username);
+        playerAvatars = data.players.map(p => {
             if (p.avatar && p.avatar.trim() !== "") {
                 return `/media/${p.avatar}`;
             } else {
@@ -146,6 +147,14 @@ document.addEventListener("keydown", (e) => {
     }
 });
 
+function showGameOverPopup() {
+    document.getElementById("winnerText").innerText = winner;
+    document.getElementById("gameOverModal").style.display = "flex";
+}
+document.getElementById("goHome").addEventListener("click", function () {
+    window.location.href = "/select";
+});
+
 function checkCollision(player) {
     if (player.x < 0 || player.x >= canvas.width || player.y < 0 || player.y >= canvas.height) {
         gameOver = true;
@@ -182,12 +191,12 @@ async function updateStatsOnGameOver() {
     if (winner === playerUsernames[0]) {
         await updateUserProfile(playerUsernames[0], 1, 0);
         await updateUserProfile(playerUsernames[1], 0, 1);
+        await syncTronStats();
     } else {
         await updateUserProfile(playerUsernames[1], 1, 0);
         await updateUserProfile(playerUsernames[0], 0, 1);
+        await syncTronStats();
     }
-
-    await syncTronStats();
 }
 
 async function updateUserProfile(username, wins, losses) {
@@ -258,9 +267,7 @@ function draw() {
     ctx.fillRect(player2.x, player2.y, 3, 3);
 
     if (gameOver) {
-        ctx.fillStyle = "black";
-        ctx.font = "30px Arial";
-        ctx.fillText(winner + " wins!", canvas.width / 2 - 100, canvas.height / 2);
+        showGameOverPopup();
     }
 }
 
