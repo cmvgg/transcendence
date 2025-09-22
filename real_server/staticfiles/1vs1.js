@@ -42,31 +42,41 @@ function log(...args) {
     });
 } */
 
-function updatePlayerNames(playerUsernames) {
+function updatePlayerNames(playerUsernames, playerAvatars) {
     const player1NameElement = document.querySelector("#player1Name");
+    const player1Avatar = document.querySelector('#player1Avatar');
     const player2NameElement = document.querySelector("#player2Name");
+    const player2Avatar = document.querySelector('#player2Avatar');
 
     if (playerUsernames.length >= 2) {
         player1NameElement.textContent = playerUsernames[0] || "Player 1";
         player2NameElement.textContent = playerUsernames[1] || "Player 2";
+
+        player1Avatar.src = playerAvatars[0];
+        player2Avatar.src = playerAvatars[1];
     } else {
         player1NameElement.textContent = "Waiting...";
         player2NameElement.textContent = "Waiting...";
-    }
-}
 
+        player1Avatar.src = "https://bootdey.com/img/Content/avatar/avatar3.png";
+        player2Avatar.src = "https://bootdey.com/img/Content/avatar/avatar3.png";
+    }
+}   
+    
 async function fetchPlayersForGame(mode = "1vs1") {
-    try {
-        const response = await fetch(`/get_players_for_game?game_type=${mode}`);
-        const data = await response.json();
-        if (response.ok) {
-            playerUsernames = data.players.map(p => p.username);
-            updatePlayerNames(playerUsernames); 
-        } else {
-            //console.error("Error obteniendo jugadores:", data.error);
-        }
-    } catch (err) {
-        //console.error("Error en la conexión:", err.message);
+    const response = await fetch(`/get_players_for_game?game_type=${mode}`);
+    const data = await response.json();
+    if (response.ok) {
+        const defaultAvatar = "https://bootdey.com/img/Content/avatar/avatar3.png";
+        const playerUsernames = data.players.map(p => p.username);
+        const playerAvatars = data.players.map(p => {
+            if (p.avatar && p.avatar.trim() !== "") {
+                return `/media/${p.avatar}`;
+            } else {
+                return defaultAvatar;
+            }
+        });
+        updatePlayerNames(playerUsernames, playerAvatars);
     }
 }
 
@@ -136,24 +146,14 @@ async function checkGameOver() {
 }
 
 async function sync1vs1Stats() {
-    try {
-        const response = await fetch('/sync_1vs1_stats/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-            //log("Error al sincronizar estadísticas 1vs1:", data.error);
-        } else {
-            //log("Estadísticas 1vs1 sincronizadas:", data.message);
-        }
-    } catch (error) {
-        //log("Error de conexión al sincronizar estadísticas 1vs1:", error.message);
-    }
+    const response = await fetch('/sync_1vs1_stats/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+    });
+    const data = await response.json();
 }
 
 function resetBall() {
@@ -199,25 +199,15 @@ function gameLoop() {
 }
 
 async function updateUserProfile(username, wins, losses) {
-    try {
-        const response = await fetch('/update_user_profile/', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': getCookie('csrftoken'),
-            },
-            body: JSON.stringify({ username, wins, losses })
-        });
-
-        const data = await response.json();
-        if (!response.ok) {
-            //log("Error:", data);
-        } else {
-            //log("Stats actualizadas:", data);
-        }
-    } catch (error) {
-        //log("Error de conexión:", error.message);
-    }
+    const response = await fetch('/update_user_profile/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken'),
+        },
+        body: JSON.stringify({ username, wins, losses })
+    });
+    const data = await response.json();
 }
 
 function getCookie(name) {

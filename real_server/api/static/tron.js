@@ -50,25 +50,42 @@ function log(...args) {
  * 2. Conection API *
  ********************/
 
-function updatePlayerNames(playerUsernames) {
+function updatePlayerNames(playerUsernames, playerAvatars) {
     const player1NameElement = document.querySelector("#player1Name");
+    const player1Avatar = document.querySelector('#player1Avatar');
     const player2NameElement = document.querySelector("#player2Name");
+    const player2Avatar = document.querySelector('#player2Avatar');
 
     if (playerUsernames.length >= 2) {
         player1NameElement.textContent = playerUsernames[0] || "Player 1";
         player2NameElement.textContent = playerUsernames[1] || "Player 2";
+
+        player1Avatar.src = playerAvatars[0];
+        player2Avatar.src = playerAvatars[1];
     } else {
         player1NameElement.textContent = "Waiting...";
         player2NameElement.textContent = "Waiting...";
-    }
-}
 
+        player1Avatar.src = "https://bootdey.com/img/Content/avatar/avatar3.png";
+        player2Avatar.src = "https://bootdey.com/img/Content/avatar/avatar3.png";
+    }
+}   
+    
 async function fetchPlayersForGame(mode = "tron") {
-    const response = await fetch(`/get_players_for_game/?game_type=${mode}`);
+    const response = await fetch(`/get_players_for_game?game_type=${mode}`);
     const data = await response.json();
-    if (data.players && data.players.length > 0) {
-        playerUsernames = data.players.map(p => p.username);
-        updatePlayerNames(playerUsernames);
+    
+    if (response.ok) {
+        const defaultAvatar = "https://bootdey.com/img/Content/avatar/avatar3.png";
+        const playerUsernames = data.players.map(p => p.username);
+        const playerAvatars = data.players.map(p => {
+            if (p.avatar && p.avatar.trim() !== "") {
+                return `/media/${p.avatar}`;
+            } else {
+                return defaultAvatar;
+            }
+        });
+        updatePlayerNames(playerUsernames, playerAvatars);
     }
 }
 

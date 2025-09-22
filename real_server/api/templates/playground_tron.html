@@ -130,13 +130,7 @@
 <body style="background-image: url('https://kingdomofhart.wordpress.com/wp-content/uploads/2014/08/smashwall.jpg'); background-repeat: no-repeat; background-size: cover;">
   <div class="row  " style=" display: flex; justify-content: center; height: 700px;">
     <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
-      {% if profile.avatar %}
-        <img src="{{ profile.avatar.url }}" style="padding-top: 10px;" width="200px;" height="200px;">
-      {% else %}
-        <a href="#">
-          <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" style="padding-top: 10px;" width="200" height="200">
-        </a>
-      {% endif %}
+      <img id="player1Avatar" src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" style="padding-top: 10px;" width="200" height="200">
       <br><br>
       <div style="background: linear-gradient(
         45deg,
@@ -165,13 +159,7 @@
     </script>
     <script src="{% static 'tron.js' %}"></script>
     <div class="col-md-2 text-center " style="margin-top: 10%; justify-content: end;">
-      {% if profile.avatar %}
-        <img src="{{ profile.avatar.url }}" style="padding-top: 10px;" width="200px;" height="200px;">
-      {% else %}
-        <a href="#">
-          <img src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" style="padding-top: 10px;" width="200" height="200">
-        </a>
-      {% endif %}
+      <img id="player2Avatar" src="https://bootdey.com/img/Content/avatar/avatar3.png" alt="" style="padding-top: 10px;" width="200" height="200">
       <br><br>
       <div style="background: linear-gradient(
         45deg,

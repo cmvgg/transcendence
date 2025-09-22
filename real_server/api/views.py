@@ -280,6 +280,7 @@ def duplicate_battleground(request):
                 player = UserProfile.objects.get(user_id=player_id)
                 UsersInTournament.objects.create(
                     username=player.user.username,
+                    avatar=player.avatar,
                     wins=0,
                     losses=0,
                     tournaments_won=0 
@@ -303,6 +304,7 @@ def duplicate_tron(request):
                 player = UserProfile.objects.get(user_id=player_id)
                 UsersInTournament.objects.create(
                     username=player.user.username,
+                    avatar=player.avatar,
                     wins=0,
                     losses=0,
                     tournaments_won=0 
@@ -329,6 +331,7 @@ def duplicate_tournament(request):
                 player = UserProfile.objects.get(user_id=player_id)
                 UsersInTournament.objects.create(
                     username=player.user.username,
+                    avatar=player.avatar,
                     wins=0,
                     losses=0,
                     tournaments_won=0
@@ -454,20 +457,24 @@ def update_user_tournament_profile(username, wins=0, losses=0, tournaments_won=0
 def get_tournament_players(request):
     def is_power_of_two(n):
         return n > 1 and (n & (n - 1)) == 0
-
     try:
         total_players = UsersInTournament.objects.count()
         max_power = 1
         while (max_power * 2) <= total_players:
             max_power *= 2
         if max_power < 2:
-            return Response({'error': 'There are not enougth players for a tournament (min 2)'}, status=400)
+            return Response({'error': 'There are not enough players for a tournament (min 2)'}, status=400)
         players = list(UsersInTournament.objects.order_by('id')[:max_power])
-        serialized = [{'username': p.username} for p in players]
+        serialized = [{
+                'username': p.username,
+                'avatar': f"/media/{p.avatar.name}" if p.avatar else None
+            } 
+            for p in players
+        ]
         return Response({'players': serialized}, status=200)
-
     except Exception as e:
         return Response({'error': str(e)}, status=500)
+
 
 @api_view(['POST'])
 def submit_tournament_match(request):
@@ -510,7 +517,12 @@ def get_players_for_game(request):
         else:
             return Response({'error': 'Game tipe not supported'}, status=400)
 
-        serialized_players = [{'username': p.username, 'wins': p.wins, 'losses': p.losses} for p in players]
+        serialized_players = [{
+            'username': p.username,
+            'wins': p.wins,
+            'losses': p.losses,
+            'avatar': p.avatar.name if p.avatar else None
+        } for p in players]
         return Response({'players': serialized_players}, status=200)
     except Exception as e:
         return Response({'error': str(e)}, status=500)

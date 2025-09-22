@@ -1,3 +1,17 @@
+window.onload = async function () {
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    await fetchPlayersForGame("battleground");
+    gameLoop();
+
+    /***********
+     * Variables
+     ***********/
+    window.gameCanvas = canvas;
+    window.ctx = ctx;
+};
+
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 
@@ -56,13 +70,41 @@ function log(...args) {
 /********************
  * 2. Conection API *
  ********************/
+function updatePlayerNames(playerUsernames, playerAvatars) {
+    const players = [
+        { nameEl: "#player1Name", avatarEl: "#player1Avatar" },
+        { nameEl: "#player2Name", avatarEl: "#player2Avatar" },
+        { nameEl: "#player3Name", avatarEl: "#player3Avatar" },
+        { nameEl: "#player4Name", avatarEl: "#player4Avatar" },
+    ];
+
+    players.forEach((p, i) => {
+        const nameEl = document.querySelector(p.nameEl);
+        const avatarEl = document.querySelector(p.avatarEl);
+        if (playerUsernames[i]) {
+            nameEl.textContent = playerUsernames[i];
+            avatarEl.src = playerAvatars[i];
+        } else {
+            nameEl.textContent = "Waiting...";
+            avatarEl.src = "https://bootdey.com/img/Content/avatar/avatar3.png";
+        }
+    });
+}
 
 async function fetchPlayersForGame(mode = "battleground") {
     const response = await fetch(`/get_players_for_game/?game_type=${mode}`);
     const data = await response.json();
     if (data.players && data.players.length > 0) {
-        playerUsernames = data.players.map(p => p.username);
-        updatePlayerNames(playerUsernames);
+        const defaultAvatar = "https://bootdey.com/img/Content/avatar/avatar3.png";
+        const playerUsernames = data.players.map(p => p.username);
+        const playerAvatars = data.players.map(p => {
+            if (p.avatar && p.avatar.trim() !== "") {
+                return `/media/${p.avatar}`;
+            } else {
+                return defaultAvatar;
+            }
+        });
+        updatePlayerNames(playerUsernames, playerAvatars);
     }
 }
 
@@ -104,25 +146,6 @@ function getCookie(name) {
         }
     }
     return cookieValue;
-}
-
-function updatePlayerNames(playerUsernames) {
-    const player1NameElement = document.querySelector("#player1Name");
-    const player2NameElement = document.querySelector("#player2Name");
-    const player3NameElement = document.querySelector("#player3Name");
-    const player4NameElement = document.querySelector("#player4Name");
-
-    if (playerUsernames.length >= 4) {
-        player1NameElement.textContent = playerUsernames[0] || "Player 1";
-        player2NameElement.textContent = playerUsernames[1] || "Player 2";
-        player3NameElement.textContent = playerUsernames[2] || "Player 3";
-        player4NameElement.textContent = playerUsernames[3] || "Player 4";
-    } else {
-        player1NameElement.textContent = "Waiting...";
-        player2NameElement.textContent = "Waiting...";
-        player3NameElement.textContent = "Waiting...";
-        player4NameElement.textContent = "Waiting...";
-    }
 }
 
 /***********
@@ -288,14 +311,10 @@ function draw() {
     ctx.closePath();
 }
 
-function gameLoop() {
-    update();
+
+async function gameLoop() {
+    await update();
     draw();
     if (!gameOver) requestAnimationFrame(gameLoop);
 }
-
-resetBall();
-fetchPlayersForGame("battleground").then(() => {
-    gameLoop();
-});
 
