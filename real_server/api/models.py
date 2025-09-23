@@ -11,11 +11,12 @@ from django_resized import ResizedImageField
 from django.contrib.auth.signals import user_logged_in, user_logged_out
 
 class MatchHistory(models.Model):
-    winner = models.CharField(max_length=100, unique=True)
-    loser = models.CharField(max_length=100, unique=True)
+    winner = models.CharField(max_length=100)
+    loser = models.CharField(max_length=100)
     w_points = models.IntegerField(default=0)
     l_points = models.IntegerField(default=0)
     date = models.DateTimeField(auto_now_add=True)
+    type_game = models.CharField(max_length=20)
     
     def __str__(self):
         return f"{self.winner} defeated {self.loser} on {self.date.strftime('%Y-%m-%d %H:%M:%S')}"

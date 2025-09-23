@@ -269,14 +269,6 @@ def duplicate_1vs1(request):
                     losses=0,
                     tournaments_won=0
                 )
-            MatchHistory.objects.all().delete()
-            MatchHistory.objects.create(
-                winner="",
-                loser="",
-                w_points=0,
-                l_points=0,
-                date=timezone.now()
-            )
             return redirect('playground')
         except UserProfile.DoesNotExist:
             return JsonResponse({'error': 'One or more players dont exist.'}, status=404)
@@ -367,14 +359,14 @@ def editprofile(request):
         form = EditProfileForm(request.POST, request.FILES)
         if form.is_valid():
             name = form.cleaned_data.get('name')
-            nickname = form.cleaned_data.get('nickname')
+            #nickname = form.cleaned_data.get('nickname')
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             avatar = form.cleaned_data.get('avatar')
             user = request.user
            
             user.set_password(password)
-            user.username = nickname
+            #user.username = nickname
             user.first_name = name
             user.email = email
             user.save()
@@ -386,7 +378,7 @@ def editprofile(request):
             return redirect("/profile", {'log_user': user, 'profile':stats})
         
     else:
-        form = RegisterForm(request.GET, request.FILES)
+        form = EditProfileForm(request.GET, request.FILES)
     return render(request, 'editprofile.html', {'form': form, 'loged_user': loged_user})
 
 """ def tournament(request):
@@ -434,6 +426,7 @@ def profile_view(request):
     logedUser = request.user
     username = logedUser.username
     profile = UserProfile.objects.get(user = logedUser)
+    
 
     if request.user.is_authenticated:
         logedUser = request.user
@@ -441,7 +434,14 @@ def profile_view(request):
         friends_usernames = User.objects.filter(id__in=profile.friends).values_list('username', flat=True)
         friends_online = UserProfile.objects.filter(id__in=profile.friends).values_list('is_online', 'user')
         cucus = User.objects.filter(id__in=profile.friends)
-    return render(request, 'profile.html', {'profile': profile, 'friends_names': friends_usernames, 'friends_online': friends_online, 'cucus': cucus})
+        matches = MatchHistory.objects.filter(winner=username) | MatchHistory.objects.filter(loser=username)
+    return render(request, 'profile.html', {
+        'profile': profile,
+        'friends_names': friends_usernames,
+        'friends_online': friends_online, 
+        'cucus': cucus,
+        'matches': matches
+    })
 
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -583,30 +583,43 @@ def sync_users_in_tournament_to_user_profile():
         print(f"Error syncing data: {str(e)}")
 
 from .models import MatchHistory
+
 @api_view(['POST'])
 def sync_1vs1_stats(request):
     try:
-        users_in_tournament = UsersInTournament.objects.all()
+        users_in_tournament = list(UsersInTournament.objects.all())
+
+        if len(users_in_tournament) != 2:
+            return Response({'error': 'Expected exactly 2 users in tournament'}, status=400)
+
         for user in users_in_tournament:
             user_profile = UserProfile.objects.get(user__username=user.username)
             user_profile.wins += user.wins
             user_profile.losses += user.losses
             user_profile.save()
-        
-        for user in users_in_tournament:
-            matching = MatchHistory.objects.first()
-            if user.wins > user.losses:
-                matching.winner = user.username
-                matching.w_points = user.score
-            else:
-                matching.loser = user.username
-                matching.l_points = user.score
-            matching.save()
-            
+
+        user1, user2 = users_in_tournament
+
+        if user1.wins > user2.wins:
+            winner, loser = user1, user2
+        else:
+            winner, loser = user2, user1
+
+        match = MatchHistory.objects.create(
+            winner=winner.username,
+            loser=loser.username,
+            w_points=winner.score,
+            l_points=loser.score,
+            type_game='1vs1',
+            date=timezone.now()
+        )
         users_in_tournament.delete()
+
         return Response({'message': 'Data correctly synced for 1vs1.'}, status=200)
+
     except Exception as e:
-        return Response({'error': f'Error syncing data: {str(e)}'}, status=500)
+        import traceback
+        return Response({'error': str(e), 'trace': traceback.format_exc()}, status=500)
 
 @api_view(['POST'])
 def sync_1vsIA_stats(request):
@@ -632,6 +645,22 @@ def sync_tron_stats(request):
             user_profile.losses += user.losses
             user_profile.tournaments_won += user.tournaments_won
             user_profile.save()
+
+        user1, user2 = users_in_tournament
+
+        if user1.wins > user2.wins:
+            winner, loser = user1, user2
+        else:
+            winner, loser = user2, user1
+
+        match = MatchHistory.objects.create(
+            winner=winner.username,
+            loser=loser.username,
+            w_points=1,
+            l_points=0,
+            type_game='tron',
+            date=timezone.now()
+        )
         users_in_tournament.delete()
         return Response({'message': 'Data correctly synced for Tron.'}, status=200)
     except Exception as e:

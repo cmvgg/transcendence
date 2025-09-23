@@ -35,7 +35,6 @@ class RegisterForm(forms.Form):
 
 class EditProfileForm(forms.Form):
     name = forms.CharField(label='Name')
-    nickname = forms.CharField(label='Nickname')
     email = forms.EmailField(label='Email')
     password = forms.CharField(max_length=20, widget=forms.PasswordInput())
     avatar = forms.ImageField(label='Avatar', required=False)

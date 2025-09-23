@@ -43,7 +43,7 @@ services:
       - POSTGRES_NAME=${POSTGRES_DB}
       - DJANGO_SETTINGS_MODULE=ft_transcendence_backend.settings
       - DJANGO_DEBUG=True
-      - DATABASE_URL=postgres://myuser:mypassword@db:5432/mydatabase
+      - DATABASE_URL=${DATABASE_URL} 
     depends_on:
       - db
     networks:

@@ -49,11 +49,12 @@ class Migration(migrations.Migration):
             name='MatchHistory',
             fields=[
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('winner', models.CharField(max_length=100, unique=True, null=True)),
-                ('loser', models.CharField(max_length=100, unique=True, null=True)),
+                ('winner', models.CharField(max_length=100, null=True)),
+                ('loser', models.CharField(max_length=100, null=True)),
                 ('w_points', models.IntegerField(default=0)),
                 ("l_points", models.IntegerField(default=0)),
                 ('date', models.DateTimeField(auto_now_add=True, null=True)),
+                ('type_game', models.CharField(max_length=20, null=True)),
             ],
         ),
         migrations.CreateModel(
