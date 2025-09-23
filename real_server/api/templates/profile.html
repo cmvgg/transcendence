@@ -485,14 +485,8 @@ text-rendering: optimizeLegibility;
           </ul>
         </div>
       </div>
-
-
-
-
       <div class="profile-info col-md-9">
         <div class="row">
-         
-          <!--AVATAR-->
             <div class="row">
               <div class="panel-body bio-graph-info">
                 <div class="row" style="width: auto;">
@@ -504,10 +498,7 @@ text-rendering: optimizeLegibility;
                 </div>
               </div>
             </div>
-            <!--INFO-->
             <div class="row" style="width: 100%;">
-              
-               
               <div class="bio-row" style="width: 100%;">
                 <h2 style="color:white; padding-top: 2%;" data-i18n="profile.friends">Friends</h2>
                 {% if profile.friends %}
@@ -547,7 +538,6 @@ text-rendering: optimizeLegibility;
                 >Delete friends</a>
               </div>   
             </div>
-            <!--STATS-->
             <div class="row" style="background-color: black; width: 100%; padding-top: 2%;">
               <h1 style="color: red; font-family: Sixtyfour Convergence, sans-serif;font-size:40px" data-i18n="profile.stats">Statistics</h1>
               <div style="display: flex; align-items: center; gap: 2vh;">
@@ -563,68 +553,49 @@ text-rendering: optimizeLegibility;
                 <h3 style="color: red; font-family: Sixtyfour Convergence, sans-serif">{{ profile.tournaments_won }}</h3>
               </div>
             </div>
-          </div>      
-
-<br>
-          <!--MATCH HISTORY-->
+          </div>
+          <br>
           <div class="row" style="padding: 2%;">
             <div class="bio-row" style="background-color:#7a7a7a; width: 100%; ">
               <h2 style="color:white; padding-top: 2%;">Match History</h2>
               {% if matches %}
                 {% for match in matches %}
-                  
-                      {% if match.winner == user.username %}
-                     
-                      <div id="score-container" style="padding: 3%; background: linear-gradient(
-                    45deg,
-                    hsla(126, 85%, 52%, 0.8),
-                    hsla(0, 98%, 47%, 0.7) 100%
-                  ); height: 10%; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                   <h6>{{ match.date|date:"Y-m-d H:i" }} - {{ match.type_game }}</h6>
-                    <div style=" display: flex; width: 100%; justify-content: space-between; align-items: center; position: relative;">
-                        
-                          <h6 style="margin: 0;">{{ match.winner }}: {{ match.w_points }} points</h6>
-                        
-                        
-                          <h6 style="margin: 0;">VS</h6>
-                        
-                        
-                          <h6 style="margin: 0;">{{ match.loser }}: {{ match.l_points }} points</h6>
-                          
-                        
-                      {% else %}
-                      <div id="score-container" style="padding: 3%; background: linear-gradient(
-                        45deg,
-                        hsla(0, 98%, 47%, 0.7),
-                        hsla(126, 85%, 52%, 0.8) 100%
-                      ); height: 10%; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                      <h6>{{ match.date|date:"Y-m-d H:i" }}</h6> 
-                        <div style="display: flex; width: 100%; justify-content: space-between; align-items: center; position: relative;">
-                          <h6 style="margin: 0;">{{ match.loser }}: {{ match.l_points }} points</h6>
-                        
-                        
-                          <h6 style="margin: 0;">VS</h6>
-                        
-                        
-                          <h6 style="margin: 0;">{{ match.winner }}: {{ match.w_points }} points</h6>
-                          
-                      {% endif %}
+                  {% if match.winner == user.username %}
+                    <div id="score-container" style="padding: 3%; background: linear-gradient(
+                      45deg,
+                      hsla(126, 85%, 52%, 0.8),
+                      hsla(0, 98%, 47%, 0.7) 100%
+                    ); height: 10%; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                      <h6>{{ match.date|date:"Y-m-d H:i" }} - {{ match.type_game }}</h6>
+                      <div style=" display: flex; width: 100%; justify-content: space-between; align-items: center; position: relative;">
+                        <h6 style="margin: 0;">{{ match.winner }}: {{ match.w_points }} points</h6>
+                        <h6 style="margin: 0;">VS</h6>
+                        <h6 style="margin: 0;">{{ match.loser }}: {{ match.l_points }} points</h6>
+                      </div>
                     </div>
-                    
-                  </div>
+                   {% else %}
+                    <div id="score-container" style="padding: 3%; background: linear-gradient(
+                      45deg,
+                      hsla(0, 98%, 47%, 0.7),
+                      hsla(126, 85%, 52%, 0.8) 100%
+                    ); height: 10%; position: relative; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                      <h6>{{ match.date|date:"Y-m-d H:i" }}</h6> 
+                      <div style="display: flex; width: 100%; justify-content: space-between; align-items: center; position: relative;">
+                        <h6 style="margin: 0;">{{ match.loser }}: {{ match.l_points }} points</h6>
+                        <h6 style="margin: 0;">VS</h6>
+                        <h6 style="margin: 0;">{{ match.winner }}: {{ match.w_points }} points</h6>
+                      </div>
+                    </div>
+                  {% endif %}
                 {% endfor %}
               {% else %}
                 <br>
                 <p style="color:white;">No matches played yet.</p>
               {% endif %}         
-             
             </div>
           </div>
-         
         </div>
       </div>
-
-
     </div>
   </div>
   <script>

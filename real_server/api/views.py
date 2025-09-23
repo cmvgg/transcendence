@@ -359,14 +359,12 @@ def editprofile(request):
         form = EditProfileForm(request.POST, request.FILES)
         if form.is_valid():
             name = form.cleaned_data.get('name')
-            #nickname = form.cleaned_data.get('nickname')
             email = form.cleaned_data.get('email')
             password = form.cleaned_data.get('password')
             avatar = form.cleaned_data.get('avatar')
             user = request.user
            
             user.set_password(password)
-            #user.username = nickname
             user.first_name = name
             user.email = email
             user.save()
@@ -733,14 +731,11 @@ def add_friends(request):
 
 def delete_friends(request):
     if request.method == 'POST':
-        # form data management
         users_selected_ids = request.POST.getlist('user_list')
         users_selected = User.objects.filter(id__in=users_selected_ids)
 
-        # active user and its profile
         user = request.user
         user_profile = UserProfile.objects.get(user = user)
-        #remove selection from userprofile friends
         for tmp_user in users_selected:
             if tmp_user != user:
                 user_profile.friends.remove(tmp_user.id)
@@ -770,6 +765,4 @@ def delete_friends(request):
         user_list = User.objects.filter(id__in=user_profile.friends)
         context = {'user_list': user_list}
         return render(request, 'delete_friends.html', context)
-
-#user friends END
 

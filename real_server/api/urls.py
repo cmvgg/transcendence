@@ -35,7 +35,6 @@ urlpatterns = [
     path('editprofile', views.editprofile, name='editprofile'),
     path('home', views.home_view, name='home'),
     path('user-profiles/', views.UserList.as_view()),
-    # API endpoints
 	#
     path('update_user_profile/', views.update_user_profile, name='update_user_profile'),
     path('get_players_for_game/', views.get_players_for_game, name='get_players_for_game'),
