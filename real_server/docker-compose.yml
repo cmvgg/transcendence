@@ -1,6 +1,7 @@
 services:
   db:
     image: postgres:15
+    container_name: postgres_db
     env_file: .env
     environment:
       - POSTGRES_USER=${POSTGRES_USER}
@@ -10,21 +11,26 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     networks:
       - app-network
+    profiles: ["core"]
 
   postgres_exporter:
-    image: prometheuscommunity/postgres-exporter
+    image: quay.io/prometheuscommunity/postgres-exporter
     env_file: .env
     environment:
-      - DATA_SOURCE_NAME=${DATABASE_URL}?sslmode=disable
+      DATA_SOURCE_NAME: DATA_SOURCE_NAME=${DATABASE_URL}?sslmode=disable
     ports:
       - "9187:9187"
     depends_on:
       - db
     networks:
       - app-network
+    profiles: ["core"]
 
   backend:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django_backend
     command: >
       sh -c "
       until pg_isready -h db -p 5432; do
@@ -42,17 +48,98 @@ services:
     environment:
       - POSTGRES_NAME=${POSTGRES_DB}
       - DJANGO_SETTINGS_MODULE=ft_transcendence_backend.settings
-      - DJANGO_DEBUG=True
-      - DATABASE_URL=${DATABASE_URL} 
+      - DJANGO_DEBUG=${DJANGO_DEBUG}
+      - DATABASE_URL=${DATABASE_URL}
     depends_on:
       - db
     networks:
       - app-network
+    profiles: ["core"]
 
-volumes:
-  frontend_data:
-  postgres_data:
+  prometheus:
+    build: ./monitoring/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - app-network
+    profiles: ["monitoring"]
+
+  grafana:
+    build: ./monitoring/grafana
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning
+    env_file: .env
+    environment:
+      - GF_PATHS_PROVISIONING=/etc/grafana/provisioning
+    depends_on:
+      - prometheus
+    networks:
+      - app-network
+    profiles: ["monitoring"]
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.12.0
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - ELASTIC_PASSWORD=${ELASTIC_PASSWORD}
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    ports:
+      - "9200:9200"
+    networks:
+      - app-network
+    profiles: ["monitoring"]
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:8.13.4
+    container_name: logstash
+    env_file: .env
+    environment:
+      - LS_JAVA_OPTS=-Xms256m -Xmx512m
+    ports:
+      - "5044:5044"
+    volumes:
+      - ./monitoring/logstash/logstash.conf:/usr/share/logstash/pipeline/logstash.conf
+    depends_on:
+      - elasticsearch
+    networks:
+      - app-network
+    profiles: ["monitoring"]
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.12.0
+    container_name: kibana
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    volumes:
+      - kibana_data:/usr/share/kibana/data
+    networks:
+      - app-network
+    profiles: ["monitoring"]
 
 networks:
   app-network:
     driver: bridge
+
+
+volumes:
+  prometheus_data:
+  grafana_data:
+  postgres_data:
+  elasticsearch_data:
+  logstash_data:
+  kibana_data:

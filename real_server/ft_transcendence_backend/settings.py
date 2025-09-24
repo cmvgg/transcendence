@@ -89,33 +89,33 @@ MEDIA_ROOT = '/app/media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'json': {
-            '()': 'pythonjsonlogger.jsonlogger.JsonFormatter',
-            'format': '%(asctime)s %(levelname)s %(name)s %(message)s'
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "json": {
+            "format": '{"time": "%(asctime)s", "level": "%(levelname)s", "name": "%(name)s", "message": "%(message)s"}',
         },
     },
-    'handlers': {
-        'logstash': {
-            'class': 'logging.handlers.DatagramHandler',
-            'host': 'logstash',
-            'port': 5044,
-            'formatter': 'json',
+    "handlers": {
+        "logstash": {
+            "level": "INFO",
+            "class": "logging.handlers.SocketHandler",
+            "host": "logstash",
+            "port": 5044,
+            "formatter": "json",
         },
-        'console': {
-            'class': 'logging.StreamHandler',
-            'formatter': 'json',
-        }
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "json",
+        },
     },
-    'loggers': {
-        'django': {
-            'handlers': ['logstash', 'console'],
-            'level': 'INFO',
-            'propagate': True,
+    "loggers": {
+        "": {
+            "handlers": ["logstash", "console"],
+            "level": "INFO",
+            "propagate": True,
         },
-    }
+    },
 }
 
 LOGIN_URL = 'signin'

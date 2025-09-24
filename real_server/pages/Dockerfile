@@ -1,21 +1,16 @@
 FROM python:3.11-slim
 
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 WORKDIR /appfront
 
 COPY requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir djangorestframework Django
 
-RUN pip install djangorestframework
-
-RUN python -m pip install Django
-
-RUN mkdir /ft_transcendence_fronten/vol
-
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    libpq-dev \
-    python3-dev \
-    && rm -rf /var/lib/apt/lists/*
+RUN mkdir -p /ft_transcendence_frontend/vol
 
 COPY . .
 

@@ -1,24 +1,29 @@
 FROM python:3.11-slim-bookworm
 
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 WORKDIR /app
 
 COPY requirements.txt .
 
-RUN apt-get update
-RUN apt-get install -y --no-install-recommends postgresql-client 
-RUN apt-get install -y --no-install-recommends libpq-dev 
-RUN apt-get install -y --no-install-recommends python3-dev
-RUN rm -rf /var/lib/apt/lists/*
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends \
+        postgresql-client \
+        libpq-dev \
+        python3-dev \
+        build-essential \
+    && rm -rf /var/lib/apt/lists/*
 
-RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir djangorestframework
-RUN pip install --no-cache-dir django-prometheus
-RUN pip install --no-cache-dir django-crispy-forms
-RUN pip install  python-json-logger
-
-RUN python -m pip install Pillow
-RUN pip install passlib
-RUN pip install django-resized
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install --no-cache-dir \
+        djangorestframework \
+        django-prometheus \
+        django-crispy-forms \
+        python-json-logger \
+        Pillow \
+        passlib \
+        django-resized
 
 COPY . .
 
